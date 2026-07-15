@@ -12,7 +12,6 @@ trae/
 skills/
 skills-lock.json
 public/trae-bridge.mjs
-trae-bridge.mjs
 
 # Design mockups & references (not part of the app)
 _plaza_reference/
@@ -39,9 +38,8 @@ netlify/
 *.md
 *.design
 
-# Standalone HTML mockups
+# Standalone HTML mockups (game-hall.html is used by the app, not a mockup)
 community-blueprint.html
-game-hall.html
 mode-page-design-philosophy.html
 subject-page-design-spec.html
 mode-page-visual-poster.png

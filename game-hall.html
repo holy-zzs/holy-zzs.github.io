@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全息模组匣子 · 游戏广场</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+:root {
+  /* === Deep Background Layers === */
+  --holo-bg-void: #050208;
+  --holo-bg-deep: #0a0514;
+  --holo-bg-base: #0d0718;
+  --holo-bg-surface: #120a22;
+  --holo-bg-elevated: #180d2e;
+
+  /* === Glassmorphism Shell === */
+  --holo-glass-bg: rgba(10, 5, 20, 0.6);
+  --holo-glass-bg-hover: rgba(15, 10, 30, 0.75);
+  --holo-glass-border: rgba(0, 255, 255, 0.2);
+  --holo-glass-border-hover: rgba(0, 255, 255, 0.5);
+  --holo-glass-blur: 24px;
+
+  /* === Neon Accent System === */
+  --holo-cyan: #00d4ff;
+  --holo-cyan-bright: #00ffff;
+  --holo-cyan-dim: rgba(0, 212, 255, 0.3);
+  --holo-cyan-glow: rgba(0, 212, 255, 0.5);
+  --holo-cyan-glow-strong: rgba(0, 255, 255, 0.8);
+
+  --holo-purple: #8b5cf6;
+  --holo-purple-bright: #b026ff;
+  --holo-purple-dim: rgba(139, 92, 246, 0.3);
+  --holo-purple-glow: rgba(139, 92, 246, 0.5);
+
+  --holo-pink: #ff2e88;
+  --holo-pink-bright: #ff3da6;
+  --holo-pink-glow: rgba(255, 46, 136, 0.5);
+
+  --holo-green: #00ff88;
+  --holo-green-dim: rgba(0, 255, 136, 0.3);
+  --holo-green-glow: rgba(0, 255, 136, 0.5);
+
+  --holo-amber: #ffaa00;
+  --holo-amber-glow: rgba(255, 170, 0, 0.5);
+
+  /* === Text Hierarchy === */
+  --holo-text-bright: #ffffff;
+  --holo-text-primary: #e8e8ff;
+  --holo-text-secondary: #9098b8;
+  --holo-text-muted: #5a5a7a;
+  --holo-text-faint: #3a3a52;
+
+  /* === Border System === */
+  --holo-border-cyan: rgba(0, 255, 255, 0.2);
+  --holo-border-cyan-bright: rgba(0, 255, 255, 0.4);
+  --holo-border-purple: rgba(139, 92, 246, 0.25);
+  --holo-border-pink: rgba(255, 46, 136, 0.25);
+  --holo-border-subtle: rgba(255, 255, 255, 0.06);
+  --holo-border-faint: rgba(255, 255, 255, 0.03);
+
+  /* === Typography === */
+  --holo-font-display: 'Michroma', 'Orbitron', sans-serif;
+  --holo-font-header: 'Orbitron', 'Michroma', sans-serif;
+  --holo-font-body: 'Rajdhani', 'Inter', system-ui, sans-serif;
+  --holo-font-mono: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+
+  /* === Scanline & Effect Layers === */
+  --holo-scanline-color: rgba(0, 255, 255, 0.04);
+  --holo-crosshair-color: rgba(0, 255, 255, 0.15);
+  --holo-grid-color: rgba(0, 212, 255, 0.03);
+
+  /* === Status Colors === */
+  --holo-status-online: #00ff88;
+  --holo-status-warning: #ffaa00;
+  --holo-status-error: #ff2e88;
+  --holo-status-info: #00d4ff;
+
+  /* === Radius System === */
+  --holo-radius-sm: 4px;
+  --holo-radius-md: 8px;
+  --holo-radius-lg: 12px;
+
+  /* === Semantic Aliases (for fill-html-head.mjs theme mapping) === */
+  --holo-background: #0a0514;
+  --holo-foreground: #e8e8ff;
+  --holo-card: rgba(10, 5, 20, 0.6);
+  --holo-primary: #00d4ff;
+  --holo-border: rgba(0, 255, 255, 0.2);
+  --holo-muted: #5a5a7a;
+}
+
+.dark {
+  --holo-background: #0a0514;
+  --holo-foreground: #e8e8ff;
+  --holo-card: rgba(10, 5, 20, 0.6);
+  --holo-primary: #00d4ff;
+  --holo-border: rgba(0, 255, 255, 0.2);
+  --holo-muted: #5a5a7a;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--holo-background);
+    --color-foreground: var(--holo-foreground);
+    --color-card: var(--holo-card);
+    --color-primary: var(--holo-primary);
+    --color-muted: var(--holo-muted);
+    --color-border: var(--holo-border);
+    --radius-sm: var(--holo-radius-sm);
+    --radius-md: var(--holo-radius-md);
+    --radius-lg: var(--holo-radius-lg);
+  }
+  @layer base {
+    body { background: var(--holo-background); color: var(--holo-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--holo-background); }
+      .text-background { color: var(--holo-background); }
+      .border-background { border-color: var(--holo-background); }
+      .ring-background { --tw-ring-color: var(--holo-background); }
+      .bg-foreground { background-color: var(--holo-foreground); }
+      .text-foreground { color: var(--holo-foreground); }
+      .border-foreground { border-color: var(--holo-foreground); }
+      .ring-foreground { --tw-ring-color: var(--holo-foreground); }
+      .bg-card { background-color: var(--holo-card); }
+      .text-card { color: var(--holo-card); }
+      .border-card { border-color: var(--holo-card); }
+      .ring-card { --tw-ring-color: var(--holo-card); }
+      .bg-primary { background-color: var(--holo-primary); }
+      .text-primary { color: var(--holo-primary); }
+      .border-primary { border-color: var(--holo-primary); }
+      .ring-primary { --tw-ring-color: var(--holo-primary); }
+      .bg-muted { background-color: var(--holo-muted); }
+      .text-muted { color: var(--holo-muted); }
+      .border-muted { border-color: var(--holo-muted); }
+      .ring-muted { --tw-ring-color: var(--holo-muted); }
+      .bg-border { background-color: var(--holo-border); }
+      .text-border { color: var(--holo-border); }
+      .border-border { border-color: var(--holo-border); }
+      .ring-border { --tw-ring-color: var(--holo-border); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+    <style>
+      /* ===== ROOT OVERRIDES ===== */
+      html, body {
+        background: var(--holo-bg-deep) !important;
+        color: var(--holo-text-primary);
+        font-family: var(--holo-font-body);
+        overflow: hidden;
+      }
+
+      /* ===== MATRIX RAIN CANVAS ===== */
+      #matrix-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.08;
+      }
+
+      /* ===== APP SHELL ===== */
+      .holo-app {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* ===== GLASS PANEL ===== */
+      .holo-glass {
+        background: var(--holo-glass-bg);
+        backdrop-filter: blur(var(--holo-glass-blur));
+        -webkit-backdrop-filter: blur(var(--holo-glass-blur));
+        border: 1px solid var(--holo-glass-border);
+      }
+
+      /* ===== HEADER ===== */
+      .holo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px;
+        height: 56px;
+        flex-shrink: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        position: relative;
+        z-index: 50;
+      }
+      .holo-header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .holo-logo {
+        width: 34px; height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        background: linear-gradient(135deg, var(--holo-cyan), var(--holo-purple));
+        box-shadow: 0 0 12px var(--holo-cyan-glow);
+        flex-shrink: 0;
+      }
+      .holo-logo-v {
+        font-family: var(--holo-font-display);
+        font-size: 16px;
+        color: var(--holo-bg-deep);
+        font-weight: 900;
+      }
+      .holo-logo-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+      }
+      .holo-os-name {
+        font-family: var(--holo-font-header);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--holo-cyan);
+        text-shadow: 0 0 8px var(--holo-cyan-glow);
+        letter-spacing: 1px;
+      }
+      .holo-os-version {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-text-muted);
+      }
+      /* 返回主界面按钮 */
+      .holo-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        font-family: var(--holo-font-mono);
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        color: var(--holo-cyan);
+        background: rgba(0,212,255,0.05);
+        border: 1px solid rgba(0,212,255,0.3);
+        cursor: pointer;
+        clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+      .holo-back-btn svg { width: 14px; height: 14px; }
+      .holo-back-btn:hover {
+        border-color: var(--holo-cyan);
+        color: var(--holo-text-bright);
+        box-shadow: 0 0 10px rgba(0,212,255,0.4);
+      }
+      @media (max-width: 639px) {
+        .holo-back-btn span { display: none; }
+        .holo-back-btn { padding: 6px 8px; }
+      }
+
+      .holo-status-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-left: 12px;
+        border-left: 1px solid var(--holo-border-subtle);
+      }
+      .holo-status-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .holo-status-dot {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--holo-green);
+        box-shadow: 0 0 8px var(--holo-green-glow);
+        animation: holo-dot-pulse 2s ease-in-out infinite;
+      }
+      @keyframes holo-dot-pulse {
+        0%,100% { opacity:1; box-shadow:0 0 8px var(--holo-green-glow); }
+        50% { opacity:0.4; box-shadow:0 0 3px var(--holo-green-glow); }
+      }
+      .holo-status-label {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-green);
+        letter-spacing: 0.5px;
+      }
+
+      /* Terminal Search */
+      .holo-header-center {
+        flex: 1;
+        max-width: 480px;
+        margin: 0 20px;
+      }
+      .holo-search-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border-bottom: 1px solid var(--holo-cyan-dim);
+        padding: 4px 0;
+      }
+      .holo-search-prompt {
+        font-family: var(--holo-font-mono);
+        color: var(--holo-cyan);
+        font-size: 13px;
+        text-shadow: 0 0 4px var(--holo-cyan-glow);
+      }
+      .holo-search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: var(--holo-font-mono);
+        font-size: 12px;
+        color: var(--holo-text-primary);
+      }
+      .holo-search-input::placeholder {
+        color: var(--holo-text-muted);
+      }
+      .holo-search-cursor {
+        font-family: var(--holo-font-mono);
+        color: var(--holo-cyan);
+        font-size: 13px;
+        animation: holo-blink 1s step-end infinite;
+      }
+      @keyframes holo-blink {
+        0%,50% { opacity:1; }
+        51%,100% { opacity:0; }
+      }
+
+      /* User Profile */
+      .holo-header-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .holo-profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        align-items: flex-end;
+      }
+      .holo-profile-name {
+        font-family: var(--holo-font-header);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--holo-text-bright);
+        letter-spacing: 0.5px;
+      }
+      .holo-profile-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .holo-lvl-badge {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-purple);
+        border: 1px solid var(--holo-purple-dim);
+        padding: 1px 5px;
+        border-radius: 2px;
+      }
+      .holo-xp-bar {
+        width: 90px;
+        height: 5px;
+        background: var(--holo-bg-surface);
+        border-radius: 3px;
+        position: relative;
+        overflow: hidden;
+      }
+      .holo-xp-fill {
+        height: 100%;
+        width: 66%;
+        background: linear-gradient(90deg, var(--holo-cyan), var(--holo-cyan-bright));
+        box-shadow: 0 0 6px var(--holo-cyan-glow);
+        border-radius: 3px;
+      }
+      .holo-xp-text {
+        position: absolute;
+        top: -13px;
+        right: 0;
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-text-muted);
+      }
+      /* 算力核心资源舱 - The Resource Core */
+      .holo-resource-core {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 14px 6px 10px;
+        background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(176,38,255,0.06));
+        border: 1px solid rgba(0,212,255,0.35);
+        /* 倒梯形切角容器 */
+        clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        box-shadow:
+          inset 0 0 12px rgba(0,212,255,0.12),
+          0 0 10px rgba(0,212,255,0.2);
+        white-space: nowrap;
+      }
+      /* 容器边缘安全标签 */
+      .holo-resource-core::before {
+        content: 'SECURE_VAULT_ACTIVE';
+        position: absolute;
+        top: -7px;
+        left: 12px;
+        font-family: var(--holo-font-mono);
+        font-size: 6px;
+        letter-spacing: 0.5px;
+        color: rgba(0,212,255,0.45);
+        background: var(--holo-bg-deep, #050208);
+        padding: 0 4px;
+        z-index: 2;
+      }
+      /* 容器右下角微小编码 */
+      .holo-resource-core::after {
+        content: 'v.37.2';
+        position: absolute;
+        bottom: -5px;
+        right: 14px;
+        font-family: var(--holo-font-mono);
+        font-size: 5px;
+        color: rgba(176,38,255,0.4);
+        background: #050208;
+        padding: 0 3px;
+      }
+
+      /* 3D 悬浮发光晶体图标 */
+      .holo-core-crystal {
+        position: relative;
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        animation: holo-crystal-float 3s ease-in-out infinite;
+      }
+      @keyframes holo-crystal-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-2px) rotate(8deg); }
+      }
+      /* 晶体本体 - 用渐变模拟 3D 几何体 */
+      .holo-core-crystal::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: linear-gradient(135deg,
+          rgba(0,212,255,0.95) 0%,
+          rgba(108,242,255,0.7) 30%,
+          rgba(176,38,255,0.6) 70%,
+          rgba(0,212,255,0.9) 100%);
+        clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        box-shadow:
+          0 0 8px rgba(0,212,255,0.8),
+          0 0 16px rgba(0,212,255,0.4),
+          inset 0 0 6px rgba(255,255,255,0.3);
+        filter: brightness(1.1);
+      }
+      /* 晶体高光面 */
+      .holo-core-crystal::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 8px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0));
+        clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        z-index: 2;
+      }
+
+      /* 电磁环绕 - 外层旋转光环 */
+      .holo-core-orbit {
+        position: absolute;
+        inset: -3px;
+        border: 1px solid rgba(0,212,255,0.25);
+        border-radius: 50%;
+        border-top-color: rgba(0,212,255,0.7);
+        border-right-color: transparent;
+        border-bottom-color: rgba(176,38,255,0.5);
+        border-left-color: transparent;
+        animation: holo-orbit-spin 2.5s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes holo-orbit-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      /* 数字区 */
+      .holo-core-numbers {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        line-height: 1;
+      }
+      .holo-core-label {
+        font-family: var(--holo-font-mono);
+        font-size: 6px;
+        letter-spacing: 0.3px;
+        color: rgba(0,212,255,0.5);
+        text-transform: uppercase;
+      }
+      .holo-core-value {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+      }
+      .holo-core-number {
+        font-family: 'JetBrains Mono', 'Space Mono', var(--holo-font-mono), monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: #22D3EE;
+        /* 双层外发光 */
+        text-shadow:
+          0 0 8px rgba(34, 211, 238, 0.8),
+          0 0 20px rgba(34, 211, 238, 0.4);
+        letter-spacing: 2px;
+        /* 数字滚动动画 */
+        animation: holo-number-pulse 4s ease-in-out infinite;
+      }
+      @keyframes holo-number-pulse {
+        0%, 100% { text-shadow: 0 0 8px rgba(34,211,238,0.8), 0 0 20px rgba(34,211,238,0.4); }
+        50% { text-shadow: 0 0 12px rgba(34,211,238,1), 0 0 28px rgba(34,211,238,0.6); }
+      }
+      /* 跳动箭头 ↑ +1.2% */
+      .holo-core-delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        font-weight: 700;
+        color: #22FF9C;
+        text-shadow: 0 0 4px rgba(34,255,156,0.7);
+        animation: holo-delta-blink 1.5s ease-in-out infinite;
+      }
+      @keyframes holo-delta-blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .holo-core-crystal,
+        .holo-core-orbit,
+        .holo-core-number,
+        .holo-core-delta { animation: none; }
+      }
+      .holo-avatar {
+        width: 38px; height: 38px;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        overflow: hidden;
+        border: 2px solid var(--holo-cyan);
+        box-shadow: 0 0 10px var(--holo-cyan-glow);
+        flex-shrink: 0;
+      }
+      .holo-avatar img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+      }
+
+      /* ===== NAV TABS ===== */
+      .holo-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        height: 38px;
+        flex-shrink: 0;
+        border-left: none;
+        border-right: none;
+        position: relative;
+        z-index: 40;
+      }
+      .holo-nav-tabs {
+        display: flex;
+        gap: 2px;
+        height: 100%;
+        align-items: center;
+      }
+      .holo-nav-tab {
+        font-family: var(--holo-font-header);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        color: var(--holo-text-muted);
+        padding: 6px 10px;
+        cursor: pointer;
+        position: relative;
+        transition: color 0.2s ease;
+        white-space: nowrap;
+      }
+      .holo-nav-tab:hover { color: var(--holo-text-secondary); }
+      .holo-nav-tab.active {
+        color: var(--holo-cyan);
+        text-shadow: 0 0 8px var(--holo-cyan-glow);
+      }
+      .holo-nav-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -7px;
+        left: 0; right: 0;
+        height: 2px;
+        background: var(--holo-cyan);
+        box-shadow: 0 0 8px var(--holo-cyan-glow);
+      }
+      .holo-nav-toggle {
+        display: flex;
+        gap: 4px;
+      }
+      .holo-toggle-btn {
+        width: 26px; height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid var(--holo-border-subtle);
+        border-radius: 2px;
+        cursor: pointer;
+        color: var(--holo-text-muted);
+        transition: all 0.2s ease;
+      }
+      .holo-toggle-btn.active {
+        border-color: var(--holo-cyan);
+        color: var(--holo-cyan);
+        box-shadow: 0 0 6px var(--holo-cyan-dim);
+      }
+      .holo-toggle-btn svg { width:14px; height:14px; }
+
+      /* ===== MAIN CONTENT ===== */
+      .holo-main {
+        flex: 1;
+        display: flex;
+        gap: 1px;
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      /* ===== LEFT SIDEBAR ===== */
+      .holo-sidebar-left {
+        width: 210px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        padding: 14px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .holo-sidebar-left::-webkit-scrollbar { width:4px; }
+      .holo-sidebar-left::-webkit-scrollbar-track { background:transparent; }
+      .holo-sidebar-left::-webkit-scrollbar-thumb { background:var(--holo-cyan-dim); border-radius:2px; }
+
+      .holo-filter-section { display:flex; flex-direction:column; gap:3px; }
+      .holo-filter-title {
+        font-family: var(--holo-font-header);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--holo-cyan);
+        margin-bottom: 4px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid var(--holo-border-cyan);
+      }
+      .holo-filter-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .holo-filter-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 3px 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: var(--holo-font-mono);
+        font-size: 10px;
+        color: var(--holo-text-secondary);
+        border-radius: 2px;
+      }
+      .holo-filter-item:hover {
+        background: rgba(0, 212, 255, 0.05);
+        color: var(--holo-text-primary);
+      }
+      .holo-filter-item.selected {
+        color: var(--holo-cyan);
+        background: rgba(0, 212, 255, 0.08);
+      }
+      .holo-filter-lock {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        width: 14px;
+        color: var(--holo-text-faint);
+      }
+      .holo-filter-item.selected .holo-filter-lock {
+        color: var(--holo-cyan);
+        text-shadow: 0 0 4px var(--holo-cyan-glow);
+      }
+      .holo-filter-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 7px;
+        border: 1px solid var(--holo-border-subtle);
+        border-radius: 2px;
+        cursor: pointer;
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        transition: all 0.2s ease;
+      }
+      .holo-filter-dropdown:hover { border-color: var(--holo-cyan-dim); }
+      .holo-dropdown-label {
+        color: var(--holo-text-muted);
+        letter-spacing: 1px;
+      }
+      .holo-dropdown-value {
+        color: var(--holo-text-secondary);
+      }
+      .holo-dropdown-arrow {
+        color: var(--holo-text-muted);
+        font-size: 7px;
+      }
+      .holo-apply-btn {
+        margin-top: auto;
+        padding: 9px;
+        font-family: var(--holo-font-header);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--holo-bg-deep);
+        background: linear-gradient(135deg, var(--holo-cyan), var(--holo-cyan-bright));
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: 0 0 12px var(--holo-cyan-glow);
+        transition: all 0.2s ease;
+        clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      }
+      .holo-apply-btn:hover {
+        box-shadow: 0 0 20px var(--holo-cyan-glow-strong);
+        transform: translateY(-1px);
+      }
+
+      /* ===== CENTER CONTENT ===== */
+      .holo-center {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+      }
+      .holo-center::-webkit-scrollbar { width:4px; }
+      .holo-center::-webkit-scrollbar-track { background:transparent; }
+      .holo-center::-webkit-scrollbar-thumb { background:var(--holo-cyan-dim); border-radius:2px; }
+
+      /* ===== HERO CAROUSEL ===== */
+      .holo-hero {
+        position: relative;
+        height: 200px;
+        border: 1px solid var(--holo-glass-border);
+        border-radius: 2px;
+        overflow: hidden;
+        background: var(--holo-glass-bg);
+        backdrop-filter: blur(var(--holo-glass-blur));
+        -webkit-backdrop-filter: blur(var(--holo-glass-blur));
+        flex-shrink: 0;
+      }
+      .holo-hero-slides {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .holo-hero-slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+      }
+      .holo-hero-slide.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .holo-hero-left {
+        width: 40%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(90deg, var(--holo-bg-deep) 50%, transparent);
+        z-index: 2;
+        position: relative;
+      }
+      .holo-hero-label {
+        font-family: var(--holo-font-header);
+        font-size: 10px;
+        letter-spacing: 3px;
+        color: var(--holo-purple);
+        text-shadow: 0 0 8px var(--holo-purple-glow);
+      }
+      .holo-hero-title {
+        font-family: var(--holo-font-display);
+        font-size: 26px;
+        font-weight: 400;
+        color: var(--holo-cyan-bright);
+        text-shadow: 0 0 16px var(--holo-cyan-glow-strong), 0 0 32px var(--holo-cyan-glow);
+        letter-spacing: 2px;
+        line-height: 1.1;
+      }
+      .holo-hero-flavor {
+        font-family: var(--holo-font-body);
+        font-size: 11px;
+        color: var(--holo-text-secondary);
+        line-height: 1.5;
+        max-width: 300px;
+      }
+      .holo-hero-btn {
+        align-self: flex-start;
+        padding: 8px 18px;
+        font-family: var(--holo-font-header);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--holo-cyan-bright);
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid var(--holo-cyan);
+        border-radius: 2px;
+        cursor: pointer;
+        box-shadow: 0 0 12px var(--holo-cyan-dim), inset 0 0 12px rgba(0, 212, 255, 0.1);
+        transition: all 0.3s ease;
+        text-shadow: 0 0 6px var(--holo-cyan-glow);
+        margin-top: 4px;
+        clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      }
+      .holo-hero-btn:hover {
+        background: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 0 20px var(--holo-cyan-glow-strong), inset 0 0 20px rgba(0, 212, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      .holo-hero-right {
+        width: 60%;
+        position: relative;
+        overflow: hidden;
+      }
+      .holo-hero-right img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 25%, black 100%);
+        mask-image: linear-gradient(90deg, transparent 0%, black 25%, black 100%);
+      }
+      .holo-hero-overlay {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+        z-index: 3;
+      }
+      .holo-hero-timecode {
+        font-family: var(--holo-font-mono);
+        font-size: 10px;
+        color: var(--holo-cyan);
+        background: rgba(10, 5, 20, 0.7);
+        padding: 2px 7px;
+        border: 1px solid var(--holo-border-cyan);
+        text-shadow: 0 0 6px var(--holo-cyan-glow);
+      }
+      .holo-hero-nodes {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-green);
+        background: rgba(10, 5, 20, 0.7);
+        padding: 2px 7px;
+        border: 1px solid var(--holo-green-dim);
+      }
+      .holo-hero-dots {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        z-index: 10;
+      }
+      .holo-hero-dot {
+        width: 20px;
+        height: 3px;
+        background: var(--holo-text-faint);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .holo-hero-dot.active {
+        background: var(--holo-cyan);
+        box-shadow: 0 0 8px var(--holo-cyan-glow);
+      }
+
+      /* ===== CARTRIDGE GRID ===== */
+      .holo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .holo-cartridge-wrap {
+        perspective: 1000px;
+      }
+      .holo-cartridge-wrap.span-2 {
+        grid-column: span 2;
+      }
+      /* 冷冻舱/数据匣子外壳 - 多层机械结构 */
+      .holo-cartridge {
+        position: relative;
+        background:
+          /* 金属面板纹理：顶部高光 */
+          linear-gradient(180deg, rgba(0,212,255,0.08) 0%, transparent 8%, transparent 92%, rgba(0,212,255,0.06) 100%),
+          /* 金属横向条纹 */
+          repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,212,255,0.015) 3px, rgba(0,212,255,0.015) 4px),
+          var(--holo-glass-bg);
+        backdrop-filter: blur(var(--holo-glass-blur));
+        -webkit-backdrop-filter: blur(var(--holo-glass-blur));
+        border: 1px solid var(--holo-glass-border);
+        clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+        overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        /* 内发光 + 外发光 + 机械投影 */
+        box-shadow:
+          inset 0 0 0 1px rgba(0,212,255,0.18),
+          inset 0 0 18px rgba(0,212,255,0.12),
+          inset 0 0 40px rgba(0,212,255,0.05),
+          0 0 14px rgba(0,212,255,0.25),
+          0 4px 14px rgba(0,0,0,0.6),
+          0 0 0 1px rgba(0,0,0,0.4);
+      }
+      /* 机械角铆钉（用伪元素模拟） */
+      .holo-cartridge::before {
+        content: '';
+        position: absolute;
+        top: 4px; left: 4px;
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,212,255,0.9) 0%, rgba(0,212,255,0.3) 60%, transparent 100%);
+        box-shadow: 0 0 4px rgba(0,212,255,0.7);
+        z-index: 6;
+        pointer-events: none;
+      }
+      .holo-cartridge::after {
+        content: '';
+        position: absolute;
+        bottom: 4px; right: 4px;
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(176,38,255,0.8) 0%, rgba(176,38,255,0.25) 60%, transparent 100%);
+        box-shadow: 0 0 4px rgba(176,38,255,0.6);
+        z-index: 6;
+        pointer-events: none;
+      }
+      .holo-cartridge-wrap:hover .holo-cartridge {
+        transform: translateZ(20px) translateY(-3px);
+        box-shadow:
+          inset 0 0 0 1px rgba(0,212,255,0.5),
+          inset 0 0 28px rgba(0,212,255,0.25),
+          inset 0 0 60px rgba(0,212,255,0.1),
+          0 0 25px rgba(0,212,255,0.6),
+          0 0 50px rgba(0,212,255,0.3),
+          0 0 80px rgba(176,38,255,0.2),
+          0 8px 22px rgba(0,0,0,0.7);
+      }
+
+      /* Cover area */
+      /* 封面区 - 玻璃冷冻舱内壳 */
+      .holo-cartridge-cover {
+        position: relative;
+        height: 130px;
+        overflow: hidden;
+        /* 内部玻璃发光：模拟冷冻舱内的霓虹光 */
+        box-shadow:
+          inset 0 0 25px rgba(0,212,255,0.25),
+          inset 0 -10px 20px rgba(0,0,0,0.5);
+      }
+      /* 玻璃顶部高光条 */
+      .holo-cartridge-cover::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.9), transparent);
+        box-shadow: 0 0 8px rgba(0,212,255,0.7);
+        z-index: 4;
+        pointer-events: none;
+      }
+      .holo-cartridge-wrap.span-2 .holo-cartridge-cover {
+        height: 160px;
+      }
+      .holo-cartridge-cover img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+      .holo-cartridge-wrap:hover .holo-cartridge-cover img {
+        transform: scale(1.05);
+      }
+
+      /* Scanlines */
+      .holo-scanlines {
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(0deg,
+          transparent, transparent 2px,
+          rgba(0,255,255,0.04) 2px, rgba(0,255,255,0.04) 4px);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Scanline sweep on hover */
+      .holo-cartridge-cover::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 50px;
+        background: linear-gradient(180deg,
+          rgba(0,255,255,0.15) 0%,
+          rgba(0,255,255,0.05) 50%,
+          transparent 100%);
+        transform: translateY(-100%);
+        transition: transform 0.6s ease;
+        pointer-events: none;
+        z-index: 3;
+      }
+      .holo-cartridge-wrap:hover .holo-cartridge-cover::before {
+        transform: translateY(260%);
+      }
+
+      /* Crosshair */
+      .holo-crosshair {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .holo-crosshair::before,
+      .holo-crosshair::after {
+        content: '';
+        position: absolute;
+        background: var(--holo-crosshair-color);
+      }
+      .holo-crosshair::before {
+        top: 50%; left: 30%; right: 30%;
+        height: 1px;
+      }
+      .holo-crosshair::after {
+        left: 50%; top: 30%; bottom: 30%;
+        width: 1px;
+      }
+
+      /* LIVE_HOTZONE */
+      .holo-hotzone {
+        position: absolute;
+        top: 8px; left: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-pink);
+        background: rgba(10, 5, 20, 0.75);
+        padding: 2px 6px;
+        border: 1px solid var(--holo-border-pink);
+        z-index: 4;
+        letter-spacing: 0.5px;
+      }
+      .holo-hotzone-dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: var(--holo-pink);
+        box-shadow: 0 0 8px var(--holo-pink-glow);
+        animation: holo-hotzone-pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes holo-hotzone-pulse {
+        0%,100% {
+          opacity:1;
+          box-shadow: 0 0 8px var(--holo-pink-glow), 0 0 16px var(--holo-pink-glow);
+          transform: scale(1);
+        }
+        50% {
+          opacity:0.5;
+          box-shadow: 0 0 3px var(--holo-pink-glow);
+          transform: scale(0.7);
+        }
+      }
+
+      /* Genre tag */
+      .holo-genre-tag {
+        position: absolute;
+        bottom: 8px; right: 8px;
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-cyan);
+        background: rgba(10, 5, 20, 0.8);
+        padding: 2px 7px;
+        border: 1px solid var(--holo-cyan-dim);
+        z-index: 4;
+        letter-spacing: 1px;
+        text-shadow: 0 0 4px var(--holo-cyan-glow);
+      }
+
+      /* Play button overlay */
+      .holo-play-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        background: rgba(10, 5, 20, 0.45);
+      }
+      .holo-cartridge-wrap:hover .holo-play-overlay {
+        opacity: 1;
+      }
+      .holo-play-btn {
+        width: 44px; height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--holo-cyan);
+        border-radius: 50%;
+        background: rgba(0, 212, 255, 0.1);
+        box-shadow: 0 0 20px var(--holo-cyan-glow), inset 0 0 12px rgba(0, 212, 255, 0.2);
+        animation: holo-play-glow 1.5s ease-in-out infinite;
+      }
+      @keyframes holo-play-glow {
+        0%,100% { box-shadow: 0 0 20px var(--holo-cyan-glow), inset 0 0 12px rgba(0, 212, 255, 0.2); }
+        50% { box-shadow: 0 0 30px var(--holo-cyan-glow-strong), inset 0 0 20px rgba(0, 212, 255, 0.3); }
+      }
+      .holo-play-triangle {
+        width: 0; height: 0;
+        border-style: solid;
+        border-width: 7px 0 7px 12px;
+        border-color: transparent transparent transparent var(--holo-cyan-bright);
+        margin-left: 3px;
+        filter: drop-shadow(0 0 4px var(--holo-cyan-glow-strong));
+      }
+      .holo-play-label {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-cyan);
+        text-shadow: 0 0 6px var(--holo-cyan-glow);
+        letter-spacing: 1px;
+      }
+
+      /* Info area */
+      .holo-cartridge-info {
+        padding: 7px 9px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 1;
+      }
+      .holo-game-title {
+        font-family: var(--holo-font-display);
+        font-size: 10px;
+        color: var(--holo-text-bright);
+        letter-spacing: 0.3px;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+      .holo-cartridge-wrap.span-2 .holo-game-title {
+        font-size: 15px;
+        letter-spacing: 1px;
+      }
+      .holo-creator {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .holo-crown {
+        width: 9px; height: 9px;
+        flex-shrink: 0;
+      }
+      .holo-creator-id {
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-purple);
+      }
+
+      /* SYNC_RATE bar */
+      .holo-sync-rate {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 1px;
+      }
+      .holo-sync-label {
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-text-secondary);
+      }
+      .holo-sync-pct {
+        color: var(--holo-cyan);
+        font-weight: 700;
+      }
+      .holo-sync-bar {
+        height: 5px;
+        background: var(--holo-bg-surface);
+        border-radius: 1px;
+        overflow: hidden;
+        position: relative;
+      }
+      .holo-sync-fill {
+        height: 100%;
+        background: var(--holo-cyan);
+        box-shadow: 0 0 4px var(--holo-cyan-glow);
+        background-image: repeating-linear-gradient(90deg,
+          var(--holo-cyan) 0px, var(--holo-cyan) 7px,
+          rgba(10,5,20,0.6) 7px, rgba(10,5,20,0.6) 9px);
+      }
+
+      /* Footer */
+      .holo-cartridge-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2px;
+      }
+      .holo-price {
+        font-family: var(--holo-font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--holo-amber);
+        text-shadow: 0 0 4px var(--holo-amber-glow);
+      }
+      .holo-cartridge-wrap.span-2 .holo-price {
+        font-size: 13px;
+      }
+      .holo-players {
+        font-family: var(--holo-font-mono);
+        font-size: 8px;
+        color: var(--holo-text-muted);
+      }
+
+      /* Barcode */
+      .holo-barcode {
+        height: 10px;
+        margin-top: 3px;
+        background: repeating-linear-gradient(90deg,
+          var(--holo-text-secondary) 0px, var(--holo-text-secondary) 1px,
+          transparent 1px, transparent 3px,
+          var(--holo-text-secondary) 3px, var(--holo-text-secondary) 5px,
+          transparent 5px, transparent 6px,
+          var(--holo-text-secondary) 6px, var(--holo-text-secondary) 7px,
+          transparent 7px, transparent 10px
+        );
+        opacity: 0.2;
+      }
+
+      /* ===== RIGHT SIDEBAR ===== */
+      .holo-sidebar-right {
+        width: 250px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        padding: 14px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .holo-sidebar-right::-webkit-scrollbar { width:4px; }
+      .holo-sidebar-right::-webkit-scrollbar-track { background:transparent; }
+      .holo-sidebar-right::-webkit-scrollbar-thumb { background:var(--holo-cyan-dim); border-radius:2px; }
+
+      .holo-panel { display:flex; flex-direction:column; gap:8px; }
+      .holo-panel-title {
+        font-family: var(--holo-font-header);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--holo-cyan);
+        padding-bottom: 3px;
+        border-bottom: 1px solid var(--holo-border-cyan);
+      }
+
+      /* Library Gauge */
+      .holo-gauge-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .holo-gauge {
+        width: 92px; height: 92px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--holo-green) 0deg 86.4deg,
+          var(--holo-text-muted) 86.4deg 302.4deg,
+          var(--holo-cyan) 302.4deg 360deg
+        );
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .holo-gauge::after {
+        content: '';
+        position: absolute;
+        inset: 7px;
+        border-radius: 50%;
+        background: var(--holo-bg-deep);
+        border: 1px solid var(--holo-border-cyan);
+      }
+      .holo-gauge-center {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+      .holo-gauge-number {
+        font-family: var(--holo-font-mono);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--holo-text-bright);
+        line-height: 1;
+      }
+      .holo-gauge-label {
+        font-family: var(--holo-font-mono);
+        font-size: 7px;
+        color: var(--holo-text-muted);
+        letter-spacing: 1px;
+        margin-top: 2px;
+      }
+      .holo-gauge-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        width: 100%;
+      }
+      .holo-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+      }
+      .holo-legend-dot {
+        width: 7px; height: 7px;
+        border-radius: 1px;
+        flex-shrink: 0;
+      }
+      .holo-legend-text {
+        color: var(--holo-text-secondary);
+        flex: 1;
+      }
+      .holo-legend-value {
+        color: var(--holo-text-primary);
+        font-weight: 700;
+      }
+
+      /* Community Activity */
+      .holo-community-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .holo-community-label {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-text-muted);
+      }
+      .holo-community-value {
+        font-family: var(--holo-font-mono);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--holo-text-bright);
+      }
+      .holo-community-change {
+        font-family: var(--holo-font-mono);
+        font-size: 10px;
+        color: var(--holo-green);
+        text-shadow: 0 0 4px var(--holo-green-glow);
+      }
+      .holo-sparkline {
+        width: 100%;
+        height: 36px;
+      }
+
+      /* Top Played */
+      .holo-top-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .holo-top-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--holo-border-faint);
+        transition: background 0.2s ease;
+      }
+      .holo-top-item:hover {
+        background: rgba(0,212,255,0.05);
+      }
+      /* 方形游戏缩略图 - 青色滤镜 + 1px 发光边框 */
+      .holo-top-thumb {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0,212,255,0.5);
+        box-shadow:
+          0 0 6px rgba(0,212,255,0.4),
+          inset 0 0 8px rgba(0,212,255,0.15);
+        clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+        background: var(--holo-bg-surface);
+      }
+      .holo-top-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* 青色滤镜 (Cyan Duotone) */
+        filter: grayscale(0.6) sepia(0.5) hue-rotate(150deg) saturate(2.5) brightness(0.95);
+        /* 叠加 20% 蓝色半透明遮罩 */
+        -webkit-mask-image: linear-gradient(0deg, rgba(0,212,255,0.2), rgba(0,212,255,0.2)),
+                            linear-gradient(#000, #000);
+        -webkit-mask-composite: source-in;
+        mix-blend-mode: screen;
+      }
+      /* 蓝色半透明遮罩层 */
+      .holo-top-thumb::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 140, 255, 0.2);
+        pointer-events: none;
+      }
+      .holo-top-rank {
+        font-family: var(--holo-font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--holo-cyan);
+        width: 20px;
+        text-shadow: 0 0 4px var(--holo-cyan-glow);
+      }
+      .holo-top-name {
+        font-family: var(--holo-font-mono);
+        font-size: 10px;
+        color: var(--holo-text-bright);
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.3px;
+      }
+      .holo-top-plays {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-cyan-soft);
+      }
+
+      /* Quick Actions */
+      .holo-quick-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+      }
+      .holo-quick-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 9px 4px;
+        background: rgba(0, 212, 255, 0.04);
+        border: 1px solid var(--holo-border-cyan);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      }
+      .holo-quick-btn:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: var(--holo-cyan);
+        box-shadow: 0 0 10px var(--holo-cyan-dim);
+      }
+      .holo-quick-icon {
+        color: var(--holo-cyan);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .holo-quick-icon svg { width:16px; height:16px; }
+      .holo-quick-label {
+        font-family: var(--holo-font-mono);
+        font-size: 7px;
+        color: var(--holo-text-secondary);
+        letter-spacing: 0.5px;
+        text-align: center;
+      }
+
+      /* ===== BOTTOM BAR ===== */
+      .holo-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 20px;
+        height: 30px;
+        flex-shrink: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        position: relative;
+        z-index: 50;
+      }
+      .holo-bottom-left {
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-text-muted);
+        white-space: nowrap;
+      }
+      .holo-bottom-center {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .holo-bottom-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--holo-font-mono);
+        font-size: 9px;
+        color: var(--holo-text-secondary);
+      }
+      .holo-queue-bar {
+        width: 70px;
+        height: 5px;
+        background: var(--holo-bg-surface);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .holo-queue-fill {
+        height: 100%;
+        width: 33%;
+        background: var(--holo-cyan);
+        box-shadow: 0 0 4px var(--holo-cyan-glow);
+        border-radius: 3px;
+      }
+      .holo-bottom-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .holo-clock {
+        font-family: var(--holo-font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--holo-cyan);
+        text-shadow: 0 0 6px var(--holo-cyan-glow);
+      }
+    </style>
+</head>
+<body class="h-screen overflow-hidden font-sans antialiased">
+    <main data-viewport-mode="app-shell">
+      <!-- Matrix Rain Canvas -->
+      <canvas id="matrix-canvas"></canvas>
+
+      <!-- App Shell -->
+      <div class="holo-app" data-viewport-mode="app-shell">
+
+        <!-- ========== HEADER ========== -->
+        <header class="holo-header holo-glass">
+          <!-- Left: Logo + Status -->
+          <div class="holo-header-left">
+            <button class="holo-back-btn" data-action="go-home" title="返回主界面" aria-label="返回主界面">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              <span>返回</span>
+            </button>
+            <div class="holo-logo" data-action="go-home" style="cursor:pointer">
+              <span class="holo-logo-v">V</span>
+            </div>
+            <div class="holo-logo-text">
+              <span class="holo-os-name">J.A.R.V.I.S</span>
+              <span class="holo-os-version">系统 v.37.2</span>
+            </div>
+            <div class="holo-status-group">
+              <div class="holo-status-item">
+                <span class="holo-status-dot"></span>
+                <span class="holo-status-label">系统:在线</span>
+              </div>
+              <div class="holo-status-item">
+                <span class="holo-status-dot"></span>
+                <span class="holo-status-label">网络:稳定</span>
+              </div>
+              <div class="holo-status-item">
+                <span class="holo-status-dot"></span>
+                <span class="holo-status-label">界面:就绪</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center: Terminal Search -->
+          <div class="holo-header-center">
+            <div class="holo-search-wrap">
+              <span class="holo-search-prompt">&gt;</span>
+              <input type="text" class="holo-search-input" placeholder="建立连接_请输入你想探索的宇宙参数..." />
+              <span class="holo-search-cursor">█</span>
+            </div>
+          </div>
+
+          <!-- Right: User Profile -->
+          <div class="holo-header-right">
+            <div class="holo-profile-info">
+              <div class="holo-profile-name">指挥官_07</div>
+              <div class="holo-profile-meta">
+                <span class="holo-lvl-badge">等级 42</span>
+                <div class="holo-xp-bar">
+                  <div class="holo-xp-fill"></div>
+                  <span class="holo-xp-text">16560/25000</span>
+                </div>
+              </div>
+            </div>
+            <div class="holo-avatar" data-action="go-profile" style="cursor:pointer" title="个人中心">
+              <img src="/assets/agents/image_0_yi19x4.jpg" alt="指挥官" />
+            </div>
+            <div class="holo-resource-core" data-action="go-pricing" style="cursor:pointer" title="算力核心 · 充值中心">
+              <div class="holo-core-crystal">
+                <span class="holo-core-orbit"></span>
+              </div>
+              <div class="holo-core-numbers">
+                <span class="holo-core-label">算力核心</span>
+                <div class="holo-core-value">
+                  <span class="holo-core-number">84,250</span>
+                  <span class="holo-core-delta">↑+1.2%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ========== NAV TABS ========== -->
+        <nav class="holo-nav holo-glass">
+          <div class="holo-nav-tabs">
+            <span class="holo-nav-tab active">全部游戏</span>
+            <span class="holo-nav-tab">精选推荐</span>
+            <span class="holo-nav-tab">热门流行</span>
+            <span class="holo-nav-tab">最新发布</span>
+            <span class="holo-nav-tab">最高评分</span>
+            <span class="holo-nav-tab">社区精选</span>
+          </div>
+          <div class="holo-nav-toggle">
+            <button class="holo-toggle-btn active" title="网格视图">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="holo-toggle-btn" title="列表视图">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+        </nav>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="holo-main">
+
+          <!-- ===== LEFT SIDEBAR ===== -->
+          <aside class="holo-sidebar-left holo-glass">
+            <!-- GENRE -->
+            <div class="holo-filter-section">
+              <h3 class="holo-filter-title">游戏类型</h3>
+              <ul class="holo-filter-list">
+                <li class="holo-filter-item selected"><span class="holo-filter-lock">[+]</span><span>全类型</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>角色扮演</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>策略</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>射击</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>冒险</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>模拟</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>解谜</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>竞速</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>恐怖</span></li>
+              </ul>
+            </div>
+
+            <!-- THEME -->
+            <div class="holo-filter-section">
+              <h3 class="holo-filter-title">题材</h3>
+              <ul class="holo-filter-list">
+                <li class="holo-filter-item selected"><span class="holo-filter-lock">[+]</span><span>全题材</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>赛博朋克</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>奇幻</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>太空</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>末日废土</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>历史</span></li>
+                <li class="holo-filter-item"><span class="holo-filter-lock">[ ]</span><span>蒸汽朋克</span></li>
+              </ul>
+            </div>
+
+            <!-- Collapsed Dropdowns -->
+            <div class="holo-filter-section">
+              <div class="holo-filter-dropdown">
+                <span class="holo-dropdown-label">难度</span>
+                <span class="holo-dropdown-value">全部</span>
+                <span class="holo-dropdown-arrow">▼</span>
+              </div>
+              <div class="holo-filter-dropdown">
+                <span class="holo-dropdown-label">游玩模式</span>
+                <span class="holo-dropdown-value">全部</span>
+                <span class="holo-dropdown-arrow">▼</span>
+              </div>
+              <div class="holo-filter-dropdown">
+                <span class="holo-dropdown-label">排序</span>
+                <span class="holo-dropdown-value">评分</span>
+                <span class="holo-dropdown-arrow">▼</span>
+              </div>
+            </div>
+
+            <!-- 应用筛选 -->
+            <button class="holo-apply-btn">应用筛选</button>
+          </aside>
+
+          <!-- ===== CENTER CONTENT ===== -->
+          <div class="holo-center overflow-y-auto" data-scroll-region="primary">
+
+            <!-- HERO CAROUSEL -->
+            <section class="holo-hero">
+              <div class="holo-hero-slides">
+                <!-- Slide 1: NEON REBELLION -->
+                <div class="holo-hero-slide active">
+                  <div class="holo-hero-left">
+                    <span class="holo-hero-label">本周顶级宇宙</span>
+                    <h2 class="holo-hero-title">霓虹反叛</h2>
+                    <p class="holo-hero-flavor">在霓虹浸透的新东京2099地下世界，反抗的火种被点燃。企业掌控着电网，而街道掌握着代码。</p>
+                    <button class="holo-hero-btn">[ 启动模拟 ]</button>
+                  </div>
+                  <div class="holo-hero-right">
+                    <img src="/assets/agents/image_1_yi19x4.jpg" alt="霓虹反叛" />
+                    <div class="holo-hero-overlay">
+                      <span class="holo-hero-timecode">00:01:42:08</span>
+                      <span class="holo-hero-nodes">[在线: 4,021 节点]</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Slide 2: EXODUS PRIME -->
+                <div class="holo-hero-slide">
+                  <div class="holo-hero-left">
+                    <span class="holo-hero-label">本周顶级宇宙</span>
+                    <h2 class="holo-hero-title">远征 Prime</h2>
+                    <p class="holo-hero-flavor">当地球最后的太阳熄灭，远征舰队驶入虚空。四千艘舰船，一千两百万灵魂，一个绝望的边疆。</p>
+                    <button class="holo-hero-btn">[ 启动模拟 ]</button>
+                  </div>
+                  <div class="holo-hero-right">
+                    <img src="/assets/agents/image_2_yi19x4.jpg" alt="远征 Prime" />
+                    <div class="holo-hero-overlay">
+                      <span class="holo-hero-timecode">00:02:15:33</span>
+                      <span class="holo-hero-nodes">[在线: 4,021 节点]</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Slide 3: SHADOW PROTOCOL -->
+                <div class="holo-hero-slide">
+                  <div class="holo-hero-left">
+                    <span class="holo-hero-label">本周顶级宇宙</span>
+                    <h2 class="holo-hero-title">暗影协议</h2>
+                    <p class="holo-hero-flavor">幽灵不留足迹。在情报机构之间的暗战中，最优秀的特工是从未存在过的人。</p>
+                    <button class="holo-hero-btn">[ 启动模拟 ]</button>
+                  </div>
+                  <div class="holo-hero-right">
+                    <img src="/assets/agents/image_3_yi19x4.jpg" alt="暗影协议" />
+                    <div class="holo-hero-overlay">
+                      <span class="holo-hero-timecode">00:00:58:21</span>
+                      <span class="holo-hero-nodes">[在线: 4,021 节点]</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="holo-hero-dots">
+                <span class="holo-hero-dot active" data-slide="0"></span>
+                <span class="holo-hero-dot" data-slide="1"></span>
+                <span class="holo-hero-dot" data-slide="2"></span>
+              </div>
+            </section>
+
+            <!-- CARTRIDGE GRID -->
+            <section class="holo-grid">
+
+              <!-- Card 1: NEON REBELLION (span 2, LIVE_HOTZONE) -->
+              <div class="holo-cartridge-wrap span-2">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_4_yi19x4.jpg" alt="霓虹反叛" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-hotzone"><span class="holo-hotzone-dot"></span>实时热区_</div>
+                    <div class="holo-genre-tag">角色扮演</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">霓虹反叛</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">96%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:96%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,455</span>
+                      <span class="holo-players">14.28万 在线</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: SHADOW PROTOCOL -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_5_yi19x4.jpg" alt="暗影协议" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">潜行</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">暗影协议</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">94%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:94%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,290</span>
+                      <span class="holo-players">8.92万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: CELESTIAL FRONTIER -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_6_yi19x4.jpg" alt="星辰边疆" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">模拟</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">星辰边疆</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">92%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:92%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,750</span>
+                      <span class="holo-players">6.75万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: EXODUS PRIME (span 2, LIVE_HOTZONE) -->
+              <div class="holo-cartridge-wrap span-2">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_7_yi19x4.jpg" alt="远征 Prime" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-hotzone"><span class="holo-hotzone-dot"></span>实时热区_</div>
+                    <div class="holo-genre-tag">策略</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">远征 Prime</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">98%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:98%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,800</span>
+                      <span class="holo-players">15.63万 在线</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 5: MECH WARRIORS (LIVE_HOTZONE) -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_8_yi19x4.jpg" alt="机甲战士" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-hotzone"><span class="holo-hotzone-dot"></span>实时热区_</div>
+                    <div class="holo-genre-tag">动作</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">机甲战士</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">98%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:98%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,200</span>
+                      <span class="holo-players">20.31万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 6: DYSTOPIA: 2099 -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_9_yi19x4.jpg" alt="反乌托邦 2099" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">冒险</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">反乌托邦: 2099</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">82%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:82%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,158</span>
+                      <span class="holo-players">4.56万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 7: QUANTUM HEIST -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_10_yi19x4.jpg" alt="量子劫案" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">射击</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">量子劫案</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">92%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:92%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥2,800</span>
+                      <span class="holo-players">7.89万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 8: ANCIENT DYNASTY -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_11_yi19x4.jpg" alt="古老王朝" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">策略</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">古老王朝</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">90%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:90%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥1,600</span>
+                      <span class="holo-players">3.42万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 9: VOID EXPLORER -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_12_yi19x4.jpg" alt="虚空探索者" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-genre-tag">探索</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">虚空探索者</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">86%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:86%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥3,400</span>
+                      <span class="holo-players">5.27万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 10: SYNTHETIC NIGHTMARE (LIVE_HOTZONE) -->
+              <div class="holo-cartridge-wrap">
+                <div class="holo-cartridge">
+                  <div class="holo-cartridge-cover">
+                    <img src="/assets/agents/image_13_yi19x4.jpg" alt="合成梦魇" />
+                    <div class="holo-scanlines"></div>
+                    <div class="holo-crosshair"></div>
+                    <div class="holo-hotzone"><span class="holo-hotzone-dot"></span>实时热区_</div>
+                    <div class="holo-genre-tag">恐怖</div>
+                    <div class="holo-play-overlay">
+                      <div class="holo-play-btn"><div class="holo-play-triangle"></div></div>
+                      <span class="holo-play-label">[ 启动模拟 ]</span>
+                    </div>
+                  </div>
+                  <div class="holo-cartridge-info">
+                    <h3 class="holo-game-title">合成梦魇</h3>
+                    <div class="holo-creator">
+                      <svg class="holo-crown" viewBox="0 0 24 24" fill="#ffaa00" stroke="#00d4ff" stroke-width="1"><path d="M3 18L5 8L9 12L12 6L15 12L19 8L21 18H3Z"/></svg>
+                      <span class="holo-creator-id">@Math_Oracle</span>
+                    </div>
+                    <div class="holo-sync-rate">
+                      <span class="holo-sync-label">同步率: <span class="holo-sync-pct">96%</span></span>
+                      <div class="holo-sync-bar"><div class="holo-sync-fill" style="width:96%"></div></div>
+                    </div>
+                    <div class="holo-cartridge-footer">
+                      <span class="holo-price">¥1,850</span>
+                      <span class="holo-players">9.84万</span>
+                    </div>
+                    <div class="holo-barcode"></div>
+                  </div>
+                </div>
+              </div>
+
+            </section>
+          </div>
+
+          <!-- ===== RIGHT SIDEBAR ===== -->
+          <aside class="holo-sidebar-right holo-glass">
+
+            <!-- 资料库状态 -->
+            <div class="holo-panel">
+              <h3 class="holo-panel-title">资料库状态</h3>
+              <div class="holo-gauge-wrap">
+                <div class="holo-gauge">
+                  <div class="holo-gauge-center">
+                    <div class="holo-gauge-number">1,248</div>
+                    <div class="holo-gauge-label">已拥有游戏</div>
+                  </div>
+                </div>
+                <div class="holo-gauge-legend">
+                  <div class="holo-legend-item">
+                    <span class="holo-legend-dot" style="background:var(--holo-green);box-shadow:0 0 4px var(--holo-green-glow);"></span>
+                    <span class="holo-legend-text">已安装</span>
+                    <span class="holo-legend-value">24%</span>
+                  </div>
+                  <div class="holo-legend-item">
+                    <span class="holo-legend-dot" style="background:var(--holo-text-muted);"></span>
+                    <span class="holo-legend-text">NOT 已安装</span>
+                    <span class="holo-legend-value">60%</span>
+                  </div>
+                  <div class="holo-legend-item">
+                    <span class="holo-legend-dot" style="background:var(--holo-cyan);box-shadow:0 0 4px var(--holo-cyan-glow);"></span>
+                    <span class="holo-legend-text">可更新</span>
+                    <span class="holo-legend-value">16%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 社区活跃度 -->
+            <div class="holo-panel">
+              <h3 class="holo-panel-title">社区活跃度</h3>
+              <div class="holo-community-row">
+                <span class="holo-community-label">24小时玩家数</span>
+                <span class="holo-community-change">+12.4%</span>
+              </div>
+              <span class="holo-community-value">128,547</span>
+              <svg class="holo-sparkline" viewBox="0 0 200 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(0,212,255,0.3)"/>
+                    <stop offset="100%" stop-color="rgba(0,212,255,0)"/>
+                  </linearGradient>
+                </defs>
+                <polygon fill="url(#spark-grad)" points="0,35 15,30 30,28 45,22 60,25 75,18 90,20 105,14 120,16 135,10 150,12 165,8 180,6 200,4 200,40 0,40"/>
+                <polyline fill="none" stroke="#00d4ff" stroke-width="1.5" points="0,35 15,30 30,28 45,22 60,25 75,18 90,20 105,14 120,16 135,10 150,12 165,8 180,6 200,4" style="filter:drop-shadow(0 0 3px rgba(0,212,255,0.6))"/>
+              </svg>
+            </div>
+
+            <!-- 热门游玩 -->
+            <div class="holo-panel">
+              <h3 class="holo-panel-title">热门游玩</h3>
+              <ul class="holo-top-list">
+                                <li class="holo-top-item">
+                  <span class="holo-top-thumb"><img src="/assets/agents/image_4_yi19x4.jpg" alt="霓虹反叛" /></span>
+                  <span class="holo-top-rank">01</span>
+                  <span class="holo-top-name">霓虹反叛</span>
+                  <span class="holo-top-plays">14.28万</span>
+                </li>
+                                <li class="holo-top-item">
+                  <span class="holo-top-thumb"><img src="/assets/agents/image_6_yi19x4.jpg" alt="星辰边疆" /></span>
+                  <span class="holo-top-rank">02</span>
+                  <span class="holo-top-name">星辰边疆</span>
+                  <span class="holo-top-plays">6.75万</span>
+                </li>
+                                <li class="holo-top-item">
+                  <span class="holo-top-thumb"><img src="/assets/agents/image_5_yi19x4.jpg" alt="暗影协议" /></span>
+                  <span class="holo-top-rank">03</span>
+                  <span class="holo-top-name">暗影协议</span>
+                  <span class="holo-top-plays">8.92万</span>
+                </li>
+                                <li class="holo-top-item">
+                  <span class="holo-top-thumb"><img src="/assets/agents/image_7_yi19x4.jpg" alt="远征 Prime" /></span>
+                  <span class="holo-top-rank">04</span>
+                  <span class="holo-top-name">远征 Prime</span>
+                  <span class="holo-top-plays">15.63万</span>
+                </li>
+                                <li class="holo-top-item">
+                  <span class="holo-top-thumb"><img src="/assets/agents/image_10_yi19x4.jpg" alt="量子劫案" /></span>
+                  <span class="holo-top-rank">05</span>
+                  <span class="holo-top-name">量子劫案</span>
+                  <span class="holo-top-plays">7.89万</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 快捷操作 -->
+            <div class="holo-panel">
+              <h3 class="holo-panel-title">快捷操作</h3>
+              <div class="holo-quick-grid">
+                <button class="holo-quick-btn">
+                  <span class="holo-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+                  <span class="holo-quick-label">扫描游戏</span>
+                </button>
+                <button class="holo-quick-btn">
+                  <span class="holo-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2zm0 0l9 6 9-6"/></svg></span>
+                  <span class="holo-quick-label">兑换码</span>
+                </button>
+                <button class="holo-quick-btn">
+                  <span class="holo-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                  <span class="holo-quick-label">社区中心</span>
+                </button>
+                <button class="holo-quick-btn">
+                  <span class="holo-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+                  <span class="holo-quick-label">系统设置</span>
+                </button>
+              </div>
+            </div>
+
+          </aside>
+        </div>
+
+        <!-- ========== BOTTOM BAR ========== -->
+        <footer class="holo-bottom holo-glass">
+          <div class="holo-bottom-left">
+            系统:64% // 协议初始化 23:45:13 // 游戏资料库访问已授权
+          </div>
+          <div class="holo-bottom-center">
+            <div class="holo-bottom-item">
+              <span>活跃任务:</span>
+              <span style="color:var(--holo-cyan);font-weight:700;">3</span>
+            </div>
+            <div class="holo-bottom-item">
+              <span>下载队列:</span>
+              <div class="holo-queue-bar"><div class="holo-queue-fill"></div></div>
+              <span style="color:var(--holo-cyan);">33%</span>
+            </div>
+          </div>
+          <div class="holo-bottom-right">
+            <div class="holo-bottom-item">
+              <span style="color:var(--holo-green);">网络: 稳定</span>
+              <span style="color:var(--holo-text-muted);">12ms</span>
+            </div>
+            <span class="holo-clock" id="holo-clock">--:--:-- UTC+0</span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+      // ===== MATRIX RAIN =====
+      (function() {
+        var canvas = document.getElementById('matrix-canvas');
+        var ctx = canvas.getContext('2d');
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        var chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜ0123456789ABCDEF';
+        var fontSize = 14;
+        var columns = Math.floor(canvas.width / fontSize);
+        var drops = [];
+        for (var i = 0; i < columns; i++) drops[i] = Math.random() * canvas.height / fontSize;
+        function draw() {
+          ctx.fillStyle = 'rgba(10, 5, 20, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#00d4ff';
+          ctx.font = fontSize + 'px monospace';
+          for (var i = 0; i < drops.length; i++) {
+            var text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+        setInterval(draw, 50);
+      })();
+
+      // ===== LIVE CLOCK =====
+      (function() {
+        var clockEl = document.getElementById('holo-clock');
+        function updateClock() {
+          var now = new Date();
+          var h = String(now.getUTCHours()).padStart(2, '0');
+          var m = String(now.getUTCMinutes()).padStart(2, '0');
+          var s = String(now.getUTCSeconds()).padStart(2, '0');
+          if (clockEl) clockEl.textContent = h + ':' + m + ':' + s + ' UTC+0';
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+      })();
+
+      // ===== HERO CAROUSEL =====
+      (function() {
+        var slides = document.querySelectorAll('.holo-hero-slide');
+        var dots = document.querySelectorAll('.holo-hero-dot');
+        var current = 0;
+        function showSlide(n) {
+          slides.forEach(function(s) { s.classList.remove('active'); });
+          dots.forEach(function(d) { d.classList.remove('active'); });
+          current = (n + slides.length) % slides.length;
+          if (slides[current]) slides[current].classList.add('active');
+          if (dots[current]) dots[current].classList.add('active');
+        }
+        dots.forEach(function(dot, i) {
+          dot.addEventListener('click', function() { showSlide(i); });
+        });
+        setInterval(function() { showSlide(current + 1); }, 5000);
+      })();
+    </script>
+    <script>
+      // ===== 导航点击事件（通过 postMessage 通知父页面）=====
+      (function() {
+        function navigate(target) {
+          window.parent.postMessage({ type: 'gpz-navigate', target: target }, '*');
+        }
+        document.addEventListener('click', function(e) {
+          var el = e.target.closest('[data-action]');
+          if (!el) return;
+          var action = el.getAttribute('data-action');
+          if (action === 'go-home') navigate('landing');
+          else if (action === 'go-profile') navigate('profile');
+          else if (action === 'go-pricing') navigate('pricing');
+        });
+      })();
+    </script>
+</body>
+</html>

@@ -220,7 +220,7 @@ function WorkflowLayout() {
 }
 
 function ShellInner() {
-  const { state, goStep } = useApp()
+  const { state, goStep, dispatch } = useApp()
 
   // Hash 路由：支持 #starvoyager 直接访问星海漫游者工作台
   useEffect(() => {
@@ -234,6 +234,9 @@ function ShellInner() {
         goStep(STEPS.BLOG)
       } else if (hash === 'profile') {
         goStep(STEPS.PROFILE)
+      } else if (hash === 'upload') {
+        // 直接进入上传页面，跳过学段守卫
+        dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
       }
     }
     handleHash()
