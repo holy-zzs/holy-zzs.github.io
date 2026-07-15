@@ -37,7 +37,7 @@ function buildCategories() {
     if (a.category && !seen.has(a.category)) {
       seen.add(a.category)
       const cat = AGENT_CATEGORIES[a.category]
-      list.push({ id: a.category, name: cat?.name || a.category, emoji: cat?.icon || '🔧' })
+      list.push({ id: a.category, name: cat?.name || a.category, emoji: cat?.icon || '🔧', iconImg: cat?.iconImg || null })
     }
   })
   return list
@@ -204,7 +204,9 @@ export default function AgentMarketPage() {
                       class=${`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left
                         ${catFilter === c.id ? 'bg-primary-800 text-white font-medium' : 'text-gray-600 hover:bg-white hover:text-primary-700'}`}
                       onClick=${() => setCatFilter(c.id)}>
-                      <span>${c.emoji}</span><span>${c.name}</span>
+                      ${c.iconImg
+                        ? html`<img src=${c.iconImg} alt=${c.name} class="w-6 h-6 rounded-md object-cover flex-shrink-0" />`
+                        : html`<span>${c.emoji}</span>`}<span>${c.name}</span>
                     </button>
                   `)}
                 </div>
@@ -274,7 +276,10 @@ export default function AgentMarketPage() {
                           <div class="min-w-0">
                             <h3 class="font-bold text-gray-800 text-sm leading-tight truncate">${agent.name}</h3>
                             <div class="flex items-center gap-1">
-                              <span class="text-[10px] text-secondary-600 bg-secondary-50 px-1.5 py-0.5 rounded">${agent.category || '综合'}</span>
+                              ${(() => { const cat = AGENT_CATEGORIES[agent.category]; return cat?.iconImg
+                                ? html`<img src=${cat.iconImg} alt=${cat.name} class="w-4 h-4 rounded-sm object-cover" />`
+                                : null })()}
+                              <span class="text-[10px] text-secondary-600 bg-secondary-50 px-1.5 py-0.5 rounded">${AGENT_CATEGORIES[agent.category]?.shortName || agent.category || '综合'}</span>
                               <span class=${`text-[10px] px-1.5 py-0.5 rounded ${GRADE_BADGE_COLORS[agent.grade] || GRADE_BADGE_COLORS.universal}`}>${GRADE_NAMES[agent.grade] || '通用'}</span>
                             </div>
                           </div>

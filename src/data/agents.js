@@ -5,14 +5,14 @@
 
 // ==================== 部门定义（AI Game Studio） ====================
 export const AGENT_CATEGORIES = {
-  ai_director:        { key: 'ai_director',        name: 'AI制作导演',     shortName: '导演', icon: '🎬', color: '#fbbf24', gradient: 'from-amber-400 to-orange-500', desc: '统筹全局、组建团队、分配任务、监督生成、验收作品' },
-  knowledge_extractor: { key: 'knowledge_extractor', name: '教材研究部',     shortName: '教研', icon: '📚', color: '#2563eb', gradient: 'from-blue-500 to-cyan-600',   desc: '教材解析、知识拆解、课程目标、考点分析' },
-  game_designer:       { key: 'game_designer',       name: '游戏策划部',     shortName: '策划', icon: '🎮', color: '#f97316', gradient: 'from-orange-500 to-amber-500', desc: '玩法设计、关卡设计、数值设计、交互设计' },
-  visual_designer:     { key: 'visual_designer',     name: '美术部',         shortName: '美术', icon: '🎨', color: '#ec4899', gradient: 'from-pink-500 to-rose-500',    desc: '美术风格、UI设计、角色生成、场景生成、动画' },
-  learning_evaluator:  { key: 'learning_evaluator',  name: '学习科学部',     shortName: '学习', icon: '📊', color: '#7c3aed', gradient: 'from-violet-500 to-purple-600', desc: '认知科学、学习路径、难度调节、行为分析、遗忘曲线' },
-  narrative_designer:  { key: 'narrative_designer',  name: '叙事世界观部',   shortName: '叙事', icon: '🎭', color: '#dc2626', gradient: 'from-red-500 to-rose-600',     desc: '世界观构建、剧情编剧、NPC人格、情绪体验' },
-  technical_architect: { key: 'technical_architect', name: '技术工程部',     shortName: '技术', icon: '⚙️', color: '#475569', gradient: 'from-slate-600 to-zinc-700',   desc: '游戏引擎、代码生成、性能优化、跨平台、AI工具链' },
-  companion:           { key: 'companion',           name: 'AI创作伙伴',     shortName: '伙伴', icon: '🤝', color: '#10b981', gradient: 'from-emerald-500 to-teal-600',  desc: '人格化角色，代表项目各利益方参与讨论' },
+  ai_director:        { key: 'ai_director',        name: 'AI制作导演',     shortName: '导演', icon: '🎬', iconImg: '/assets/departments/director.jpg',   color: '#fbbf24', gradient: 'from-amber-400 to-orange-500', desc: '统筹全局、组建团队、分配任务、监督生成、验收作品' },
+  knowledge_extractor: { key: 'knowledge_extractor', name: '教材研究部',     shortName: '教研', icon: '📚', iconImg: '/assets/departments/research.jpg',   color: '#2563eb', gradient: 'from-blue-500 to-cyan-600',   desc: '教材解析、知识拆解、课程目标、考点分析' },
+  game_designer:       { key: 'game_designer',       name: '游戏策划部',     shortName: '策划', icon: '🎮', iconImg: '/assets/departments/gameplay.jpg',   color: '#f97316', gradient: 'from-orange-500 to-amber-500', desc: '玩法设计、关卡设计、数值设计、交互设计' },
+  visual_designer:     { key: 'visual_designer',     name: '美术部',         shortName: '美术', icon: '🎨', iconImg: '/assets/departments/art.jpg',        color: '#ec4899', gradient: 'from-pink-500 to-rose-500',    desc: '美术风格、UI设计、角色生成、场景生成、动画' },
+  learning_evaluator:  { key: 'learning_evaluator',  name: '学习科学部',     shortName: '学习', icon: '📊', iconImg: '/assets/departments/learning.jpg',   color: '#7c3aed', gradient: 'from-violet-500 to-purple-600', desc: '认知科学、学习路径、难度调节、行为分析、遗忘曲线' },
+  narrative_designer:  { key: 'narrative_designer',  name: '叙事世界观部',   shortName: '叙事', icon: '🎭', iconImg: '/assets/departments/narrative.jpg',  color: '#dc2626', gradient: 'from-red-500 to-rose-600',     desc: '世界观构建、剧情编剧、NPC人格、情绪体验' },
+  technical_architect: { key: 'technical_architect', name: '技术工程部',     shortName: '技术', icon: '⚙️', iconImg: '/assets/departments/tech.jpg',       color: '#475569', gradient: 'from-slate-600 to-zinc-700',   desc: '游戏引擎、代码生成、性能优化、跨平台、AI工具链' },
+  companion:           { key: 'companion',           name: 'AI创作伙伴',     shortName: '伙伴', icon: '🤝', iconImg: '/assets/departments/companion.jpg',  color: '#10b981', gradient: 'from-emerald-500 to-teal-600',  desc: '人格化角色，代表项目各利益方参与讨论' },
 }
 
 // ==================== 智能体列表 ====================

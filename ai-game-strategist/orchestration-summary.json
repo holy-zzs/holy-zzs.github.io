@@ -1,0 +1,276 @@
+{
+  "skillProvenance": {
+    "name": "solo-design",
+    "version": "2026.07.06.8",
+    "version_source": "skill-version.json",
+    "runtime_skill_dir": "c:\\Users\\16242\\.trae-cn\\builtin\\design\\default\\skills\\solo-design",
+    "recorded_at": "2026-07-16T00:53:00.000Z"
+  },
+  "project": {
+    "name": "AI游戏策略师",
+    "path": "f:\\math\\创界山\\ai-game-strategist",
+    "operation": "create",
+    "deviceType": "desktop",
+    "language": "zh-CN",
+    "dashboardMode": true,
+    "intentProfile": {
+      "caseFamily": "restore_1to1",
+      "graphicStrategy": null,
+      "sourceType": "image",
+      "routingReason": "User explicitly requests 1:1 replication of all layout, colors, icons, avatars, components, fonts, CTAs, and image assets"
+    },
+    "replicationMode": "high-fidelity",
+    "sourceUrl": null,
+    "contextReadBudget": {
+      "workflowFileReadLimit": 1,
+      "largeWorkflowFilesCachedInSummary": [],
+      "restoreInputsCached": ["referenceCaptureEvidence", "visualSpecExcerpt", "restorationContractLite", "restoreVisualCheckpoints"],
+      "subAgentReadsFullSummary": false
+    },
+    "readBudgetLedger": [
+      {
+        "file": "workflows/create-project-restore-1to1.md",
+        "readCount": 1,
+        "limit": 1,
+        "reason": "initial route-locked workflow read",
+        "exceeded": false
+      }
+    ],
+    "dispatchPreflightManifest": [],
+    "cssPreflightEvidence": {
+      "applies": false,
+      "status": "not-needed",
+      "brandPrefix": "ags",
+      "checks": {
+        "themeVars": "present",
+        "semanticTokenFallback": "not-needed",
+        "themeInline": "not-needed",
+        "tailwindCdn": "present",
+        "htmlClass": "present"
+      },
+      "retryCount": 0,
+      "blockingReason": null
+    },
+    "referenceCaptureEvidence": {
+      "sourceType": "image",
+      "sourceAuthority": "screenshot",
+      "providedImagePath": "c:\\Users\\16242\\.trae-cn\\attachments\\6a57ba8f45b180797b7df282\\59fd2851-56c9-4a09-9ccd-82735c9e359b_d3df2924-4eae-40f5-8103-12b2f8566a79_image.png",
+      "fullPageScreenshotEvidence": null,
+      "viewportScreenshotEvidence": null,
+      "browserSnapshotSections": [],
+      "webFetchStatus": "not-needed",
+      "visualSpecExcerptLength": 1850,
+      "captureBlockingReason": null
+    },
+    "visualSpecExcerpt": "DARK CYBERPUNK DASHBOARD. Bg: #0a0814 base, #0d0b1a deep, #131124 surface, #181530 cards. 3-column layout: left sidebar ~220px flush to edge, main content flex-1, right panel ~280px. Full viewport height dark theme with neon glows. LEFT SIDEBAR: logo 'AI GAME STRATEGIST' at top in purple-cyan gradient text, 8 nav items with lucide icons (项目中心/教材解析/玩法推荐[ACTIVE purple glow]/AI团队组建/工作台/游戏预览/数据分析/发布管理), active item has purple bg #1a1530 with left purple border. Below nav: AI assistant NEXUS persona card - female character with futuristic glasses, purple-pink holographic, text 'AI 助手 NEXUS' + '我已分析完毕'. MAIN HEADER: title 'AI 正在为你的教材设计最佳游戏化方案' 24px bold white, subtitle muted, top-right 'AI 分析引擎运行中' with 98% progress bar purple gradient. CURRENT TEXTBOOK PANEL: card with textbook name '小学科学五年级上册 人教版', stats (126知识点/23实验), core themes as purple chips, learning objectives with purple bullet dots, match analysis section with 98% circular progress ring. AGE SELECTION BAR: 4 horizontal cards (小学6-12岁[ACTIVE purple glow border]/中学12-18岁/大学18-22岁/成人22岁以上) each with avatar icon. 4-GAME GRID 2x2: each card has number badge (01-04), type label (探索冒险类ADVENTURE/模拟经营类SIMULATION/解谜闯关类PUZZLE/角色养成类ROLE-PLAYING), match % with trophy for top, visual thumbnail image, 4 core mechanic circular icons, learning effectiveness 4-bar metrics (知识理解/记忆留存/学习兴趣/应用能力), '选择此方案' CTA button purple gradient. AI COMBINATION SECTION: circular gauge 96% '最佳组合方案', breakdown bars (70%探索/20%解谜/10%模拟), combination advantages list, 3 metric improvements with icons (+42%/+33%/+29%). AI TEAM FORMATION: 6 character cards in 3x2 grid (游戏设计师AI/教育专家AI/剧情设计师AI/关卡设计师AI/美术总监AI/测试分析师AI) each with avatar, name, color theme. FINAL CTA: '团队就绪 READY TO CREATE' large button with purple-pink gradient glow. Effects: glassmorphism, neon borders rgba(139,92,246,0.15), box-shadow glows, gradient text, circular progress rings with conic-gradient.",
+    "restoreVisualCheckpoints": [
+      {
+        "id": "vc-01",
+        "priority": "high",
+        "sourceObservation": "Full dark cyberpunk theme with near-black purple-tinted background (#0a0814), neon purple/pink/cyan accents, and glassmorphism cards",
+        "targetImplementation": "body bg #0a0814, cards bg #181530 with border rgba(139,92,246,0.15), neon glow shadows on active/important elements",
+        "tolerance": "none",
+        "region": "header"
+      },
+      {
+        "id": "vc-02",
+        "priority": "high",
+        "sourceObservation": "Left sidebar flush to viewport edge, ~220px wide, with logo, 8 nav items, active item '玩法推荐' has purple bg and left border glow, AI assistant persona at bottom",
+        "targetImplementation": "Fixed sidebar 220px, h-screen, bg #0d0b1a, nav items with lucide icons 16px + text 14px, active item bg #181530 with 3px left border #8b5cf6 and purple glow, NEXUS persona card at bottom",
+        "tolerance": "none",
+        "region": "sidebar"
+      },
+      {
+        "id": "vc-03",
+        "priority": "high",
+        "sourceObservation": "Main header with large title 'AI 正在为你的教材设计最佳游戏化方案', subtitle, and top-right AI engine status with 98% progress bar",
+        "targetImplementation": "Title 24px font-bold white, subtitle 14px text-muted, right-side status card with 'AI 分析引擎运行中' label and animated progress bar 98% with purple gradient fill",
+        "tolerance": "none",
+        "region": "header"
+      },
+      {
+        "id": "vc-04",
+        "priority": "high",
+        "sourceObservation": "Current textbook panel showing '小学科学五年级上册 人教版' with 126知识点/23实验 stats, core themes as purple chips, learning objectives with purple bullets, and 98% match circular ring",
+        "targetImplementation": "Card with textbook info, stat badges, theme chips with purple bg rgba(139,92,246,0.15), objectives list with purple dot bullets, circular progress ring using conic-gradient at 98%",
+        "tolerance": "small spacing variance",
+        "region": "card"
+      },
+      {
+        "id": "vc-05",
+        "priority": "high",
+        "sourceObservation": "4 age selection cards horizontally: 小学6-12岁 [active with purple glow border], 中学12-18岁, 大学18-22岁, 成人22岁以上, each with avatar icon",
+        "targetImplementation": "4-column grid, each card bg #131124 with avatar icon, active card has border #8b5cf6 and glow shadow, inactive cards have subtle border",
+        "tolerance": "approximate icon acceptable",
+        "region": "card"
+      },
+      {
+        "id": "vc-06",
+        "priority": "high",
+        "sourceObservation": "2x2 grid of 4 game recommendation cards, each with: number badge (01-04), type label with English subtitle, match percentage (98%/92%/85%/78%) with trophy for #1, thumbnail image, 4 circular mechanic icons, 4-bar learning effectiveness metrics, '选择此方案' CTA",
+        "targetImplementation": "2-col grid gap-4, each card bg #181530 rounded-xl p-5, number badge top-left, match% top-right with trophy for 98%, thumbnail image aspect-video rounded-lg, 4 mechanic icons in row, 4 metric bars with labels and colored fills, CTA button purple gradient full-width",
+        "tolerance": "small spacing variance",
+        "region": "card"
+      },
+      {
+        "id": "vc-07",
+        "priority": "high",
+        "sourceObservation": "AI combination recommendation section with large 96% circular gauge '最佳组合方案', breakdown bars (70%/20%/10%), combination advantages list, and 3 improvement metrics (+42%/+33%/+29%)",
+        "targetImplementation": "Section card with left circular gauge using conic-gradient 96%, right side with 3 horizontal breakdown bars colored purple/cyan/pink, advantages list with checkmark icons, 3 metric cards with percentage increases",
+        "tolerance": "none",
+        "region": "card"
+      },
+      {
+        "id": "vc-08",
+        "priority": "high",
+        "sourceObservation": "AI team formation: 6 character cards in 3x2 grid, each with unique avatar, role name (游戏设计师AI etc.), and color theme (blue/pink/cyan/purple/gold/green)",
+        "targetImplementation": "3-col 2-row grid, each card bg #181530 with avatar image 64px rounded-full with colored ring, role label, color-themed accent border/glow matching each role",
+        "tolerance": "approximate icon acceptable",
+        "region": "card"
+      },
+      {
+        "id": "vc-09",
+        "priority": "high",
+        "sourceObservation": "Final CTA section '团队就绪 READY TO CREATE' with large button '进入 AI STUDIO 开始创建你的教育游戏' with purple-pink gradient and glow",
+        "targetImplementation": "Centered section with heading and large gradient button (purple-to-pink) with box-shadow glow, full text preserved",
+        "tolerance": "none",
+        "region": "card"
+      },
+      {
+        "id": "vc-10",
+        "priority": "medium",
+        "sourceObservation": "Typography uses sans-serif Chinese font, heading 24px bold, section titles 16px semibold, body 13-14px, small labels 11-12px, with purple/cyan gradient text for special headings",
+        "targetImplementation": "font-family PingFang SC/Noto Sans SC, heading text-2xl font-bold, sections text-base font-semibold, body text-sm, labels text-xs, gradient text via bg-clip-text for logo and special titles",
+        "tolerance": "none",
+        "region": "header"
+      },
+      {
+        "id": "vc-11",
+        "priority": "medium",
+        "sourceObservation": "Game card learning effectiveness metrics use 4 horizontal bars with labels (知识理解/记忆留存/学习兴趣/应用能力) and colored fills at different levels",
+        "targetImplementation": "4-row metric section, each row: label text-xs left + bar track bg #131124 with colored fill (purple/cyan/pink/gold) at specified percentage, percentage text right",
+        "tolerance": "small spacing variance",
+        "region": "card"
+      },
+      {
+        "id": "vc-12",
+        "priority": "medium",
+        "sourceObservation": "NEXUS AI assistant persona in sidebar bottom: stylized female character with short dark hair, futuristic glasses/headset, purple-pink holographic effects",
+        "targetImplementation": "Avatar image in sidebar bottom card with purple-pink glow border, name 'AI 助手 NEXUS' and status text '我已分析完毕' with description below",
+        "tolerance": "approximate icon acceptable",
+        "region": "sidebar"
+      }
+    ],
+    "restorationContractLite": {
+      "sourceAuthority": "screenshot",
+      "targetViewport": "desktop",
+      "similarityFreeze": [
+        "dark cyberpunk 3-column dashboard composition with neon accents",
+        "deep purple-black background color rhythm (#0a0814 / #0d0b1a / #181530)",
+        "left sidebar navigation with 8 items and active purple glow + NEXUS persona",
+        "2x2 game recommendation card grid with match percentages and metric bars",
+        "6-avatar AI team formation grid with color-themed roles"
+      ],
+      "contentToPreserve": [
+        "Sidebar: AI GAME STRATEGIST logo, 8 nav items (项目中心/教材解析/玩法推荐/AI团队组建/工作台/游戏预览/数据分析/发布管理), NEXUS AI助手 persona",
+        "Header: AI 正在为你的教材设计最佳游戏化方案 / 让学习变得更有趣，让知识真正被理解和记住 / AI 分析引擎运行中 98%",
+        "Textbook: 小学科学五年级上册 人教版 / 126知识点 / 23实验 / 生态系统/植物生长/物质循环/能量流动/生物多样性",
+        "Objectives: 理解生态系统组成与相互关系 / 培养科学探究与观察能力 / 增强环境保护意识",
+        "Match: 10-11岁(小学高年级) / 好奇心强，喜欢探索和互动 / 视觉型、游戏化、任务驱动 / 98%匹配度",
+        "Age cards: 小学6-12岁 / 中学12-18岁 / 大学18-22岁 / 成人22岁以上",
+        "Game 01: 探索冒险类 ADVENTURE 98% / 探索/收集/任务/成长 / 丛林探险场景",
+        "Game 02: 模拟经营类 SIMULATION 92% / 建设/管理/平衡/发展 / 生态球场景",
+        "Game 03: 解谜闯关类 PUZZLE 85% / 解谜/推理/挑战/逻辑 / 网格解谜场景",
+        "Game 04: 角色养成类 ROLE-PLAYING 78% / 培养/互动/收集/进化 / 宠物实验室场景",
+        "Combination: 最佳组合方案 96% / 70%探索冒险 / 20%解谜闯关 / 10%模拟经营",
+        "Improvements: 知识留存率提升42% / 学习兴趣提升33% / 应用能力提升29%",
+        "Team: 游戏设计师AI / 教育专家AI / 剧情设计师AI / 关卡设计师AI / 美术总监AI / 测试分析师AI",
+        "CTA: 团队就绪 READY TO CREATE / 进入 AI STUDIO 开始创建你的教育游戏"
+      ],
+      "sourceRegionCoverage": [
+        {"sourceRegion": "sidebar", "priority": "high", "mustPreserve": "logo, 8 nav items, active state, NEXUS persona", "targetPageSection": "left sidebar", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "header", "priority": "high", "mustPreserve": "title, subtitle, AI engine status with progress bar", "targetPageSection": "main header", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "textbook panel", "priority": "high", "mustPreserve": "textbook info, stats, themes, objectives, match ring", "targetPageSection": "textbook analysis card", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "age selection", "priority": "high", "mustPreserve": "4 age cards with active state", "targetPageSection": "age selection bar", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "game grid", "priority": "high", "mustPreserve": "4 game cards with all details", "targetPageSection": "2x2 game grid", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "combination section", "priority": "high", "mustPreserve": "96% gauge, breakdown, advantages, improvements", "targetPageSection": "AI combination recommendation", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "team formation", "priority": "high", "mustPreserve": "6 role cards with avatars", "targetPageSection": "AI team grid", "mappedStatus": "mapped", "allowedDeviation": "none"},
+        {"sourceRegion": "final CTA", "priority": "high", "mustPreserve": "READY TO CREATE button", "targetPageSection": "bottom CTA", "mappedStatus": "mapped", "allowedDeviation": "none"}
+      ],
+      "allowedDeviationBudget": []
+    },
+    "restoreEvidenceReview": null,
+    "styleDefinitionBrief": null,
+    "designRead": "dashboard / EdTech educators / cyberpunk futuristic / dense / generic card wall",
+    "designDials": {
+      "layoutVariance": 3,
+      "motionIntensity": 2,
+      "visualDensity": 5
+    },
+    "styleContinuityAnchors": null,
+    "specsConstraints": null,
+    "sharedProjectShellContract": null,
+    "generationTree": null
+  },
+  "designSource": {
+    "operatingMode": "free-explore",
+    "libraryIdentity": null,
+    "libraryPath": null,
+    "cssFilePath": "f:\\math\\创界山\\ai-game-strategist\\colors_and_type.css",
+    "brandPrefix": "ags",
+    "themeMode": "dark",
+    "designDecisionSummary": "Dark cyberpunk dashboard theme derived from screenshot: deep purple-black backgrounds, neon purple/pink/cyan/gold/green accents, glassmorphism cards, sans-serif Chinese typography",
+    "componentContractKind": "undefined",
+    "forbiddenInventedComponents": [],
+    "allowedComponents": [],
+    "styleConstraints": null,
+    "productContext": null,
+    "actualTokenNameReference": null
+  },
+  "pages": [
+    {
+      "nodeId": "page-gameplay-recommendation",
+      "slug": "gameplay-recommendation",
+      "title": "玩法推荐",
+      "htmlSrc": "pages/gameplay-recommendation.html",
+      "pageIndex": 1,
+      "stateGroupId": null,
+      "stateRole": null,
+      "baseStatePageId": null,
+      "sharedShellContract": [],
+      "mutableRegions": [],
+      "derivedFromHtmlSrc": null,
+      "derivationType": "original",
+      "sourcePageId": null,
+      "sourceHtmlSrc": null,
+      "pageType": "task-driven",
+      "viewportMode": "app-shell",
+      "businessScenario": "AI gamification strategy dashboard for educational textbook analysis",
+      "visualNorthStar": "Dark cyberpunk control panel with neon glows, dense information cards, and futuristic AI assistant persona",
+      "compositionPattern": "3-column dashboard: fixed sidebar + scrollable main content + status panel",
+      "continuityAnchors": [],
+      "libraryRestraintMode": false,
+      "uiKitPath": null,
+      "componentPlan": [],
+      "imagePlan": ["nexus-ai-persona.png", "game-adventure.jpg", "game-simulation.jpg", "game-puzzle.jpg", "game-rpg.jpg", "team-game-designer.png", "team-education-expert.png", "team-narrative-designer.png", "team-level-designer.png", "team-art-director.png", "team-qa-analyst.png"],
+      "chartsRequired": false,
+      "miniProgramStyle": false,
+      "qualityRisks": ["dense first screen with many cards", "many small avatars and icons", "complex metric bars and progress rings"]
+    }
+  ],
+  "assets": [
+    {"filename": "nexus-ai-persona.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "AI assistant NEXUS female character with futuristic glasses and purple-pink holographic effects", "status": "planned"},
+    {"filename": "game-adventure.jpg", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Jungle forest exploration scene with child explorer for adventure game type", "status": "planned"},
+    {"filename": "game-simulation.jpg", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Glass biodome ecosystem sphere for simulation game type", "status": "planned"},
+    {"filename": "game-puzzle.jpg", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Grid-based puzzle interface for puzzle game type", "status": "planned"},
+    {"filename": "game-rpg.jpg", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Cute creature pet in lab setting for RPG game type", "status": "planned"},
+    {"filename": "team-game-designer.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Game Designer AI avatar with blue-purple theme", "status": "planned"},
+    {"filename": "team-education-expert.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Education Expert AI avatar with pink-purple theme", "status": "planned"},
+    {"filename": "team-narrative-designer.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Narrative Designer AI avatar with cyan theme", "status": "planned"},
+    {"filename": "team-level-designer.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Level Designer AI avatar with purple theme", "status": "planned"},
+    {"filename": "team-art-director.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "Art Director AI avatar with gold-amber theme", "status": "planned"},
+    {"filename": "team-qa-analyst.png", "role": "supporting-content", "owningPage": "page-gameplay-recommendation", "semanticDescription": "QA Analyst AI avatar with green theme", "status": "planned"}
+  ],
+  "wiringPlan": [],
+  "hiddenInteractionPlan": []
+}

@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 import { html, useState, useCallback, useMemo, useEffect } from '../../deps.js'
 import { useApp, STEPS } from '../../store/appContext.js'
-import { AGENTS, AGENT_CATEGORIES, getNewAgents, getAgentAvatar, DIRECTOR_AGENTS } from '../../data/agents.js'
+import { AGENTS, AGENT_CATEGORIES, getNewAgents, getAgentAvatar, DIRECTOR_AGENTS } from '../../data/agents.js?v=dep1'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import {
   TEAM_SLOTS,
@@ -21,7 +21,7 @@ import {
   MICROCOPY,
   getScoreText,
   getProgress,
-} from '../../data/teamBuilder.js'
+} from '../../data/teamBuilder.js?v=tb1'
 
 // 只显示新智能体（120个，不含12个AI创作伙伴）
 const NEW_AGENTS = getNewAgents()
@@ -276,6 +276,7 @@ const BUILDER_CSS = `
   background: color-mix(in srgb, var(--dept-color, ${H.cyan}) 15%, transparent);
   border: 1px solid color-mix(in srgb, var(--dept-color, ${H.cyan}) 30%, transparent);
   flex-shrink: 0;
+  overflow: hidden;
 }
 .tb-dept-name {
   font-family: ${H.fontBody}; font-size: 20px; font-weight: 700;
@@ -959,7 +960,9 @@ export default function TeamBuilder() {
 
         <!-- 槽位标签 -->
         <div class="absolute top-2 left-2 flex items-center gap-1.5 z-10">
-          <span class="text-base">${slotDef.icon}</span>
+          ${slotDef.iconImg
+            ? html`<img src=${slotDef.iconImg} alt=${slotDef.name} class="w-5 h-5 rounded object-cover" />`
+            : html`<span class="text-base">${slotDef.icon}</span>`}
           <span class="text-[9px] font-bold uppercase tracking-wider"
                 style=${{ fontFamily: H.fontMono, color: isEmpty ? H.textMuted : slotDef.color, textShadow: isEmpty ? 'none' : `0 0 4px ${slotDef.color}60` }}>
             ${slotDef.nameEn}
@@ -968,9 +971,11 @@ export default function TeamBuilder() {
 
         ${isEmpty ? html`
           <div class="relative flex flex-col items-center justify-center h-full pt-8 pb-4 px-3 text-center z-10">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2 opacity-30"
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2 overflow-hidden"
                  style=${{ background: slotDef.color + '10' }}>
-              ${slotDef.icon}
+              ${slotDef.iconImg
+                ? html`<img src=${slotDef.iconImg} alt=${slotDef.name} class="w-full h-full object-cover opacity-50" />`
+                : html`<span class="opacity-30">${slotDef.icon}</span>`}
             </div>
             <div class="text-xs font-bold mb-0.5" style=${{ fontFamily: H.fontBody, color: H.textPrimary }}>${slotDef.name}</div>
             <div class="text-[10px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textMuted }}>
@@ -1112,7 +1117,9 @@ export default function TeamBuilder() {
                         border: `1px solid ${categoryFilter === key ? cat.color + '40' : H.borderSubtle}`,
                       }}
                       onClick=${() => setCategoryFilter(key)}>
-                <span>${cat.icon}</span><span>${cat.shortName}</span><span style=${{ opacity: 0.5, fontSize: '11px' }}>${count}</span>
+                ${cat.iconImg
+                  ? html`<img src=${cat.iconImg} alt=${cat.name} class="w-4 h-4 rounded-sm object-cover" />`
+                  : html`<span>${cat.icon}</span>`}<span>${cat.shortName}</span><span style=${{ opacity: 0.5, fontSize: '11px' }}>${count}</span>
               </button>
             `})}
           </div>
@@ -1131,7 +1138,9 @@ export default function TeamBuilder() {
                         onClick=${() => setExpandedDepts(prev => ({ ...prev, [deptKey]: !isExpanded }))}>
                   <div class="flex items-center gap-3">
                     <span class="tb-dept-icon">
-                      ${catInfo.icon || '◇'}
+                      ${catInfo.iconImg
+                        ? html`<img src=${catInfo.iconImg} alt=${catInfo.name || deptKey} style=${{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} />`
+                        : (catInfo.icon || '◇')}
                     </span>
                     <div class="flex flex-col text-left">
                       <span class="tb-dept-name">${catInfo.name || deptKey}</span>

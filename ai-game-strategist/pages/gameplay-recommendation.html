@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩法推荐 - AI游戏策略师</title>
+    <style id="theme-vars">
+:root {
+  /* === Base Background === */
+  --ags-bg-base: #0a0814;
+  --ags-bg-deep: #0d0b1a;
+  --ags-bg-surface: #131124;
+  --ags-bg-card: #181530;
+  --ags-bg-card-hover: #1d1a3d;
+  --ags-bg-elevated: #1f1b3a;
+
+  /* === Primary Purple === */
+  --ags-purple: #8b5cf6;
+  --ags-purple-light: #a78bfa;
+  --ags-purple-dark: #7c3aed;
+  --ags-purple-glow: rgba(139, 92, 246, 0.4);
+
+  /* === Pink / Magenta === */
+  --ags-pink: #ec4899;
+  --ags-pink-light: #f472b6;
+  --ags-pink-glow: rgba(236, 72, 153, 0.35);
+
+  /* === Cyan === */
+  --ags-cyan: #06b6d4;
+  --ags-cyan-light: #22d3ee;
+  --ags-cyan-glow: rgba(6, 182, 212, 0.35);
+
+  /* === Blue === */
+  --ags-blue: #3b82f6;
+  --ags-blue-light: #60a5fa;
+  --ags-blue-glow: rgba(59, 130, 246, 0.35);
+
+  /* === Gold / Amber === */
+  --ags-gold: #f59e0b;
+  --ags-gold-light: #fbbf24;
+  --ags-gold-glow: rgba(245, 158, 11, 0.35);
+
+  /* === Green === */
+  --ags-green: #10b981;
+  --ags-green-light: #34d399;
+  --ags-green-glow: rgba(16, 185, 129, 0.35);
+
+  /* === Text === */
+  --ags-text-primary: #ffffff;
+  --ags-text-secondary: #c4b8e8;
+  --ags-text-muted: #8b80b5;
+  --ags-text-dim: #5c5478;
+
+  /* === Border === */
+  --ags-border: rgba(139, 92, 246, 0.15);
+  --ags-border-light: rgba(139, 92, 246, 0.08);
+  --ags-border-active: rgba(139, 92, 246, 0.4);
+
+  /* === Gradients === */
+  --ags-gradient-purple-pink: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  --ags-gradient-purple-cyan: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+  --ags-gradient-pink-purple: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  --ags-gradient-blue-purple: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --ags-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  --ags-gradient-green: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --ags-gradient-dark: linear-gradient(180deg, #131124 0%, #0d0b1a 100%);
+
+  /* === Shadows === */
+  --ags-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --ags-shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+  --ags-shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.3);
+  --ags-shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.3);
+
+  /* === Typography === */
+  --ags-font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ags-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+
+  /* === Radius === */
+  --ags-radius-sm: 6px;
+  --ags-radius-md: 10px;
+  --ags-radius-lg: 14px;
+  --ags-radius-xl: 20px;
+  --ags-radius-full: 9999px;
+
+  /* === Semantic Aliases (required by fill-html-head.mjs) === */
+  --ags-background: var(--ags-bg-base);
+  --ags-foreground: var(--ags-text-primary);
+  --ags-card: var(--ags-bg-card);
+  --ags-primary: var(--ags-purple);
+  --ags-primary-foreground: var(--ags-text-primary);
+  --ags-muted: var(--ags-bg-surface);
+  --ags-muted-foreground: var(--ags-text-muted);
+  --ags-border-semantic: var(--ags-border);
+  --ags-ring: var(--ags-purple);
+  --ags-secondary: var(--ags-bg-elevated);
+  --ags-secondary-foreground: var(--ags-text-secondary);
+  --ags-accent: var(--ags-bg-surface);
+  --ags-accent-foreground: var(--ags-text-secondary);
+  --ags-destructive: var(--ags-pink);
+  --ags-destructive-foreground: var(--ags-text-primary);
+  --ags-popover: var(--ags-bg-elevated);
+  --ags-popover-foreground: var(--ags-text-primary);
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--ags-background);
+    --color-foreground: var(--ags-foreground);
+    --color-card: var(--ags-card);
+    --color-popover: var(--ags-popover);
+    --color-popover-foreground: var(--ags-popover-foreground);
+    --color-primary: var(--ags-primary);
+    --color-primary-foreground: var(--ags-primary-foreground);
+    --color-secondary: var(--ags-secondary);
+    --color-secondary-foreground: var(--ags-secondary-foreground);
+    --color-muted: var(--ags-muted);
+    --color-muted-foreground: var(--ags-muted-foreground);
+    --color-accent: var(--ags-accent);
+    --color-accent-foreground: var(--ags-accent-foreground);
+    --color-destructive: var(--ags-destructive);
+    --color-destructive-foreground: var(--ags-destructive-foreground);
+    --color-border: var(--ags-border);
+    --color-ring: var(--ags-ring);
+    --radius-sm: var(--ags-radius-sm);
+    --radius-md: var(--ags-radius-md);
+    --radius-lg: var(--ags-radius-lg);
+    --radius-xl: var(--ags-radius-xl);
+  }
+  @layer base {
+    body { background: var(--ags-background); color: var(--ags-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--ags-background); }
+      .text-background { color: var(--ags-background); }
+      .border-background { border-color: var(--ags-background); }
+      .ring-background { --tw-ring-color: var(--ags-background); }
+      .bg-foreground { background-color: var(--ags-foreground); }
+      .text-foreground { color: var(--ags-foreground); }
+      .border-foreground { border-color: var(--ags-foreground); }
+      .ring-foreground { --tw-ring-color: var(--ags-foreground); }
+      .bg-card { background-color: var(--ags-card); }
+      .text-card { color: var(--ags-card); }
+      .border-card { border-color: var(--ags-card); }
+      .ring-card { --tw-ring-color: var(--ags-card); }
+      .bg-popover { background-color: var(--ags-popover); }
+      .text-popover { color: var(--ags-popover); }
+      .border-popover { border-color: var(--ags-popover); }
+      .ring-popover { --tw-ring-color: var(--ags-popover); }
+      .bg-popover-foreground { background-color: var(--ags-popover-foreground); }
+      .text-popover-foreground { color: var(--ags-popover-foreground); }
+      .border-popover-foreground { border-color: var(--ags-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--ags-popover-foreground); }
+      .bg-primary { background-color: var(--ags-primary); }
+      .text-primary { color: var(--ags-primary); }
+      .border-primary { border-color: var(--ags-primary); }
+      .ring-primary { --tw-ring-color: var(--ags-primary); }
+      .bg-primary-foreground { background-color: var(--ags-primary-foreground); }
+      .text-primary-foreground { color: var(--ags-primary-foreground); }
+      .border-primary-foreground { border-color: var(--ags-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--ags-primary-foreground); }
+      .bg-secondary { background-color: var(--ags-secondary); }
+      .text-secondary { color: var(--ags-secondary); }
+      .border-secondary { border-color: var(--ags-secondary); }
+      .ring-secondary { --tw-ring-color: var(--ags-secondary); }
+      .bg-secondary-foreground { background-color: var(--ags-secondary-foreground); }
+      .text-secondary-foreground { color: var(--ags-secondary-foreground); }
+      .border-secondary-foreground { border-color: var(--ags-secondary-foreground); }
+      .ring-secondary-foreground { --tw-ring-color: var(--ags-secondary-foreground); }
+      .bg-muted { background-color: var(--ags-muted); }
+      .text-muted { color: var(--ags-muted); }
+      .border-muted { border-color: var(--ags-muted); }
+      .ring-muted { --tw-ring-color: var(--ags-muted); }
+      .bg-muted-foreground { background-color: var(--ags-muted-foreground); }
+      .text-muted-foreground { color: var(--ags-muted-foreground); }
+      .border-muted-foreground { border-color: var(--ags-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--ags-muted-foreground); }
+      .bg-accent { background-color: var(--ags-accent); }
+      .text-accent { color: var(--ags-accent); }
+      .border-accent { border-color: var(--ags-accent); }
+      .ring-accent { --tw-ring-color: var(--ags-accent); }
+      .bg-accent-foreground { background-color: var(--ags-accent-foreground); }
+      .text-accent-foreground { color: var(--ags-accent-foreground); }
+      .border-accent-foreground { border-color: var(--ags-accent-foreground); }
+      .ring-accent-foreground { --tw-ring-color: var(--ags-accent-foreground); }
+      .bg-destructive { background-color: var(--ags-destructive); }
+      .text-destructive { color: var(--ags-destructive); }
+      .border-destructive { border-color: var(--ags-destructive); }
+      .ring-destructive { --tw-ring-color: var(--ags-destructive); }
+      .bg-destructive-foreground { background-color: var(--ags-destructive-foreground); }
+      .text-destructive-foreground { color: var(--ags-destructive-foreground); }
+      .border-destructive-foreground { border-color: var(--ags-destructive-foreground); }
+      .ring-destructive-foreground { --tw-ring-color: var(--ags-destructive-foreground); }
+      .bg-border { background-color: var(--ags-border); }
+      .text-border { color: var(--ags-border); }
+      .border-border { border-color: var(--ags-border); }
+      .ring-border { --tw-ring-color: var(--ags-border); }
+      .bg-ring { background-color: var(--ags-ring); }
+      .text-ring { color: var(--ags-ring); }
+      .border-ring { border-color: var(--ags-ring); }
+      .ring-ring { --tw-ring-color: var(--ags-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

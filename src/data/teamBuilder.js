@@ -2,7 +2,7 @@
 // 引导式智能团队构建器 —— 数据层 v3.0
 // 6槽位（6大核心部门）+ 132个智能体 + 羁绊系统 + 协同评分
 // ═══════════════════════════════════════════════════════════
-import { AGENT_CATEGORIES, AGENT_COMBOS, getNewAgents } from './agents.js'
+import { AGENT_CATEGORIES, AGENT_COMBOS, getNewAgents } from './agents.js?v=dep1'
 
 // ── 6 个固定团队槽位（对应6大核心部门）──
 export const TEAM_SLOTS = [
@@ -13,6 +13,7 @@ export const TEAM_SLOTS = [
     name: '教研专家',
     nameEn: 'Researcher',
     icon: AGENT_CATEGORIES.knowledge_extractor.icon,
+    iconImg: AGENT_CATEGORIES.knowledge_extractor.iconImg,
     color: AGENT_CATEGORIES.knowledge_extractor.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.knowledge_extractor.color}, ${AGENT_CATEGORIES.knowledge_extractor.color}dd)`,
     desc: AGENT_CATEGORIES.knowledge_extractor.desc,
@@ -26,6 +27,7 @@ export const TEAM_SLOTS = [
     name: '游戏设计师',
     nameEn: 'Designer',
     icon: AGENT_CATEGORIES.game_designer.icon,
+    iconImg: AGENT_CATEGORIES.game_designer.iconImg,
     color: AGENT_CATEGORIES.game_designer.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.game_designer.color}, ${AGENT_CATEGORIES.game_designer.color}dd)`,
     desc: AGENT_CATEGORIES.game_designer.desc,
@@ -39,6 +41,7 @@ export const TEAM_SLOTS = [
     name: '艺术总监',
     nameEn: 'Art Director',
     icon: AGENT_CATEGORIES.visual_designer.icon,
+    iconImg: AGENT_CATEGORIES.visual_designer.iconImg,
     color: AGENT_CATEGORIES.visual_designer.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.visual_designer.color}, ${AGENT_CATEGORIES.visual_designer.color}dd)`,
     desc: AGENT_CATEGORIES.visual_designer.desc,
@@ -52,6 +55,7 @@ export const TEAM_SLOTS = [
     name: '学习科学家',
     nameEn: 'Learning Scientist',
     icon: AGENT_CATEGORIES.learning_evaluator.icon,
+    iconImg: AGENT_CATEGORIES.learning_evaluator.iconImg,
     color: AGENT_CATEGORIES.learning_evaluator.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.learning_evaluator.color}, ${AGENT_CATEGORIES.learning_evaluator.color}dd)`,
     desc: AGENT_CATEGORIES.learning_evaluator.desc,
@@ -65,6 +69,7 @@ export const TEAM_SLOTS = [
     name: '叙事设计师',
     nameEn: 'Narrative',
     icon: AGENT_CATEGORIES.narrative_designer.icon,
+    iconImg: AGENT_CATEGORIES.narrative_designer.iconImg,
     color: AGENT_CATEGORIES.narrative_designer.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.narrative_designer.color}, ${AGENT_CATEGORIES.narrative_designer.color}dd)`,
     desc: AGENT_CATEGORIES.narrative_designer.desc,
@@ -78,6 +83,7 @@ export const TEAM_SLOTS = [
     name: '技术架构师',
     nameEn: 'Architect',
     icon: AGENT_CATEGORIES.technical_architect.icon,
+    iconImg: AGENT_CATEGORIES.technical_architect.iconImg,
     color: AGENT_CATEGORIES.technical_architect.color,
     gradient: `linear-gradient(135deg, ${AGENT_CATEGORIES.technical_architect.color}, ${AGENT_CATEGORIES.technical_architect.color}dd)`,
     desc: AGENT_CATEGORIES.technical_architect.desc,
