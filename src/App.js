@@ -2,7 +2,7 @@
 import SettingsModal from './components/common/SettingsModal.js'
 import { ErrorBanner, LoadingOverlay, Stepper, Toast } from './components/common/ui.js'
 import { html, useEffect } from './react.js'
-import { AppProvider, STEPS, useApp } from './store/appContext.js'
+import { AppProvider, STEPS, useApp } from './store/appContext.js?v=ctx2'
 import { ThemeProvider } from './store/themeContext.js'
 
 // 已有页面
@@ -15,12 +15,12 @@ import WorkspaceView from './components/platform/WorkspaceView.js?v=wsv9'
 import StarVoyagerWorkbench from './components/platform/StarVoyagerWorkbench.js'
 import AIStudio from './components/platform/AIStudio.js?v=as7'
 // PreviewView 已迁移为平台风格的游戏播放器（HTML5 game player）
-import PreviewView from './components/platform/PreviewView.js'
+import PreviewView from './components/platform/PreviewView.js?v=pv2'
 
 // 新平台页面（页面1-15）
-import GameplayGacha from './components/platform/GameplayGacha.js'
+import GameplayGacha from './components/platform/GameplayGacha.js?v=gg2'
 import HelpPage from './components/platform/HelpPage.js'
-import LandingPage from './components/platform/LandingPage.js'
+import LandingPage from './components/platform/LandingPage.js?v=lp2'
 import ModePage from './components/platform/ModePage.js'
 import PlanDetailPage from './components/platform/PlanDetailPage.js'
 import PreferencesPage from './components/platform/PreferencesPage.js'
@@ -28,7 +28,7 @@ import PresetTeamPage from './components/platform/PresetTeamPage.js'
 import ProfilePage from './components/platform/ProfilePage.js?v=nav2'
 import ProjectsPage from './components/platform/ProjectsPage.js'
 import ProtocolDemo from './components/platform/ProtocolDemo.js'
-import SubjectPage from './components/platform/SubjectPage.js'
+import SubjectPage from './components/platform/SubjectPage.js?v=sp2'
 import TeamBuilder from './components/platform/TeamBuilder.js'
 import UploadPage from './components/platform/UploadPage.js?v=pdf20260716a'
 
@@ -46,7 +46,7 @@ import PricingPage from './components/platform/PricingPage.js'
 import SearchPage from './components/platform/SearchPage.js'
 import SettingsPage from './components/platform/SettingsPage.js'
 import StatusPage from './components/platform/StatusPage.js'
-import { FeedbackButton } from './components/platform/PlatformCommon.js?v=nav2'
+import { FeedbackButton } from './components/platform/PlatformCommon.js?v=nav3'
 
 function scrollTopRespectMotion() {
   const reduced = typeof window !== 'undefined'
