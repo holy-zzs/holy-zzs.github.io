@@ -1,4 +1,5 @@
-﻿// 页面2：学段学科细分页（三栏布局：学段确认 / 学科选择 / 推荐团队）
+// 页面2：学段学科细分页（三栏布局：学段确认 / 学科选择 / 推荐团队）
+// v2: 深空暗色主题 + 放大字体 + 引导提示 + 清晰按钮 — 2026-07-16 重设计
 import { html, useContext, useState, useEffect, useMemo, useCallback, useRef } from '../../deps.js'
 import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress, EmptyState } from './PlatformCommon.js?v=nav3'
@@ -21,11 +22,51 @@ const resolveId = (id) => AGENT_ALIAS[id] || id
 // 数字格式化器
 const compactFmt = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 })
 const intFmt = new Intl.NumberFormat('en-US')
-const fmtCompact = (n) => compactFmt.format(n).toLowerCase() // 1240 -> 1.2k
+const fmtCompact = (n) => compactFmt.format(n).toLowerCase()
 
-// 减弱动效（无障碍）
-const REDUCE_MOTION_CSS =
-  '@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0.01ms!important;animation-duration:0.01ms!important;animation-iteration-count:1!important}}'
+// ── 深空色板（与平台统一）──
+const C = {
+  bg: '#05010f',
+  bgRadial: 'radial-gradient(ellipse at 50% 80%, #1e0f4d 0%, #0a0420 40%, #05010f 100%)',
+  surface: 'rgba(255,255,255,0.03)',
+  surfaceHover: 'rgba(255,255,255,0.06)',
+  surfaceActive: 'rgba(167,139,250,0.08)',
+  text: '#f5e8ff',
+  textMuted: '#8b7da8',
+  textDim: '#5d4f7a',
+  border: 'rgba(167,139,250,0.12)',
+  borderBright: 'rgba(167,139,250,0.25)',
+  borderActive: 'rgba(167,139,250,0.4)',
+  primary: '#a78bfa',
+  primaryDark: '#7c3aed',
+  accent: '#F5A623',
+  accentLight: '#fbbf24',
+  green: '#4ade80',
+  pink: '#f472b6',
+  red: '#f87171',
+}
+
+// ── 页面 CSS ──
+const PAGE_CSS = `
+@keyframes spFadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+@keyframes spBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.sp-card-enter{ animation: spFadeIn 0.4s ease-out backwards; }
+.sp-pulse{ animation: spPulse 2s ease-in-out infinite; }
+.sp-bounce{ animation: spBounce 1.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce){
+  .sp-card-enter,.sp-pulse,.sp-bounce{ animation: none !important; }
+  *,*::before,*::after{ transition-duration:0.01ms!important; animation-duration:0.01ms!important; }
+}
+.sp-card{ transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.sp-card:hover{ transform: translateY(-3px); }
+.sp-subject-btn{ transition: background 0.2s ease, border-color 0.2s ease; }
+.sp-subject-btn:hover{ background: ${C.surfaceHover}; }
+.sp-tag{ transition: background 0.2s ease, color 0.2s ease; }
+.sp-cta{ transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+.sp-cta:not(:disabled):hover{ transform: scale(1.02); }
+.sp-cta:not(:disabled):active{ transform: scale(0.98); }
+`
 
 export default function SubjectPage() {
   const { state, dispatch } = useContext(AppContext)
@@ -34,14 +75,14 @@ export default function SubjectPage() {
   const subjects = grade ? (SUBJECTS[grade.id] || []) : []
 
   // ── 本地状态 ──
-  const [selectedSubject1, setSelectedSubject1] = useState(null)       // 一级学科对象
-  const [selectedSubject2Ids, setSelectedSubject2Ids] = useState([])   // 二级学科ID数组
-  const [selectedScenes, setSelectedScenes] = useState([])             // 场景标签数组
-  const [searchQuery, setSearchQuery] = useState('')                   // 搜索文本
-  const [searchResults, setSearchResults] = useState([])               // 搜索结果数组
-  const [expandedSubject1, setExpandedSubject1] = useState(null)       // 展开的一级学科ID
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false)  // 搜索下拉
-  const [mobileRightOpen, setMobileRightOpen] = useState(false)        // 移动端右栏折叠
+  const [selectedSubject1, setSelectedSubject1] = useState(null)
+  const [selectedSubject2Ids, setSelectedSubject2Ids] = useState([])
+  const [selectedScenes, setSelectedScenes] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [expandedSubject1, setExpandedSubject1] = useState(null)
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [mobileRightOpen, setMobileRightOpen] = useState(false)
 
   const searchRef = useRef(null)
 
@@ -71,7 +112,7 @@ export default function SubjectPage() {
   // ── 一级卡片：选中 + 展开/收起 ──
   const onSubject1Click = useCallback((subject) => {
     if (expandedSubject1 === subject.id) {
-      setExpandedSubject1(null) // 收起
+      setExpandedSubject1(null)
     } else {
       setSelectedSubject1(subject)
       setSelectedSubject2Ids([])
@@ -93,7 +134,7 @@ export default function SubjectPage() {
   const onSceneToggle = useCallback((scene) => {
     setSelectedScenes((prev) => {
       if (prev.includes(scene)) return prev.filter((s) => s !== scene)
-      if (prev.length >= 2) return [prev[1], scene] // 替换最旧的
+      if (prev.length >= 2) return [prev[1], scene]
       return [...prev, scene]
     })
   }, [])
@@ -180,7 +221,6 @@ export default function SubjectPage() {
     return Array.from(set)
   }, [selectedSubject2Ids, subject2Map])
 
-  // 场景随二级学科变化自动清理
   useEffect(() => {
     setSelectedScenes((prev) => prev.filter((s) => availableScenes.includes(s)))
   }, [availableScenes])
@@ -244,7 +284,7 @@ export default function SubjectPage() {
   // ── 空状态：未选学段 ──
   if (!grade) {
     return html`
-      <div class="min-h-screen" style=${{ background: '#05010f', minHeight: '100vh' }}>
+      <div class="min-h-screen" style=${{ background: C.bg, minHeight: '100vh' }}>
         <${NavBar} />
         <${PageContainer}>
           <${EmptyState}
@@ -259,88 +299,200 @@ export default function SubjectPage() {
     `
   }
 
-  const nextBtnBase =
-    'w-full rounded-xl py-3 text-sm font-bold transition-[transform,background-color,opacity] duration-300 ' +
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 ' +
-    (nextDisabled
-      ? 'cursor-not-allowed bg-primary-900 text-gray-400'
+  // ── 下一步按钮样式 ──
+  const nextBtnStyle = {
+    width: '100%',
+    borderRadius: '14px',
+    padding: '14px 20px',
+    fontSize: '16px',
+    fontWeight: 700,
+    transition: 'transform 0.2s, box-shadow 0.2s, opacity 0.2s',
+    cursor: nextDisabled ? 'not-allowed' : 'pointer',
+    ...(nextDisabled
+      ? { background: 'rgba(167,139,250,0.08)', color: C.textDim, border: `1px solid ${C.border}` }
       : nextHalf
-        ? 'bg-primary-800 text-white hover:opacity-80'
-        : 'bg-secondary-400 text-white shadow-lg shadow-secondary-400/30 motion-safe:hover:scale-[1.02]')
+        ? { background: `linear-gradient(135deg, ${C.primaryDark}, ${C.primary})`, color: '#fff', boxShadow: `0 4px 20px ${C.primary}40` }
+        : { background: `linear-gradient(135deg, ${C.accent}, ${C.accentLight})`, color: '#1a0a00', boxShadow: `0 4px 24px ${C.accent}40` })
+  }
   const nextBtnLabel = nextDisabled
-    ? '请先选择学科'
+    ? '👆 请先选择一个学科方向'
     : nextHalf
       ? '继续，看看推荐的团队'
-      : '下一步：组建AI团队'
+      : '下一步：上传教材 →'
 
   return html`
-    <div class="min-h-screen" style=${{ background: '#05010f', minHeight: '100vh' }}>
-      <style>${REDUCE_MOTION_CSS}</style>
+    <div class="min-h-screen" style=${{ background: C.bg, minHeight: '100vh' }}>
+      <style>${PAGE_CSS}</style>
       <${NavBar} />
       <${PageContainer}>
 
         <!-- 面包屑 -->
-        <nav class="flex items-center gap-1.5 text-xs text-gray-400">
-          <button class="rounded transition-colors hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+        <nav class="flex items-center gap-2" style=${{ fontSize: '14px', color: C.textMuted }}>
+          <button style=${{ color: C.textMuted, transition: 'color 0.2s', cursor: 'pointer', background: 'none', border: 'none' }}
+            onMouseEnter=${(e) => e.target.style.color = C.primary}
+            onMouseLeave=${(e) => e.target.style.color = C.textMuted}
             onClick=${() => goStep(STEPS.LANDING)}>首页</button>
-          <span class="text-gray-300">›</span>
-          <span class="text-gray-600">${grade.emoji} ${grade.name}</span>
-          <span class="text-gray-300">›</span>
-          <span class="font-semibold text-secondary-500">选择学科</span>
+          <span style=${{ color: C.textDim }}>›</span>
+          <span style=${{ color: C.textDim }}>${grade.emoji} ${grade.name}</span>
+          <span style=${{ color: C.textDim }}>›</span>
+          <span style=${{ color: C.primary, fontWeight: 600 }}>选择学科</span>
         </nav>
 
         <!-- 步骤进度 -->
-        <div class="mt-3">
+        <div style=${{ marginTop: '12px' }}>
           <${StepProgress} current=${0} total=${4} labels=${['选学科', '传教材', '选玩法', 'AI工作室']} />
+        </div>
+
+        <!-- 引导横幅：深空配图 + 标题 + 引导文案 -->
+        <div style=${{
+          marginTop: '20px',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          position: 'relative',
+          border: `1px solid ${C.border}`,
+        }}>
+          <div style=${{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/assets/illustrations/subject-cosmic.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: 0.35,
+          }}></div>
+          <div style=${{
+            position: 'relative',
+            padding: '28px 32px',
+            background: 'linear-gradient(90deg, rgba(5,1,15,0.92) 0%, rgba(5,1,15,0.7) 60%, rgba(5,1,15,0.4) 100%)',
+          }}>
+            <div style=${{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style=${{ fontSize: '32px' }}>${grade.emoji}</span>
+              <div>
+                <h1 style=${{ fontSize: '24px', fontWeight: 800, color: C.text, margin: 0 }}>
+                  ${grade.name} · 选择学科方向
+                </h1>
+                <p style=${{ fontSize: '15px', color: C.textMuted, margin: '4px 0 0 0' }}>
+                  ${GRADE_GUIDE[grade.id] || '选对学科，AI团队配置更精准'}
+                </p>
+              </div>
+            </div>
+            <!-- 引导提示 -->
+            <div style=${{
+              marginTop: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 16px',
+              borderRadius: '12px',
+              background: 'rgba(167,139,250,0.08)',
+              border: `1px solid ${C.border}`,
+              fontSize: '14px',
+              color: C.text,
+            }}>
+              <span class="sp-bounce" style=${{ fontSize: '16px' }}>👇</span>
+              <span>点击下方学科卡片选择方向，也可以在右侧直接使用推荐团队</span>
+            </div>
+          </div>
         </div>
 
         <!-- 移动端：快捷场景横向滚动条 -->
         <div class="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden">
           ${(QUICK_SCENES[grade.id] || []).map((scene) => html`
             <button key=${scene.id}
-              class="flex shrink-0 items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-primary-700 transition-colors hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+              style=${{
+                flexShrink: 0, display: 'flex', alignItems: 'center', gap: '6px',
+                borderRadius: '20px', padding: '8px 14px',
+                fontSize: '14px', fontWeight: 500,
+                border: `1px solid ${C.border}`,
+                background: C.surface, color: C.primary,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+              }}
               onClick=${onQuickScene}>
               <span>${scene.emoji}</span><span>${scene.name}</span>
             </button>
           `)}
-          <button class="flex shrink-0 items-center gap-1 rounded-full border border-dashed border-gray-200 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-            onClick=${skipToUpload}>不限学科</button>
+          <button style=${{
+              flexShrink: 0, display: 'flex', alignItems: 'center', gap: '6px',
+              borderRadius: '20px', padding: '8px 14px',
+              fontSize: '14px', border: `1px dashed ${C.borderBright}`,
+              background: 'transparent', color: C.textMuted, cursor: 'pointer', whiteSpace: 'nowrap',
+            }}
+            onClick=${skipToUpload}>⏭️ 跳过选科</button>
         </div>
 
         <!-- 三栏布局 -->
-        <div class="mt-4 flex flex-col gap-6 md:flex-row">
+        <div class="mt-5 flex flex-col gap-5 md:flex-row">
 
           <!-- ════ 左栏 ════ -->
-          <aside class="hidden md:flex md:w-56 md:shrink-0 md:flex-col md:gap-4">
+          <aside class="hidden md:flex md:w-52 md:shrink-0 md:flex-col md:gap-4">
 
             <!-- 学段确认卡片 -->
-            <div class="rounded-xl bg-primary-50 p-4">
-              <div class="text-3xl">${grade.emoji}</div>
-              <div class="mt-1 text-xl font-bold text-primary-800">${grade.name}</div>
-              <p class="mt-1 text-xs leading-relaxed text-gray-500">${GRADE_GUIDE[grade.id]}</p>
-              <button class="mt-2 rounded text-xs font-medium text-primary-600 underline-offset-2 transition-colors hover:text-primary-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+            <div style=${{
+              borderRadius: '16px', padding: '18px',
+              background: C.surface, border: `1px solid ${C.border}`,
+            }}>
+              <div style=${{ fontSize: '36px' }}>${grade.emoji}</div>
+              <div style=${{ marginTop: '6px', fontSize: '22px', fontWeight: 800, color: C.text }}>
+                ${grade.name}
+              </div>
+              <p style=${{ marginTop: '6px', fontSize: '14px', lineHeight: 1.6, color: C.textMuted }}>
+                ${GRADE_GUIDE[grade.id]}
+              </p>
+              <button style=${{
+                marginTop: '10px', fontSize: '14px', fontWeight: 500,
+                color: C.primary, background: 'none', border: 'none',
+                cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px',
+              }}
+                onMouseEnter=${(e) => e.target.style.color = C.accentLight}
+                onMouseLeave=${(e) => e.target.style.color = C.primary}
                 onClick=${goBack}>更换学段</button>
             </div>
 
-            <!-- 快捷场景入口 -->
-            <div class="rounded-xl border border-gray-100 bg-white p-2">
-              <div class="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400">快捷入口</div>
+            <!-- 快捷入口 -->
+            <div style=${{
+              borderRadius: '16px', padding: '8px',
+              background: C.surface, border: `1px solid ${C.border}`,
+            }}>
+              <div style=${{ padding: '8px 10px', fontSize: '13px', fontWeight: 700, color: C.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                快捷入口
+              </div>
               ${(QUICK_SCENES[grade.id] || []).map((scene) => html`
                 <button key=${scene.id}
-                  class="flex w-full items-center gap-2.5 rounded-lg p-2 text-left transition-colors hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                  class="sp-subject-btn"
+                  style=${{
+                    display: 'flex', width: '100%', alignItems: 'center', gap: '10px',
+                    borderRadius: '10px', padding: '10px', textAlign: 'left',
+                    border: 'none', background: 'transparent', cursor: 'pointer',
+                  }}
                   onClick=${onQuickScene}>
-                  <span class="text-xl">${scene.emoji}</span>
-                  <span class="min-w-0">
-                    <span class="block truncate text-sm font-medium text-primary-800">${scene.name}</span>
-                    <span class="block truncate text-[10px] text-gray-400">${scene.desc}</span>
+                  <span style=${{ fontSize: '24px' }}>${scene.emoji}</span>
+                  <span style=${{ minWidth: 0, flex: 1 }}>
+                    <span style=${{ display: 'block', fontSize: '15px', fontWeight: 600, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${scene.name}</span>
+                    <span style=${{ display: 'block', fontSize: '13px', color: C.textDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${scene.desc}</span>
                   </span>
                 </button>
               `)}
             </div>
 
-            <!-- 不限学科 -->
-            <button class="w-full rounded-lg border border-dashed border-gray-200 px-3 py-2.5 text-xs text-gray-400 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-              onClick=${skipToUpload}>不限学科，直接开始</button>
+            <!-- 跳过选科 -->
+            <button style=${{
+              width: '100%', borderRadius: '12px', padding: '14px',
+              fontSize: '15px', fontWeight: 500,
+              border: `1px dashed ${C.borderBright}`,
+              background: 'transparent', color: C.textMuted,
+              cursor: 'pointer', transition: 'all 0.2s',
+            }}
+            onMouseEnter=${(e) => {
+              e.target.style.borderColor = C.primary
+              e.target.style.color = C.primary
+              e.target.style.background = C.surfaceActive
+            }}
+            onMouseLeave=${(e) => {
+              e.target.style.borderColor = C.borderBright
+              e.target.style.color = C.textMuted
+              e.target.style.background = 'transparent'
+            }}
+            onClick=${skipToUpload}>
+              ⏭️ 跳过选科，直接上传教材
+            </button>
           </aside>
 
           <!-- ════ 中栏 ════ -->
@@ -349,99 +501,197 @@ export default function SubjectPage() {
             <!-- 搜索框 -->
             <div class="relative" ref=${searchRef}>
               <div class="relative">
-                <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                <span style=${{
+                  position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '18px', pointerEvents: 'none',
+                }}>🔍</span>
                 <input
                   type="text"
-                  class="w-full rounded-full border border-gray-200 bg-white py-3 pl-11 pr-10 text-sm text-gray-700 placeholder-gray-400 transition-[border-color,box-shadow] duration-200 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400"
+                  style=${{
+                    width: '100%', borderRadius: '14px',
+                    border: `1px solid ${C.border}`,
+                    background: C.surface, color: C.text,
+                    padding: '14px 44px 14px 46px', fontSize: '15px',
+                    outline: 'none', transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
                   placeholder=${SEARCH_PLACEHOLDER[grade.id] || '搜索学科…'}
                   value=${searchQuery}
                   onChange=${(e) => setSearchQuery(e.target.value)}
-                  onFocus=${() => setShowSearchDropdown(true)} />
+                  onFocus=${(e) => {
+                    setShowSearchDropdown(true)
+                    e.target.style.borderColor = C.primary
+                    e.target.style.boxShadow = `0 0 0 3px ${C.primary}20`
+                  }}
+                  onBlur=${(e) => {
+                    e.target.style.borderColor = C.border
+                    e.target.style.boxShadow = 'none'
+                  }} />
                 ${searchQuery ? html`
-                  <button class="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                  <button style=${{
+                    position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                    width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: '50%', border: 'none', background: 'transparent',
+                    color: C.textMuted, cursor: 'pointer', fontSize: '18px',
+                  }}
+                  onMouseEnter=${(e) => { e.target.style.background = C.surfaceHover; e.target.style.color = C.text }}
+                  onMouseLeave=${(e) => { e.target.style.background = 'transparent'; e.target.style.color = C.textMuted }}
                     onClick=${clearSearch}>×</button>
                 ` : null}
               </div>
               ${showSearchDropdown && searchResults.length > 0 ? html`
-                <div class="absolute left-0 right-0 z-20 mt-1 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
+                <div style=${{
+                  position: 'absolute', left: 0, right: 0, zIndex: 20, marginTop: '4px',
+                  borderRadius: '14px', overflow: 'hidden',
+                  border: `1px solid ${C.border}`, background: '#0a0420',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                }}>
                   ${searchResults.map((r) => html`
                     <button key=${r.key}
-                      class="flex w-full items-center gap-2.5 px-4 py-2.5 text-left transition-colors hover:bg-primary-50 focus-visible:bg-primary-50 focus-visible:outline-none"
+                      style=${{
+                        display: 'flex', width: '100%', alignItems: 'center', gap: '12px',
+                        padding: '12px 16px', textAlign: 'left',
+                        border: 'none', background: 'transparent', cursor: 'pointer',
+                        transition: 'background 0.15s',
+                      }}
+                      onMouseEnter=${(e) => e.target.style.background = C.surfaceActive}
+                      onMouseLeave=${(e) => e.target.style.background = 'transparent'}
                       onClick=${() => onSearchResultClick(r)}>
-                      <span class="text-lg">${r.emoji}</span>
-                      <span class="min-w-0 flex-1">
-                        <span class="block truncate text-sm font-medium text-primary-800">${r.label}</span>
-                        <span class="block truncate text-[10px] text-gray-400">${r.sub}</span>
+                      <span style=${{ fontSize: '20px' }}>${r.emoji}</span>
+                      <span style=${{ minWidth: 0, flex: 1 }}>
+                        <span style=${{ display: 'block', fontSize: '15px', fontWeight: 600, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${r.label}</span>
+                        <span style=${{ display: 'block', fontSize: '13px', color: C.textDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${r.sub}</span>
                       </span>
-                      <span class="shrink-0 text-xs text-primary-500">选择</span>
+                      <span style=${{ fontSize: '14px', color: C.primary, flexShrink: 0 }}>选择</span>
                     </button>
                   `)}
                 </div>
               ` : null}
             </div>
 
-            <!-- 标题 -->
-            <div class="mt-5 flex items-end justify-between gap-3">
+            <!-- 标题 + 引导 -->
+            <div style=${{ marginTop: '24px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '12px' }}>
               <div>
-                <h2 class="text-xl font-bold text-primary-800">挑个学科细分方向</h2>
-                <p class="mt-0.5 text-xs text-gray-400">选对学科，团队配置更对口，含金量还在上升</p>
+                <h2 style=${{ fontSize: '22px', fontWeight: 800, color: C.text, margin: 0 }}>
+                  挑个学科细分方向
+                </h2>
+                <p style=${{ marginTop: '6px', fontSize: '15px', color: C.textMuted, margin: '6px 0 0 0' }}>
+                  选对学科，团队配置更对口 · 也可以跳过直接上传
+                </p>
               </div>
-              <span class="shrink-0 text-xs text-gray-400">${filteredSubjects.length} 个方向</span>
+              <span style=${{ flexShrink: 0, fontSize: '14px', color: C.textDim }}>
+                ${filteredSubjects.length} 个方向
+              </span>
             </div>
 
-            <!-- 一级学科网格 -->
+            <!-- 一级学科网格（2列，更大卡片） -->
             ${filteredSubjects.length === 0 ? html`
-              <div class="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-12 text-center">
-                <div class="text-4xl opacity-50">🔍</div>
-                <p class="mt-2 text-sm text-gray-400">没找到相关学科，换个关键词试试…</p>
+              <div style=${{
+                marginTop: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '16px', border: `1px dashed ${C.border}`, padding: '48px 24px', textAlign: 'center',
+              }}>
+                <div style=${{ fontSize: '48px', opacity: 0.4 }}>🔍</div>
+                <p style=${{ marginTop: '12px', fontSize: '16px', color: C.textMuted }}>没找到相关学科，换个关键词试试…</p>
               </div>
             ` : html`
-              <div class="mt-4 grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
-                ${filteredSubjects.map((subject) => {
+              <div class="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+                ${filteredSubjects.map((subject, idx) => {
                   const isExpanded = expandedSubject1 === subject.id
                   const isSelected = selectedSubject1?.id === subject.id
-                  const hot = subject.uses > 500
-                  const recommend = !hot && subject.uses > 200
+                  const hot = subject.uses > 800
+                  const recommend = !hot && subject.uses > 400
                   return html`
                     <div key=${subject.id}
-                      class=${`group rounded-xl border bg-white p-4 transition-[transform,box-shadow,border-color] duration-300 ${isSelected ? 'border-primary-400 ring-2 ring-primary-400' : 'border-gray-100'} ${isExpanded ? '' : 'hover:-translate-y-1 hover:shadow-lg hover:border-primary-200'}`}>
-                      <button class="flex w-full items-start gap-3 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                      class="sp-card sp-card-enter"
+                      style=${{
+                        borderRadius: '16px', padding: '20px',
+                        border: `1px solid ${isSelected ? C.borderActive : C.border}`,
+                        background: isSelected ? C.surfaceActive : C.surface,
+                        boxShadow: isSelected ? `0 0 0 2px ${C.primary}40` : 'none',
+                        animationDelay: `${idx * 60}ms`,
+                      }}>
+                      <button style=${{
+                        display: 'flex', width: '100%', alignItems: 'flex-start', gap: '14px',
+                        borderRadius: '10px', textAlign: 'left', border: 'none',
+                        background: 'transparent', cursor: 'pointer',
+                      }}
                         onClick=${() => onSubject1Click(subject)}>
-                        <div class=${`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl transition-transform duration-300 motion-safe:group-hover:scale-110 ${isSelected ? 'bg-primary-100' : 'bg-primary-50'}`}>${subject.emoji}</div>
-                        <div class="min-w-0 flex-1">
-                          <div class="flex items-center gap-1.5">
-                            <h3 class="truncate text-lg font-bold text-primary-800">${subject.name}</h3>
-                            ${hot ? html`<span class="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold" style=${{ background: 'rgba(248,113,113,0.15)', color: '#f87171' }}>🔥 热门</span>` : null}
-                            ${recommend ? html`<span class="shrink-0 rounded-full bg-secondary-50 px-1.5 py-0.5 text-[10px] font-semibold text-secondary-500">⭐ 推荐</span>` : null}
+                        <div style=${{
+                          flexShrink: 0, width: '56px', height: '56px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          borderRadius: '14px', fontSize: '32px',
+                          background: isSelected ? C.surfaceActive : 'rgba(167,139,250,0.06)',
+                          border: `1px solid ${C.border}`,
+                        }}>${subject.emoji}</div>
+                        <div style=${{ minWidth: 0, flex: 1 }}>
+                          <div style=${{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <h3 style=${{
+                              fontSize: '20px', fontWeight: 800, color: C.text,
+                              margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                            }}>${subject.name}</h3>
+                            ${hot ? html`<span style=${{
+                              flexShrink: 0, borderRadius: '6px', padding: '2px 8px',
+                              fontSize: '12px', fontWeight: 700,
+                              background: 'rgba(248,113,113,0.15)', color: C.red,
+                            }}>🔥 热门</span>` : null}
+                            ${recommend ? html`<span style=${{
+                              flexShrink: 0, borderRadius: '6px', padding: '2px 8px',
+                              fontSize: '12px', fontWeight: 700,
+                              background: 'rgba(245,166,35,0.12)', color: C.accentLight,
+                            }}>⭐ 推荐</span>` : null}
                           </div>
-                          <p class="mt-0.5 truncate text-xs text-gray-400">${subject.desc}</p>
-                          <div class="mt-2 flex flex-wrap gap-1">
+                          <p style=${{
+                            marginTop: '4px', fontSize: '14px', color: C.textMuted,
+                            margin: '4px 0 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                          }}>${subject.desc}</p>
+                          <div style=${{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                             ${(subject.tags || []).slice(0, 3).map((t) => html`
-                              <span key=${t} class="rounded-full bg-primary-50 px-2 py-0.5 text-[10px] text-primary-600">${t}</span>
+                              <span key=${t} class="sp-tag" style=${{
+                                borderRadius: '8px', padding: '4px 10px',
+                                fontSize: '13px', fontWeight: 500,
+                                background: 'rgba(167,139,250,0.08)', color: C.primary,
+                              }}>${t}</span>
                             `)}
                           </div>
-                          <div class="mt-2 flex items-center justify-between">
-                            <span class="text-[11px] text-gray-400">${fmtCompact(subject.uses)}个方案</span>
-                            <span class=${`text-xs font-bold text-primary-500 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>▾</span>
+                          <div style=${{ marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <span style=${{ fontSize: '14px', color: C.textDim }}>${fmtCompact(subject.uses)} 个方案</span>
+                            <span style=${{
+                              fontSize: '16px', fontWeight: 700, color: C.primary,
+                              transform: isExpanded ? 'rotate(180deg)' : 'none',
+                              transition: 'transform 0.3s',
+                            }}>▾</span>
                           </div>
                         </div>
                       </button>
 
-                      <!-- 二级学科展开区（max-h 过渡动画）-->
-                      <div class=${`overflow-hidden transition-[max-height] duration-300 ease-in-out ${isExpanded ? 'max-h-[640px]' : 'max-h-0'}`}>
-                        <div class="mt-3 border-t border-gray-100 pt-3">
-                          <div class="mb-2 text-[10px] font-medium text-gray-400">选择细分方向（可多选）</div>
-                          <div class="flex flex-wrap gap-2">
+                      <!-- 二级学科展开区 -->
+                      <div style=${{
+                        overflow: 'hidden',
+                        maxHeight: isExpanded ? '640px' : '0',
+                        transition: 'max-height 0.3s ease-in-out',
+                      }}>
+                        <div style=${{ marginTop: '12px', paddingTop: '14px', borderTop: `1px solid ${C.border}` }}>
+                          <div style=${{ marginBottom: '10px', fontSize: '14px', fontWeight: 600, color: C.textMuted }}>
+                            选择细分方向（可多选）
+                          </div>
+                          <div style=${{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                             ${(subject.children || []).map((s2) => {
                               const s2Selected = selectedSubject2Ids.includes(s2.id)
                               return html`
                                 <button key=${s2.id}
-                                  class=${`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-left transition-[background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 ${s2Selected ? 'border-primary-400 bg-primary-100' : 'border-gray-200 bg-white hover:border-primary-200 hover:bg-primary-50'}`}
+                                  style=${{
+                                    display: 'flex', alignItems: 'center', gap: '8px',
+                                    borderRadius: '10px', padding: '10px 14px', textAlign: 'left',
+                                    border: `1px solid ${s2Selected ? C.borderActive : C.border}`,
+                                    background: s2Selected ? C.surfaceActive : 'transparent',
+                                    cursor: 'pointer', transition: 'all 0.2s',
+                                  }}
+                                  onMouseEnter=${(e) => { if (!s2Selected) e.currentTarget.style.background = C.surfaceHover }}
+                                  onMouseLeave=${(e) => { if (!s2Selected) e.currentTarget.style.background = 'transparent' }}
                                   onClick=${() => onSubject2Click(s2)}>
-                                  <span class="text-sm">${s2.emoji}</span>
-                                  <span class="min-w-0">
-                                    <span class="block text-xs font-medium text-primary-800">${s2.name}</span>
-                                    <span class="block max-w-[7rem] truncate text-[10px] text-gray-400">${s2.desc}</span>
+                                  <span style=${{ fontSize: '18px' }}>${s2.emoji}</span>
+                                  <span style=${{ minWidth: 0 }}>
+                                    <span style=${{ display: 'block', fontSize: '15px', fontWeight: 600, color: C.text }}>${s2.name}</span>
+                                    <span style=${{ display: 'block', fontSize: '13px', color: C.textDim, maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${s2.desc}</span>
                                   </span>
                                 </button>
                               `
@@ -457,15 +707,26 @@ export default function SubjectPage() {
 
             <!-- 三级场景标签（选中二级学科后显示）-->
             ${availableScenes.length > 0 ? html`
-              <section class="mt-5 rounded-xl border border-primary-200 bg-secondary-50 p-4">
-                <div class="mb-2 flex items-center gap-2">
-                  <span class="text-sm">🎯</span>
-                  <span class="text-xs font-semibold text-secondary-500">选择场景（可多选1-2个）</span>
+              <section style=${{
+                marginTop: '20px', borderRadius: '16px', padding: '18px',
+                background: 'rgba(245,166,35,0.06)', border: `1px solid rgba(245,166,35,0.15)`,
+              }}>
+                <div style=${{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style=${{ fontSize: '18px' }}>🎯</span>
+                  <span style=${{ fontSize: '16px', fontWeight: 700, color: C.accentLight }}>选择场景（可多选 1-2 个）</span>
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <div style=${{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   ${availableScenes.map((scene) => html`
                     <button key=${scene}
-                      class=${`rounded-full px-3 py-1 text-xs transition-[background-color,color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 ${selectedScenes.includes(scene) ? 'border border-primary-200 bg-secondary-100 text-secondary-500' : 'border border-gray-200 bg-white text-gray-500 hover:bg-primary-50'}`}
+                      style=${{
+                        borderRadius: '20px', padding: '8px 16px', fontSize: '14px', fontWeight: 500,
+                        border: `1px solid ${selectedScenes.includes(scene) ? C.borderActive : C.border}`,
+                        background: selectedScenes.includes(scene) ? C.surfaceActive : 'transparent',
+                        color: selectedScenes.includes(scene) ? C.primary : C.textMuted,
+                        cursor: 'pointer', transition: 'all 0.2s',
+                      }}
+                      onMouseEnter=${(e) => { if (!selectedScenes.includes(scene)) { e.target.style.background = C.surfaceHover; e.target.style.color = C.text } }}
+                      onMouseLeave=${(e) => { if (!selectedScenes.includes(scene)) { e.target.style.background = 'transparent'; e.target.style.color = C.textMuted } }}
                       onClick=${() => onSceneToggle(scene)}>${scene}</button>
                   `)}
                 </div>
@@ -478,62 +739,116 @@ export default function SubjectPage() {
           <aside class="w-full md:w-72 md:shrink-0">
 
             <!-- 移动端折叠开关 -->
-            <button class="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm font-bold text-primary-800 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+            <button style=${{
+              display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between',
+              borderRadius: '14px', padding: '14px 18px',
+              fontSize: '16px', fontWeight: 700, color: C.text,
+              border: `1px solid ${C.border}`, background: C.surface,
+              cursor: 'pointer',
+            }}
+              class="md:hidden"
               onClick=${() => setMobileRightOpen((v) => !v)}>
               <span>推荐团队 & 当前选择</span>
-              <span class=${`text-xs text-primary-500 transition-transform duration-300 ${mobileRightOpen ? 'rotate-180' : ''}`}>▾</span>
+              <span style=${{
+                fontSize: '14px', color: C.primary,
+                transform: mobileRightOpen ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.3s',
+              }}>▾</span>
             </button>
 
             <div class=${`mt-4 flex flex-col gap-4 md:mt-0 ${mobileRightOpen ? 'block' : 'hidden md:block'}`}>
 
               <!-- 推荐团队预览 -->
-              <div class="rounded-xl border border-gray-100 bg-white p-3">
-                <div class="mb-2 flex items-center justify-between">
-                  <span class="text-xs font-bold text-primary-800">推荐团队</span>
-                  <span class="text-[10px] text-gray-400">随选择实时更新</span>
+              <div style=${{
+                borderRadius: '16px', padding: '14px',
+                background: C.surface, border: `1px solid ${C.border}`,
+              }}>
+                <div style=${{ marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style=${{ fontSize: '16px', fontWeight: 700, color: C.text }}>推荐团队</span>
+                  <span style=${{ fontSize: '13px', color: C.textDim }}>随选择实时更新</span>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div style=${{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   ${teams.map((team) => html`
-                    <div key=${team.id} class="rounded-lg border border-gray-100 bg-white p-2.5">
-                      <div class="flex items-center gap-2">
-                        <span class="text-lg">${team.emoji}</span>
-                        <span class="text-xs font-bold text-primary-800">${team.name}</span>
+                    <div key=${team.id} style=${{
+                      borderRadius: '12px', padding: '14px',
+                      background: 'rgba(255,255,255,0.02)', border: `1px solid ${C.border}`,
+                    }}>
+                      <div style=${{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style=${{ fontSize: '22px' }}>${team.emoji}</span>
+                        <span style=${{ fontSize: '16px', fontWeight: 700, color: C.text }}>${team.name}</span>
                       </div>
-                      <div class="mt-1.5 flex gap-1">
+                      <div style=${{ marginTop: '8px', display: 'flex', gap: '4px' }}>
                         ${(team.agentEmojis || []).map((e, i) => html`
-                          <span key=${i} class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-50 text-xs">${e}</span>
+                          <span key=${i} style=${{
+                            width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            borderRadius: '50%', background: 'rgba(167,139,250,0.08)', fontSize: '15px',
+                          }}>${e}</span>
                         `)}
                       </div>
-                      <p class="mt-1.5 text-[11px] leading-relaxed text-gray-400">${team.desc}</p>
-                      <button class="mt-2 w-full rounded-lg bg-primary-800 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-                        onClick=${() => useTeam(team)}>一键使用</button>
+                      <p style=${{ marginTop: '8px', fontSize: '14px', lineHeight: 1.6, color: C.textMuted, margin: '8px 0 0 0' }}>${team.desc}</p>
+                      <button class="sp-cta" style=${{
+                        marginTop: '12px', width: '100%', borderRadius: '10px', padding: '12px',
+                        fontSize: '15px', fontWeight: 600,
+                        background: `linear-gradient(135deg, ${C.primaryDark}, ${C.primary})`,
+                        color: '#fff', border: 'none', cursor: 'pointer',
+                        boxShadow: `0 2px 12px ${C.primary}30`,
+                      }}
+                      onMouseEnter=${(e) => e.target.style.boxShadow = `0 4px 20px ${C.primary}50`}
+                      onMouseLeave=${(e) => e.target.style.boxShadow = `0 2px 12px ${C.primary}30`}
+                        onClick=${() => useTeam(team)}>使用这套团队 →</button>
                     </div>
                   `)}
                 </div>
               </div>
 
               <!-- 当前选择摘要 -->
-              <div class="rounded-xl border border-gray-100 bg-white p-3">
-                <div class="mb-2 text-xs font-bold text-primary-800">当前选择</div>
+              <div style=${{
+                borderRadius: '16px', padding: '14px',
+                background: C.surface, border: `1px solid ${C.border}`,
+              }}>
+                <div style=${{ marginBottom: '10px', fontSize: '16px', fontWeight: 700, color: C.text }}>当前选择</div>
                 ${selectedSubject1 ? html`
-                  <div class="flex flex-wrap items-center gap-1">
+                  <div style=${{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
                     ${summaryPath.map((p, i) => html`
-                      <span key=${i} class="flex items-center gap-1">
-                        ${i > 0 ? html`<span class="text-gray-300">→</span>` : null}
-                        <span class="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2 py-0.5 text-[11px] text-primary-700">
+                      <span key=${i} style=${{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        ${i > 0 ? html`<span style=${{ color: C.textDim, fontSize: '14px' }}>→</span>` : null}
+                        <span style=${{
+                          display: 'inline-flex', alignItems: 'center', gap: '4px',
+                          borderRadius: '8px', padding: '4px 10px',
+                          fontSize: '14px', color: C.text,
+                          background: 'rgba(167,139,250,0.08)',
+                        }}>
                           <span>${p.emoji}</span>
                           <span>${p.label}</span>
-                          ${p.onClear ? html`<button class="ml-0.5 rounded-full text-gray-400 transition-colors hover:text-red-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-400"
+                          ${p.onClear ? html`<button style=${{
+                            marginLeft: '2px', borderRadius: '50%', border: 'none',
+                            background: 'transparent', color: C.textDim, cursor: 'pointer',
+                            fontSize: '16px', lineHeight: 1, padding: '0',
+                          }}
+                          onMouseEnter=${(e) => e.target.style.color = C.red}
+                          onMouseLeave=${(e) => e.target.style.color = C.textDim}
                             onClick=${p.onClear}>×</button>` : null}
                         </span>
                       </span>
                     `)}
                   </div>
-                ` : html`<p class="text-[11px] text-gray-400">选择学科后，推荐更精准…</p>`}
+                ` : html`
+                  <div style=${{
+                    fontSize: '14px', color: C.textDim, lineHeight: 1.6,
+                    padding: '12px', borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.02)',
+                    border: `1px dashed ${C.border}`,
+                  }}>
+                    💡 选择学科后，推荐团队会自动匹配更精准的方案
+                  </div>
+                `}
               </div>
 
               <!-- 下一步（桌面）-->
-              <button class=${nextBtnBase + ' hidden md:block'} disabled=${nextDisabled} onClick=${onNext}>
+              <button class="sp-cta hidden md:block"
+                style=${nextBtnStyle}
+                disabled=${nextDisabled}
+                onClick=${onNext}>
                 ${nextBtnLabel}
               </button>
 
@@ -542,21 +857,44 @@ export default function SubjectPage() {
 
         </div>
 
-        <!-- 底部留白，避免被固定栏遮挡 -->
-        <div class="h-24 md:h-12"></div>
+        <!-- 底部留白 -->
+        <div style=${{ height: '80px' }}></div>
       <//>
 
       <!-- 底部固定栏：平台数据 -->
-      <div class="fixed bottom-0 left-0 right-0 z-30 h-9 border-t border-gray-100 bg-white/90 backdrop-blur">
-        <div class="mx-auto flex h-full max-w-7xl items-center justify-between px-4 text-[11px] text-gray-400">
-          <span class="truncate">已有 ${intFmt.format(2341)} 本教材通过本平台变成游戏 | ${intFmt.format(132)} 个AI角色 | ${intFmt.format(20)} 个预设团队</span>
-          <button class="shrink-0 rounded font-medium text-primary-600 transition-colors hover:text-primary-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+      <div style=${{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 30,
+        height: '40px', borderTop: `1px solid ${C.border}`,
+        background: 'rgba(5,1,15,0.9)', backdropFilter: 'blur(12px)',
+      }}>
+        <div style=${{
+          maxWidth: '80rem', margin: '0 auto', height: '100%',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 16px', fontSize: '13px', color: C.textDim,
+        }}>
+          <span style=${{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            已有 ${intFmt.format(2341)} 本教材通过本平台变成游戏 | ${intFmt.format(132)} 个AI角色 | ${intFmt.format(20)} 个预设团队
+          </span>
+          <button style=${{
+            flexShrink: 0, borderRadius: '6px', padding: '4px 10px',
+            fontSize: '14px', fontWeight: 500, color: C.primary,
+            background: 'transparent', border: 'none', cursor: 'pointer',
+          }}
+          onMouseEnter=${(e) => e.target.style.color = C.accentLight}
+          onMouseLeave=${(e) => e.target.style.color = C.primary}
             onClick=${() => goStep(STEPS.HELP)}>使用帮助</button>
         </div>
       </div>
 
       <!-- 移动端固定下一步按钮 -->
-      <button class=${nextBtnBase + ' fixed bottom-9 left-2 right-2 z-40 shadow-lg md:hidden'} disabled=${nextDisabled} onClick=${onNext}>
+      <button class="sp-cta md:hidden"
+        style=${{
+          ...nextBtnStyle,
+          position: 'fixed', bottom: '40px', left: '8px', right: '8px', zIndex: 40,
+          boxShadow: nextDisabled ? 'none' : '0 4px 24px rgba(0,0,0,0.3)',
+        }}
+        disabled=${nextDisabled}
+        onClick=${onNext}>
         ${nextBtnLabel}
       </button>
 

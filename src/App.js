@@ -28,7 +28,7 @@ import PresetTeamPage from './components/platform/PresetTeamPage.js?v=cb2'
 import ProfilePage from './components/platform/ProfilePage.js?v=pp3'
 import ProjectsPage from './components/platform/ProjectsPage.js?v=cb2'
 import ProtocolDemo from './components/platform/ProtocolDemo.js?v=cb2'
-import SubjectPage from './components/platform/SubjectPage.js?v=sp3'
+import SubjectPage from './components/platform/SubjectPage.js?v=sp6'
 import TeamBuilder from './components/platform/TeamBuilder.js?v=cb2'
 import UploadPage from './components/platform/UploadPage.js?v=pdf20260717'
 
