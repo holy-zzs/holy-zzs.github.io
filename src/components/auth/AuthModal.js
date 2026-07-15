@@ -1,6 +1,6 @@
-// 延迟注册弹窗：大厅内触发注册/登录时的传送门模态框
+﻿// 延迟注册弹窗：大厅内触发注册/登录时的传送门模态框
 import { html, useEffect } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import AuthForm from './AuthForm.js'
 
 export default function AuthModal() {

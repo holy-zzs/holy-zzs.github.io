@@ -1,7 +1,7 @@
-// 页面6：上传教材页 — 把教材交给你的AI团队
+﻿// 页面6：上传教材页 — 把教材交给你的AI团队
 // 4种输入模式（PDF / 粘贴 / 网址 / 示例）+ 解析预览面板 + 团队预览条 + 5步进度
 import { html, useState, useRef, useCallback, useMemo } from '../../deps.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
 import { analyzeWithLLM, extractPdfText } from '../../lib/aiParser.js?v=aip8'

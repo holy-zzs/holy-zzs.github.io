@@ -1,8 +1,8 @@
-// 游戏广场 · 全息模组匣子
+﻿// 游戏广场 · 全息模组匣子
 // 通过 iframe 加载设计稿 HTML，保持原封不动的视觉效果
 // 监听 iframe 内 postMessage 实现导航跳转
 import { html, useEffect, useRef } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 
 // 默认用户头像（demo 阶段统一使用）
 export const DEFAULT_AVATAR = '/assets/agents/image_0_yi19x4.jpg'

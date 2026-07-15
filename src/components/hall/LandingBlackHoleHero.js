@@ -1,5 +1,5 @@
-import { html, useEffect, useMemo, useRef } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+﻿import { html, useEffect, useMemo, useRef } from '../../react.js'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { useHeroUploadFlow } from './useHeroUploadFlow.js'
 
 function prefersReducedMotion() {

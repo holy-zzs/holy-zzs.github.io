@@ -1,7 +1,7 @@
-// 多智能体协作讨论工作台 · 深空赛博 HUD 风格
+﻿// 多智能体协作讨论工作台 · 深空赛博 HUD 风格
 // v2: 匹配游戏广场设计美学 — 深空背景 / 霓虹双色 / 等宽字体 / 棱角切割面板
 import { html, useState, useRef, useEffect, useCallback } from '../../deps.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { Button, MarkdownView } from '../common/ui.js'
 import { getAgent } from '../../data/agents.js'
 import { streamAgentResponse } from '../../lib/aiAdapter.js?v=aip7'

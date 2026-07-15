@@ -1,7 +1,7 @@
-// 社区展示：海报式大色块横向滚动墙
+﻿// 社区展示：海报式大色块横向滚动墙
 import { html, useState, useRef, useEffect } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { getAgents } from '../../data/agents.js'
 import { COMMUNITY_CREATIONS } from '../../data/community.js'
 import { audio } from '../../lib/audio.js'

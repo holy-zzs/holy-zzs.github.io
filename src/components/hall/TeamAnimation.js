@@ -1,8 +1,8 @@
-// 团队协作动画 v3.0：AI 圆桌讨论 + 思维连线粒子 + NPC微表情互动
+﻿// 团队协作动画 v3.0：AI 圆桌讨论 + 思维连线粒子 + NPC微表情互动
 // 升级五：悬停交互、点击对话、情绪系统、空闲状态
 import { html, useEffect, useRef, useState, useCallback } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { getAgents, DEFAULT_TEAM, getAgent } from '../../data/agents.js'
 import { audio } from '../../lib/audio.js'
 

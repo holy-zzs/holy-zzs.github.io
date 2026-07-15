@@ -1,6 +1,6 @@
-// 反馈 / 工单系统 — 双栏布局：左侧反馈表单 + 右侧快速自查/已知问题/路线图
+﻿// 反馈 / 工单系统 — 双栏布局：左侧反馈表单 + 右侧快速自查/已知问题/路线图
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──

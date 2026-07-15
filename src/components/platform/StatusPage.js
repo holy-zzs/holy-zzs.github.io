@@ -1,6 +1,6 @@
-// 状态页 — 系统运行状态总览 + 服务健康度 + 30天可用率 + 历史事件 + 维护通知
+﻿// 状态页 — 系统运行状态总览 + 服务健康度 + 30天可用率 + 历史事件 + 维护通知
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──

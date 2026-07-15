@@ -1,9 +1,9 @@
-// 游戏广场 · 全息模组匣子 (Holo-Cartridges)
+﻿// 游戏广场 · 全息模组匣子 (Holo-Cartridges)
 // 完全按设计稿实现：深空赛博 HUD 主题，双霓虹（青/紫）
 // 含矩阵雨、英雄轮播、终端检索、Bento 模组匣子、侧边 HUD 4面板、状态栏
 // 交互：搜索 / Tab 过滤 / 流派 chip / 排序 / 网格-列表切换 / 悬停解码 / 触摸滑动
 import { html, useState, useEffect, useRef, useCallback, useMemo } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 
 /* ============================ 数据 ============================ */
 

@@ -1,4 +1,4 @@
-// 页面14：注册/登录页 — 复古CRT风格双栏布局
+﻿// 页面14：注册/登录页 — 复古CRT风格双栏布局
 // 左侧品牌视觉 + CRT 扫描线动效，右侧登录/注册表单
 import { html, useCallback, useContext, useState } from '../../deps.js'
 import {
@@ -9,7 +9,7 @@ import {
   verifyPassword
 } from '../../lib/crypto.js'
 import { uid } from '../../lib/storage.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { Footer, NavBar } from './PlatformCommon.js?v=nav3'
 
 // ── 复古色板 ──

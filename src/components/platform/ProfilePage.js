@@ -1,7 +1,7 @@
-// 页面13：用户个人中心 — 创作者中心 Dashboard
+﻿// 页面13：用户个人中心 — 创作者中心 Dashboard
 // 完全复刻设计稿：赛博朋克暗紫风 + 玻璃拟态 + 数据可视化
 import { html, useContext, useEffect, useState } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer } from './PlatformCommon.js?v=nav3'
 
 // ── 设计令牌（与设计稿 CSS 变量一致）──

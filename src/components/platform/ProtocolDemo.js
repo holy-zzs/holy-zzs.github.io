@@ -1,10 +1,10 @@
-// ═══════════════════════════════════════════════════════════
+﻿// ═══════════════════════════════════════════════════════════
 // 知识-玩法映射协议演示页 (ProtocolDemo)
 // 展示跨学段的AI如何把课本知识变成游戏，含 T16 医学临床队深度演示
 // 技术栈：React 18 + htm（无 JSX，使用 html`` 模板字符串）
 // ═══════════════════════════════════════════════════════════
 import { html, useState, useMemo, useContext, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 import {
   T16_DEMO,

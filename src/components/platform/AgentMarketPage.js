@@ -1,7 +1,7 @@
-// 页面5：自定义团队 - 智能体市场页
+﻿// 页面5：自定义团队 - 智能体市场页
 // 自由挑选AI角色组队，含金量拉满，这不比博人传燃？
 import { html, useContext, useCallback, useState, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 

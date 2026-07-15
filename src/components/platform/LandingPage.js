@@ -1,4 +1,4 @@
-import {
+﻿import {
     HOMEPAGE_FAQS,
     HOMEPAGE_FEATURES,
     HOMEPAGE_HERO,
@@ -8,24 +8,24 @@ import {
     HOMEPAGE_SOCIAL_PROOF,
     HOMEPAGE_AUDIENCES,
     HOMEPAGE_DEMO_CASES
-} from '../../data/homepageBrandContent.mjs'
-import { html, useCallback, useContext, useMemo } from '../../deps.js'
-import { getLandingPrimaryAction } from '../../lib/homepageState.mjs?v8'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
-import DemoShowcaseSection from './homepage/DemoShowcaseSection.js'
-import FaqSection from './homepage/FaqSection.js'
-import FeatureCardsSection from './homepage/FeatureCardsSection.js'
-import FinalCtaSection from './homepage/FinalCtaSection.js'
-import HeroStage from './homepage/HeroStage.js'
-import PipelineSection from './homepage/PipelineSection.js'
-import CommunityFeaturedSection from './homepage/CommunityFeaturedSection.js'
-import ShowcaseWallSection from './homepage/ShowcaseWallSection.js'
-import StageSelectSection from './homepage/StageSelectSection.js'
-import ValueCardsSection from './homepage/ValueCardsSection.js'
-import SocialProofSection from './homepage/SocialProofSection.js'
-import AudiencesSection from './homepage/AudiencesSection.js'
-import { Footer, NavBar } from './PlatformCommon.js?v=nav3'
-import InfiniteCanvas from './homepage/InfiniteCanvas.js'
+} from '../../data/homepageBrandContent.mjs?v=hbc1'
+import { html, useCallback, useContext, useMemo } from '../../deps.js?v=deps1'
+import { getLandingPrimaryAction } from '../../lib/homepageState.mjs?v9'
+import { AppContext, STEPS } from '../../store/appContext.js'
+import DemoShowcaseSection from './homepage/DemoShowcaseSection.js?v=hs1'
+import FaqSection from './homepage/FaqSection.js?v=hs1'
+import FeatureCardsSection from './homepage/FeatureCardsSection.js?v=hs1'
+import FinalCtaSection from './homepage/FinalCtaSection.js?v=hs1'
+import HeroStage from './homepage/HeroStage.js?v=hs1'
+import PipelineSection from './homepage/PipelineSection.js?v=hs1'
+import CommunityFeaturedSection from './homepage/CommunityFeaturedSection.js?v=hs1'
+import ShowcaseWallSection from './homepage/ShowcaseWallSection.js?v=hs1'
+import StageSelectSection from './homepage/StageSelectSection.js?v=hs1'
+import ValueCardsSection from './homepage/ValueCardsSection.js?v=hs1'
+import SocialProofSection from './homepage/SocialProofSection.js?v=hs1'
+import AudiencesSection from './homepage/AudiencesSection.js?v=hs1'
+import { Footer, NavBar } from './PlatformCommon.js?v=nav4'
+import InfiniteCanvas from './homepage/InfiniteCanvas.js?v=hs1'
 
 export default function LandingPage() {
   const { state, dispatch } = useContext(AppContext)

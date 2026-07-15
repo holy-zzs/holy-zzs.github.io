@@ -1,10 +1,10 @@
-// ═══════════════════════════════════════════════════════════
+﻿// ═══════════════════════════════════════════════════════════
 // 战术链路指示器 (Tactical Pipeline HUD)
 // 4阶段造物流程：投喂知识 → 降维解析 → 唤醒团队 → 宇宙锻造
 // ═══════════════════════════════════════════════════════════
 
 import { html } from '../../deps.js'
-import { STEPS } from '../../store/appContext.js?v=ctx2'
+import { STEPS } from '../../store/appContext.js'
 
 const PIPELINE_STAGES = [
   { id: 'data_input',    num: '01', en: 'UPLOAD_DATA',   cn: '投喂知识',   desc: '燃料注入',         step: STEPS.UPLOAD },

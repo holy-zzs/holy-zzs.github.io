@@ -1,9 +1,9 @@
-// ═══════════════════════════════════════════════════════════
+﻿// ═══════════════════════════════════════════════════════════
 // 玩法扭蛋机 (GameplayGacha)
 // 学段游戏架构师系统：扭蛋抽取玩法 + 协作链注入可视化
 // ═══════════════════════════════════════════════════════════
 import { html, useContext, useState, useCallback, useMemo, useEffect } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import {
   GAME_ARCHITECTS,

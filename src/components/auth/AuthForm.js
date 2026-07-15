@@ -1,6 +1,6 @@
-// 认证表单组件 — 对接后端 API
+﻿// 认证表单组件 — 对接后端 API
 import { html, useState } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { Button } from '../common/ui.js'
 import { authAPI, tokenStore } from '../../lib/api.js'
 import { isValidEmail, isStrongPassword, passwordStrength, STRENGTH_LABELS } from '../../lib/crypto.js'

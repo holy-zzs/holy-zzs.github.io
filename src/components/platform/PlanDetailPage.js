@@ -1,7 +1,7 @@
-// 页面12：方案详情页
+﻿// 页面12：方案详情页
 // 别人做的方案长啥样？点进来抄作业，含金量拉满
 import { html, useContext, useCallback, useState, useEffect } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { COMMUNITY_PLANS, VISUAL_STYLES } from '../../data/platformData.js'
 import { NavBar, Footer, PageContainer, EmptyState } from './PlatformCommon.js?v=nav3'
 

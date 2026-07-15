@@ -1,6 +1,6 @@
-// 邀请好友 / 推荐计划页 — 分享链接、双方得奖，含金量传染
+﻿// 邀请好友 / 推荐计划页 — 分享链接、双方得奖，含金量传染
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──

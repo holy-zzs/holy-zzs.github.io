@@ -1,6 +1,6 @@
-// 博客/资源中心 — Hero + 游戏模板蓝图 + 分类筛选 + 精选文章 + 文章网格 + 订阅
+﻿// 博客/资源中心 — Hero + 游戏模板蓝图 + 分类筛选 + 精选文章 + 文章网格 + 订阅
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 import GameTemplateSection from './GameTemplateSection.js'
 

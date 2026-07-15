@@ -1,7 +1,7 @@
-// 页面4：预设团队选择页
+﻿// 页面4：预设团队选择页
 // 选一个现成AI团队模板，有手就行，含金量拉满
 import { html, useContext, useCallback, useState, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { PRESET_TEAMS } from '../../data/platformData.js'
 import { AGENTS } from '../../data/agents.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'

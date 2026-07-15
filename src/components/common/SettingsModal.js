@@ -1,6 +1,6 @@
-// 设置模态框 v3.1：三模式 AI 引擎 + 16+ API 预设 + TRAE 同款免费模型 + TRAE CLI 检测
+﻿// 设置模态框 v3.1：三模式 AI 引擎 + 16+ API 预设 + TRAE 同款免费模型 + TRAE CLI 检测
 import { html, useState, useEffect } from '../../react.js'
-import { useApp } from '../../store/appContext.js?v=ctx2'
+import { useApp } from '../../store/appContext.js'
 import { Modal, Button } from './ui.js'
 import { checkBridgeHealth, testApiKey } from '../../lib/aiAdapter.js?v=aip7'
 import { getBridgeStartupCommand, copyToClipboard } from '../../lib/bridgeScript.js'

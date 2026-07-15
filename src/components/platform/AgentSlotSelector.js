@@ -1,10 +1,10 @@
-// ═══════════════════════════════════════════════════════════
+﻿// ═══════════════════════════════════════════════════════════
 // 智能体插槽选择器 (AgentSlotSelector)
 // 像选英雄/组牌一样拖拽角色到5个插槽
 // 含羁绊系统 + 一键套用模板 + 神秘嘉宾
 // ═══════════════════════════════════════════════════════════
 import { html, useContext, useState, useCallback, useEffect, useRef, useMemo } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { AGENTS, getAgentsByGrade } from '../../data/agents.js'
 import { PRESET_TEAMS } from '../../data/platformData.js'
 import { encodeTeamCode, isValidCode, getTeamByCode } from '../../data/teamShareCode.js'

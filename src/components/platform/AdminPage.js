@@ -1,6 +1,6 @@
-// 管理员 / 教师面板 — 班级管理、学生进度、方案审核、数据统计
+﻿// 管理员 / 教师面板 — 班级管理、学生进度、方案审核、数据统计
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, EmptyState } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──

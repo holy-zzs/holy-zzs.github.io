@@ -1,5 +1,5 @@
-import { html } from '../../react.js'
-import { useApp } from '../../store/appContext.js?v=ctx2'
+﻿import { html } from '../../react.js'
+import { useApp } from '../../store/appContext.js'
 import { useHall } from './GameHall.js'
 import { HALL_PLAZA_HERO, HALL_PLAZA_STATS } from '../../data/hallPlazaContent.mjs'
 import { audio } from '../../lib/audio.js'

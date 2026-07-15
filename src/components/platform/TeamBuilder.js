@@ -1,10 +1,10 @@
-// ═══════════════════════════════════════════════════════════
+﻿// ═══════════════════════════════════════════════════════════
 // 引导式智能团队构建器 (TeamBuilder) v4.0 — Holo Cartridge Console
 // 6槽位 × 8大部门 × 132个智能体 × 三围属性 × 羁绊系统
 // 视觉语言：全息模组匣子 · 借鉴游戏广场设计
 // ═══════════════════════════════════════════════════════════
 import { html, useState, useCallback, useMemo, useEffect } from '../../deps.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { AGENTS, AGENT_CATEGORIES, getNewAgents, getAgentAvatar, DIRECTOR_AGENTS } from '../../data/agents.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import {

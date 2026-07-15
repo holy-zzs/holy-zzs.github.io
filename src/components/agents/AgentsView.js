@@ -1,6 +1,6 @@
-// 智能体组队界面：角色市场 + 拖拽组队 + 团队管理（任务5）
+﻿// 智能体组队界面：角色市场 + 拖拽组队 + 团队管理（任务5）
 import { html, useState, useRef } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
+import { useApp, STEPS } from '../../store/appContext.js'
 import { Button, Modal, EmptyState } from '../common/ui.js'
 import { AGENTS, getAgent, DEFAULT_TEAM, ROLE_TYPES, AGENT_ROLE_MAP } from '../../data/agents.js'
 import { uid } from '../../lib/storage.js'
