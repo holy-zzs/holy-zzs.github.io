@@ -6,109 +6,109 @@
     <title>玩法推荐 - AI游戏策略师</title>
     <style id="theme-vars">
 :root {
-  /* === Base Background === */
-  --ags-bg-base: #0a0814;
-  --ags-bg-deep: #0d0b1a;
-  --ags-bg-surface: #131124;
-  --ags-bg-card: #181530;
-  --ags-bg-card-hover: #1d1a3d;
-  --ags-bg-elevated: #1f1b3a;
+  /* === Base Background (Light Apple-style) === */
+  --ags-bg-base: #f5f5f7;
+  --ags-bg-surface: #ffffff;
+  --ags-bg-card: #ffffff;
+  --ags-bg-sidebar: #1d1d1f;
+  --bg-sidebar-secondary: #2c2c2e;
+  --ags-bg-hover: #f5f5f7;
+  --ags-bg-elevated: #ffffff;
 
   /* === Primary Purple === */
   --ags-purple: #8b5cf6;
   --ags-purple-light: #a78bfa;
   --ags-purple-dark: #7c3aed;
-  --ags-purple-glow: rgba(139, 92, 246, 0.4);
+  --ags-purple-soft: #f3effe;
+  --ags-purple-glow: rgba(139, 92, 246, 0.15);
 
-  /* === Pink / Magenta === */
+  /* === Pink === */
   --ags-pink: #ec4899;
   --ags-pink-light: #f472b6;
-  --ags-pink-glow: rgba(236, 72, 153, 0.35);
+  --ags-pink-soft: #fdf2f8;
 
-  /* === Cyan === */
+  /* === Cyan / Blue === */
   --ags-cyan: #06b6d4;
   --ags-cyan-light: #22d3ee;
-  --ags-cyan-glow: rgba(6, 182, 212, 0.35);
-
-  /* === Blue === */
   --ags-blue: #3b82f6;
   --ags-blue-light: #60a5fa;
-  --ags-blue-glow: rgba(59, 130, 246, 0.35);
 
   /* === Gold / Amber === */
   --ags-gold: #f59e0b;
   --ags-gold-light: #fbbf24;
-  --ags-gold-glow: rgba(245, 158, 11, 0.35);
 
   /* === Green === */
   --ags-green: #10b981;
   --ags-green-light: #34d399;
-  --ags-green-glow: rgba(16, 185, 129, 0.35);
 
   /* === Text === */
-  --ags-text-primary: #ffffff;
-  --ags-text-secondary: #c4b8e8;
-  --ags-text-muted: #8b80b5;
-  --ags-text-dim: #5c5478;
+  --ags-text-primary: #1d1d1f;
+  --ags-text-secondary: #424245;
+  --ags-text-muted: #6e6e73;
+  --ags-text-dim: #86868b;
+  --ags-text-on-dark: #ffffff;
+  --ags-text-on-dark-muted: #aeaeb2;
 
   /* === Border === */
-  --ags-border: rgba(139, 92, 246, 0.15);
-  --ags-border-light: rgba(139, 92, 246, 0.08);
-  --ags-border-active: rgba(139, 92, 246, 0.4);
+  --ags-border: #d2d2d7;
+  --ags-border-light: #e5e5ea;
+  --ags-border-dark: rgba(255, 255, 255, 0.1);
 
   /* === Gradients === */
-  --ags-gradient-purple-pink: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-  --ags-gradient-purple-cyan: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-  --ags-gradient-pink-purple: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  --ags-gradient-blue-purple: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --ags-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  --ags-gradient-green: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  --ags-gradient-dark: linear-gradient(180deg, #131124 0%, #0d0b1a 100%);
+  --ags-gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  --ags-gradient-dark: linear-gradient(180deg, #1d1d1f 0%, #2c2c2e 100%);
 
   /* === Shadows === */
-  --ags-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --ags-shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
-  --ags-shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.3);
-  --ags-shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.3);
+  --ags-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --ags-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --ags-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --ags-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
 
   /* === Typography === */
-  --ags-font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ags-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --ags-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", sans-serif;
 
   /* === Radius === */
-  --ags-radius-sm: 6px;
-  --ags-radius-md: 10px;
-  --ags-radius-lg: 14px;
+  --ags-radius-sm: 8px;
+  --ags-radius-md: 12px;
+  --ags-radius-lg: 16px;
   --ags-radius-xl: 20px;
   --ags-radius-full: 9999px;
 
-  /* === Semantic Aliases (required by fill-html-head.mjs) === */
+  /* === Semantic Aliases (required by fill-html-head.mjs @theme inline bridge) === */
   --ags-background: var(--ags-bg-base);
   --ags-foreground: var(--ags-text-primary);
   --ags-card: var(--ags-bg-card);
-  --ags-primary: var(--ags-purple);
-  --ags-primary-foreground: var(--ags-text-primary);
-  --ags-muted: var(--ags-bg-surface);
-  --ags-muted-foreground: var(--ags-text-muted);
-  --ags-border-semantic: var(--ags-border);
-  --ags-ring: var(--ags-purple);
-  --ags-secondary: var(--ags-bg-elevated);
-  --ags-secondary-foreground: var(--ags-text-secondary);
-  --ags-accent: var(--ags-bg-surface);
-  --ags-accent-foreground: var(--ags-text-secondary);
-  --ags-destructive: var(--ags-pink);
-  --ags-destructive-foreground: var(--ags-text-primary);
+  --ags-card-foreground: var(--ags-text-primary);
   --ags-popover: var(--ags-bg-elevated);
   --ags-popover-foreground: var(--ags-text-primary);
+  --ags-primary: var(--ags-purple);
+  --ags-primary-foreground: #ffffff;
+  --ags-secondary: var(--ags-bg-elevated);
+  --ags-secondary-foreground: var(--ags-text-secondary);
+  --ags-muted: var(--ags-bg-hover);
+  --ags-muted-foreground: var(--ags-text-muted);
+  --ags-accent: var(--ags-purple-soft);
+  --ags-accent-foreground: var(--ags-purple-dark);
+  --ags-destructive: var(--ags-pink);
+  --ags-destructive-foreground: #ffffff;
+  --ags-input: var(--ags-border-light);
+  --ags-ring: var(--ags-purple);
+  --ags-chart-1: var(--ags-purple);
+  --ags-chart-2: var(--ags-cyan);
+  --ags-chart-3: var(--ags-blue);
+  --ags-chart-4: var(--ags-pink);
+  --ags-chart-5: var(--ags-gold);
 }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
     <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
     <style type="text/tailwindcss">
   @theme inline {
     --color-background: var(--ags-background);
     --color-foreground: var(--ags-foreground);
     --color-card: var(--ags-card);
+    --color-card-foreground: var(--ags-card-foreground);
     --color-popover: var(--ags-popover);
     --color-popover-foreground: var(--ags-popover-foreground);
     --color-primary: var(--ags-primary);
@@ -122,7 +122,13 @@
     --color-destructive: var(--ags-destructive);
     --color-destructive-foreground: var(--ags-destructive-foreground);
     --color-border: var(--ags-border);
+    --color-input: var(--ags-input);
     --color-ring: var(--ags-ring);
+    --color-chart-1: var(--ags-chart-1);
+    --color-chart-2: var(--ags-chart-2);
+    --color-chart-3: var(--ags-chart-3);
+    --color-chart-4: var(--ags-chart-4);
+    --color-chart-5: var(--ags-chart-5);
     --radius-sm: var(--ags-radius-sm);
     --radius-md: var(--ags-radius-md);
     --radius-lg: var(--ags-radius-lg);
@@ -147,6 +153,10 @@
       .text-card { color: var(--ags-card); }
       .border-card { border-color: var(--ags-card); }
       .ring-card { --tw-ring-color: var(--ags-card); }
+      .bg-card-foreground { background-color: var(--ags-card-foreground); }
+      .text-card-foreground { color: var(--ags-card-foreground); }
+      .border-card-foreground { border-color: var(--ags-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--ags-card-foreground); }
       .bg-popover { background-color: var(--ags-popover); }
       .text-popover { color: var(--ags-popover); }
       .border-popover { border-color: var(--ags-popover); }
@@ -199,10 +209,34 @@
       .text-border { color: var(--ags-border); }
       .border-border { border-color: var(--ags-border); }
       .ring-border { --tw-ring-color: var(--ags-border); }
+      .bg-input { background-color: var(--ags-input); }
+      .text-input { color: var(--ags-input); }
+      .border-input { border-color: var(--ags-input); }
+      .ring-input { --tw-ring-color: var(--ags-input); }
       .bg-ring { background-color: var(--ags-ring); }
       .text-ring { color: var(--ags-ring); }
       .border-ring { border-color: var(--ags-ring); }
       .ring-ring { --tw-ring-color: var(--ags-ring); }
+      .bg-chart-1 { background-color: var(--ags-chart-1); }
+      .text-chart-1 { color: var(--ags-chart-1); }
+      .border-chart-1 { border-color: var(--ags-chart-1); }
+      .ring-chart-1 { --tw-ring-color: var(--ags-chart-1); }
+      .bg-chart-2 { background-color: var(--ags-chart-2); }
+      .text-chart-2 { color: var(--ags-chart-2); }
+      .border-chart-2 { border-color: var(--ags-chart-2); }
+      .ring-chart-2 { --tw-ring-color: var(--ags-chart-2); }
+      .bg-chart-3 { background-color: var(--ags-chart-3); }
+      .text-chart-3 { color: var(--ags-chart-3); }
+      .border-chart-3 { border-color: var(--ags-chart-3); }
+      .ring-chart-3 { --tw-ring-color: var(--ags-chart-3); }
+      .bg-chart-4 { background-color: var(--ags-chart-4); }
+      .text-chart-4 { color: var(--ags-chart-4); }
+      .border-chart-4 { border-color: var(--ags-chart-4); }
+      .ring-chart-4 { --tw-ring-color: var(--ags-chart-4); }
+      .bg-chart-5 { background-color: var(--ags-chart-5); }
+      .text-chart-5 { color: var(--ags-chart-5); }
+      .border-chart-5 { border-color: var(--ags-chart-5); }
+      .ring-chart-5 { --tw-ring-color: var(--ags-chart-5); }
     </style>
     <style>
       .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -222,7 +256,476 @@
     </style>
 </head>
 <body class="min-h-screen font-sans antialiased">
-    <main>
+    <main class="h-screen overflow-hidden flex flex-col" data-viewport-mode="app-shell" style="font-family: var(--ags-font-sans); background: var(--ags-bg-base);">
+
+      <!-- ===== TOP NAV BAR ===== -->
+      <nav class="h-16 shrink-0 grid grid-cols-3 items-center px-8 gap-4 border-b" style="background: var(--ags-bg-card); border-color: var(--ags-border-light);">
+        <!-- left: brand -->
+        <div class="flex items-center gap-3 min-w-0 justify-self-start">
+          <span class="shrink-0 inline-flex items-center" style="color: var(--ags-text-primary);">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.78 1.3 10.33.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.56 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.44 1.39-2.83 1.41-2.9-.03-.01-2.7-1.04-2.72-4.13M14.6 4.59c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.01-1.44"/></svg>
+          </span>
+          <div class="min-w-0">
+            <div class="text-lg font-semibold leading-tight truncate" style="color: var(--ags-text-primary);">AI Game Strategist</div>
+            <div class="text-xs leading-tight truncate" style="color: var(--ags-text-muted);">AI 为你的教材找到最佳游戏化学习方式</div>
+          </div>
+        </div>
+        <!-- center: 4-step progress -->
+        <div class="flex items-center justify-center gap-3 justify-self-center">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style="background: var(--ags-purple); color: var(--ags-primary-foreground);">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            </div>
+            <span class="text-xs font-medium whitespace-nowrap" style="color: var(--ags-text-primary);">教材分析</span>
+          </div>
+          <div class="w-6 h-px shrink-0" style="background: var(--ags-purple);"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0" style="background: var(--ags-purple); color: var(--ags-primary-foreground); box-shadow: 0 0 0 3px var(--ags-purple-glow);">02</div>
+            <span class="text-xs font-semibold whitespace-nowrap" style="color: var(--ags-purple);">玩法推荐</span>
+          </div>
+          <div class="w-6 h-px shrink-0" style="background: var(--ags-border-light);"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 border" style="border-color: var(--ags-border); color: var(--ags-text-dim);">03</div>
+            <span class="text-xs whitespace-nowrap" style="color: var(--ags-text-dim);">团队组建</span>
+          </div>
+          <div class="w-6 h-px shrink-0" style="background: var(--ags-border-light);"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 border" style="border-color: var(--ags-border); color: var(--ags-text-dim);">04</div>
+            <span class="text-xs whitespace-nowrap" style="color: var(--ags-text-dim);">开始创作</span>
+          </div>
+        </div>
+        <!-- right: bell + avatar -->
+        <div class="flex items-center gap-3 justify-self-end shrink-0">
+          <button type="button" class="relative w-9 h-9 rounded-full flex items-center justify-center" style="color: var(--ags-text-muted);" aria-label="通知">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute top-1.5 right-2 w-2 h-2 rounded-full" style="background: var(--ags-pink);"></span>
+          </button>
+          <img src="../assets/team-education-expert.jpg" alt="用户头像" class="w-8 h-8 rounded-full object-cover shrink-0">
+        </div>
+      </nav>
+
+      <!-- ===== MIDDLE: SIDEBAR + MAIN CONTENT ===== -->
+      <div class="flex-1 flex min-h-0 gap-6 p-6">
+        <!-- LEFT SIDEBAR (dark card) -->
+        <aside class="w-72 shrink-0 rounded-2xl p-6 overflow-y-auto no-scrollbar" style="background: var(--ags-bg-sidebar); color: var(--ags-text-on-dark);">
+          <div class="flex items-center gap-2">
+            <i data-lucide="file-text" class="w-3.5 h-3.5" style="color: var(--ags-text-on-dark-muted);"></i>
+            <span class="text-xs uppercase tracking-wider" style="color: var(--ags-text-on-dark-muted);">当前教材</span>
+          </div>
+          <h2 class="mt-2 text-base font-semibold truncate" style="color: var(--ags-text-on-dark);">小学科学 五年级上册</h2>
+          <p class="text-xs mt-1 truncate" style="color: var(--ags-text-on-dark-muted);">science_grades.pdf</p>
+          <div class="flex items-center gap-1.5 mt-2 text-xs" style="color: var(--ags-text-on-dark-muted);">
+            <span>126个知识点</span>
+            <span style="color: var(--ags-purple);">·</span>
+            <span>23个实验</span>
+          </div>
+
+          <div class="my-5 h-px" style="background: var(--ags-border-dark);"></div>
+
+          <div class="flex items-center gap-2">
+            <i data-lucide="target" class="w-3.5 h-3.5" style="color: var(--ags-text-on-dark-muted);"></i>
+            <span class="text-xs uppercase tracking-wider" style="color: var(--ags-text-on-dark-muted);">学习目标</span>
+          </div>
+          <ul class="mt-3 space-y-2.5">
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 mt-0.5 rounded-full flex items-center justify-center shrink-0" style="background: var(--ags-purple);">
+                <i data-lucide="check" class="w-2.5 h-2.5" style="color: var(--ags-primary-foreground);"></i>
+              </span>
+              <span class="text-sm leading-snug" style="color: var(--ags-text-on-dark);">理解生态系统的构成</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 mt-0.5 rounded-full flex items-center justify-center shrink-0" style="background: var(--ags-purple);">
+                <i data-lucide="check" class="w-2.5 h-2.5" style="color: var(--ags-primary-foreground);"></i>
+              </span>
+              <span class="text-sm leading-snug" style="color: var(--ags-text-on-dark);">掌握食物链和能量流动</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 mt-0.5 rounded-full flex items-center justify-center shrink-0" style="background: var(--ags-purple);">
+                <i data-lucide="check" class="w-2.5 h-2.5" style="color: var(--ags-primary-foreground);"></i>
+              </span>
+              <span class="text-sm leading-snug" style="color: var(--ags-text-on-dark);">培养科学探究能力</span>
+            </li>
+          </ul>
+
+          <div class="my-5 h-px" style="background: var(--ags-border-dark);"></div>
+
+          <div class="flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5" style="color: var(--ags-text-on-dark-muted);"></i>
+            <span class="text-xs uppercase tracking-wider" style="color: var(--ags-text-on-dark-muted);">AI 分析结果</span>
+          </div>
+          <div class="mt-4 flex flex-col items-center">
+            <div class="relative w-24 h-24 rounded-full" style="background: conic-gradient(var(--ags-purple) 0% 98%, var(--ags-border-dark) 98% 100%);">
+              <div class="absolute inset-[6px] rounded-full flex flex-col items-center justify-center" style="background: var(--ags-bg-sidebar);">
+                <span class="text-2xl font-bold leading-none" style="color: var(--ags-text-on-dark);">98%</span>
+                <span class="text-[10px] mt-1" style="color: var(--ags-text-on-dark-muted);">匹配度</span>
+              </div>
+            </div>
+            <p class="mt-3 text-sm font-medium" style="color: var(--ags-text-on-dark);">知识覆盖度高</p>
+            <p class="text-xs mt-0.5" style="color: var(--ags-text-on-dark-muted);">非常适合游戏化学习</p>
+          </div>
+
+          <div class="my-5 h-px" style="background: var(--ags-border-dark);"></div>
+
+          <div class="flex items-center gap-2">
+            <i data-lucide="users" class="w-3.5 h-3.5" style="color: var(--ags-text-on-dark-muted);"></i>
+            <span class="text-xs uppercase tracking-wider" style="color: var(--ags-text-on-dark-muted);">适合年龄</span>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <div class="min-w-0">
+              <div class="text-lg font-semibold leading-tight" style="color: var(--ags-text-on-dark);">10-11岁</div>
+              <div class="text-xs mt-0.5" style="color: var(--ags-text-on-dark-muted);">小学高年级</div>
+            </div>
+            <img src="../assets/age-kids.jpg" alt="适龄儿童" class="w-16 h-16 rounded-lg object-cover shrink-0">
+          </div>
+        </aside>
+
+        <!-- MAIN CONTENT (scrollable) -->
+        <section class="flex-1 min-h-0 overflow-y-auto no-scrollbar" data-scroll-region="primary">
+          <div class="pb-6">
+            <!-- Section 1: Header + Age Tabs -->
+            <header class="mb-6">
+              <h1 class="text-2xl font-bold tracking-tight" style="color: var(--ags-text-primary);">AI 推荐的游戏化学习方案</h1>
+              <p class="text-sm mt-1.5" style="color: var(--ags-text-muted);">基于教材内容分析，为目标年龄段推荐最合适的游戏化学习方案</p>
+              <div class="flex flex-wrap items-center gap-2 mt-4">
+                <button type="button" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap" style="background: var(--ags-purple); color: var(--ags-primary-foreground);">小学 6-12岁</button>
+                <button type="button" class="px-4 py-2 rounded-full text-sm whitespace-nowrap border" style="background: var(--ags-bg-card); color: var(--ags-text-muted); border-color: var(--ags-border-light);">中学 12-18岁</button>
+                <button type="button" class="px-4 py-2 rounded-full text-sm whitespace-nowrap border" style="background: var(--ags-bg-card); color: var(--ags-text-muted); border-color: var(--ags-border-light);">大学 18-22岁</button>
+                <button type="button" class="px-4 py-2 rounded-full text-sm whitespace-nowrap border" style="background: var(--ags-bg-card); color: var(--ags-text-muted); border-color: var(--ags-border-light);">成人 22+岁</button>
+              </div>
+            </header>
+
+            <!-- Section 2: 4 Game Mode Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <!-- Card 01 Adventure -->
+              <article class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <img src="../assets/game-adventure.jpg" alt="探索冒险" class="h-32 w-full object-cover">
+                <div class="p-4 flex flex-col gap-3 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--ags-text-dim);">01</span>
+                    <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--ags-purple);">Adventure</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2">
+                    <h3 class="text-base font-semibold leading-tight min-w-0" style="color: var(--ags-text-primary);">探索冒险</h3>
+                    <span class="text-lg font-bold leading-none shrink-0" style="color: var(--ags-purple);">98%</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">探索</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">收集</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">剧情</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">养成</span>
+                  </div>
+                  <div>
+                    <div class="text-xs uppercase tracking-wider mb-1" style="color: var(--ags-text-dim);">教材结合方式</div>
+                    <p class="text-xs leading-relaxed line-clamp-2" style="color: var(--ags-text-secondary);">学生扮演探险家，在虚拟生态系统中寻找物种、记录生物关系，完成知识任务解锁新区域。</p>
+                  </div>
+                  <div class="mt-auto">
+                    <div class="text-xs uppercase tracking-wider mb-1.5" style="color: var(--ags-text-dim);">学习效果预测</div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-0.5">
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                      </div>
+                      <span class="text-sm font-semibold" style="color: var(--ags-green);">92%</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Card 02 Simulation -->
+              <article class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <img src="../assets/game-simulation.jpg" alt="模拟经营" class="h-32 w-full object-cover">
+                <div class="p-4 flex flex-col gap-3 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--ags-text-dim);">02</span>
+                    <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--ags-purple);">Simulation</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2">
+                    <h3 class="text-base font-semibold leading-tight min-w-0" style="color: var(--ags-text-primary);">模拟经营</h3>
+                    <span class="text-lg font-bold leading-none shrink-0" style="color: var(--ags-purple);">96%</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">策略</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">管理</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">决策</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">模拟</span>
+                  </div>
+                  <div>
+                    <div class="text-xs uppercase tracking-wider mb-1" style="color: var(--ags-text-dim);">教材结合方式</div>
+                    <p class="text-xs leading-relaxed line-clamp-2" style="color: var(--ags-text-secondary);">经营一个生态球，调节光照、温度与生物比例，观察物质循环与能量流动的平衡。</p>
+                  </div>
+                  <div class="mt-auto">
+                    <div class="text-xs uppercase tracking-wider mb-1.5" style="color: var(--ags-text-dim);">学习效果预测</div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-0.5">
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                      </div>
+                      <span class="text-sm font-semibold" style="color: var(--ags-green);">90%</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Card 03 Puzzle -->
+              <article class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <img src="../assets/game-puzzle.jpg" alt="解谜闯关" class="h-32 w-full object-cover">
+                <div class="p-4 flex flex-col gap-3 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--ags-text-dim);">03</span>
+                    <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--ags-purple);">Puzzle</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2">
+                    <h3 class="text-base font-semibold leading-tight min-w-0" style="color: var(--ags-text-primary);">解谜闯关</h3>
+                    <span class="text-lg font-bold leading-none shrink-0" style="color: var(--ags-purple);">96%</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">解谜</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">逻辑</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">挑战</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">闯关</span>
+                  </div>
+                  <div>
+                    <div class="text-xs uppercase tracking-wider mb-1" style="color: var(--ags-text-dim);">教材结合方式</div>
+                    <p class="text-xs leading-relaxed line-clamp-2" style="color: var(--ags-text-secondary);">通过解谜关卡理解食物链与能量金字塔，每关对应一个核心知识点，逻辑推理通关。</p>
+                  </div>
+                  <div class="mt-auto">
+                    <div class="text-xs uppercase tracking-wider mb-1.5" style="color: var(--ags-text-dim);">学习效果预测</div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-0.5">
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                      </div>
+                      <span class="text-sm font-semibold" style="color: var(--ags-green);">88%</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Card 04 RPG -->
+              <article class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <img src="../assets/game-rpg.jpg" alt="角色养成" class="h-32 w-full object-cover">
+                <div class="p-4 flex flex-col gap-3 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs" style="color: var(--ags-text-dim);">04</span>
+                    <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--ags-purple);">RPG</span>
+                  </div>
+                  <div class="flex items-start justify-between gap-2">
+                    <h3 class="text-base font-semibold leading-tight min-w-0" style="color: var(--ags-text-primary);">角色养成</h3>
+                    <span class="text-lg font-bold leading-none shrink-0" style="color: var(--ags-purple);">76%</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">养成</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">成长</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">任务</span>
+                    <span class="px-2 py-0.5 rounded-full text-xs whitespace-nowrap" style="background: var(--ags-purple-soft); color: var(--ags-purple);">剧情</span>
+                  </div>
+                  <div>
+                    <div class="text-xs uppercase tracking-wider mb-1" style="color: var(--ags-text-dim);">教材结合方式</div>
+                    <p class="text-xs leading-relaxed line-clamp-2" style="color: var(--ags-text-secondary);">养成专属科学角色，完成探究任务线，在剧情推进中掌握科学方法与实验技能。</p>
+                  </div>
+                  <div class="mt-auto">
+                    <div class="text-xs uppercase tracking-wider mb-1.5" style="color: var(--ags-text-dim);">学习效果预测</div>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-0.5">
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-gold); fill: var(--ags-gold);"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5" style="color: var(--ags-border-light); fill: var(--ags-border-light);"></i>
+                      </div>
+                      <span class="text-sm font-semibold" style="color: var(--ags-green);">74%</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <!-- Section 3: Lower 3-Column Analysis -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <!-- Column 1: 方案对比 (radar) -->
+              <section class="rounded-2xl p-5 flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <h3 class="text-sm font-semibold mb-2" style="color: var(--ags-text-primary);">方案对比</h3>
+                <div class="relative w-full" style="height: 220px;">
+                  <canvas id="ags-radar" width="320" height="220" aria-label="方案对比雷达图" role="img"></canvas>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3">
+                  <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background: var(--ags-purple);"></span><span class="text-xs" style="color: var(--ags-text-secondary);">探索冒险</span></div>
+                  <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background: var(--ags-cyan);"></span><span class="text-xs" style="color: var(--ags-text-secondary);">模拟经营</span></div>
+                  <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background: var(--ags-blue);"></span><span class="text-xs" style="color: var(--ags-text-secondary);">解谜闯关</span></div>
+                  <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background: var(--ags-pink);"></span><span class="text-xs" style="color: var(--ags-text-secondary);">角色养成</span></div>
+                </div>
+              </section>
+
+              <!-- Column 2: AI 建议 + 游戏 DNA 分析 -->
+              <section class="rounded-2xl p-5 flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <h3 class="text-sm font-semibold" style="color: var(--ags-text-primary);">AI 建议</h3>
+                <p class="text-xs leading-relaxed mt-2 line-clamp-3" style="color: var(--ags-text-secondary);">基于教材分析，推荐选择「探索冒险」方案，该方案与生态系统的探索性学习高度匹配，能有效激发学生的好奇心与探究欲，知识覆盖度与学习效果均表现优异。</p>
+                <div class="my-4 h-px" style="background: var(--ags-border-light);"></div>
+                <h3 class="text-sm font-semibold" style="color: var(--ags-text-primary);">游戏 DNA 分析</h3>
+                <div class="mt-3 space-y-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs w-16 shrink-0 truncate" style="color: var(--ags-text-secondary);">探索元素</span>
+                    <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--ags-bg-base);">
+                      <div class="h-full rounded-full" style="width: 60%; background: var(--ags-purple);"></div>
+                    </div>
+                    <span class="text-xs font-medium w-9 text-right shrink-0" style="color: var(--ags-text-primary);">60%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs w-16 shrink-0 truncate" style="color: var(--ags-text-secondary);">收集元素</span>
+                    <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--ags-bg-base);">
+                      <div class="h-full rounded-full" style="width: 20%; background: var(--ags-cyan);"></div>
+                    </div>
+                    <span class="text-xs font-medium w-9 text-right shrink-0" style="color: var(--ags-text-primary);">20%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs w-16 shrink-0 truncate" style="color: var(--ags-text-secondary);">解谜元素</span>
+                    <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--ags-bg-base);">
+                      <div class="h-full rounded-full" style="width: 15%; background: var(--ags-blue);"></div>
+                    </div>
+                    <span class="text-xs font-medium w-9 text-right shrink-0" style="color: var(--ags-text-primary);">15%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs w-16 shrink-0 truncate" style="color: var(--ags-text-secondary);">成长元素</span>
+                    <div class="flex-1 h-2 rounded-full overflow-hidden" style="background: var(--ags-bg-base);">
+                      <div class="h-full rounded-full" style="width: 5%; background: var(--ags-pink);"></div>
+                    </div>
+                    <span class="text-xs font-medium w-9 text-right shrink-0" style="color: var(--ags-text-primary);">5%</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Column 3: 所需 AI 团队 -->
+              <section class="rounded-2xl p-5 flex flex-col" style="background: var(--ags-bg-card); box-shadow: var(--ags-shadow-card);">
+                <h3 class="text-sm font-semibold mb-3" style="color: var(--ags-text-primary);">所需 AI 团队</h3>
+                <ul class="flex flex-col gap-2">
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-game-designer.jpg" alt="游戏策划师" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">游戏策划师</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">负责整体游戏设计</div>
+                    </div>
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-education-expert.jpg" alt="教育专家" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">教育专家</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">确保知识准确性</div>
+                    </div>
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-narrative-designer.jpg" alt="剧情设计师" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">剧情设计师</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">设计故事和任务</div>
+                    </div>
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-art-director.jpg" alt="美术设计师" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">美术设计师</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">创建视觉世界</div>
+                    </div>
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-level-designer.jpg" alt="系统设计师" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">系统设计师</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">设计游戏机制</div>
+                    </div>
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <img src="../assets/team-qa-analyst.jpg" alt="测试分析师" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    <div class="min-w-0">
+                      <div class="text-sm font-medium truncate" style="color: var(--ags-text-primary);">测试分析师</div>
+                      <div class="text-xs truncate" style="color: var(--ags-text-muted);">评估学习效果</div>
+                    </div>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== BOTTOM ACTION BAR ===== -->
+      <footer class="h-16 shrink-0 grid grid-cols-3 items-center px-8 gap-4 border-t" style="background: var(--ags-bg-card); border-color: var(--ags-border-light);">
+        <div class="flex items-center gap-2 min-w-0 justify-self-start">
+          <i data-lucide="help-circle" class="w-4 h-4 shrink-0" style="color: var(--ags-text-muted);"></i>
+          <div class="min-w-0">
+            <div class="text-sm truncate" style="color: var(--ags-text-muted);">需要更多选择?</div>
+            <div class="text-xs truncate" style="color: var(--ags-text-dim);">AI 可以为你生成更多定制化方案</div>
+          </div>
+        </div>
+        <div class="justify-self-center">
+          <button type="button" class="px-4 py-2 rounded-full text-sm whitespace-nowrap border" style="background: var(--ags-bg-card); color: var(--ags-text-secondary); border-color: var(--ags-border);">生成更多方案</button>
+        </div>
+        <div class="justify-self-end">
+          <button type="button" class="px-6 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap" style="background: var(--ags-bg-sidebar); color: var(--ags-text-on-dark);">确认方案，组建团队 →</button>
+        </div>
+      </footer>
+
+      <script>
+        (function () {
+          function rgba(token, a) {
+            var h = String(token).replace('#', '').trim();
+            if (h.length === 3) { h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]; }
+            var n = parseInt(h, 16);
+            if (isNaN(n)) { return 'transparent'; }
+            return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+          }
+          function initRadar() {
+            var el = document.getElementById('ags-radar');
+            if (!el || typeof Chart === 'undefined') { return; }
+            var cs = getComputedStyle(document.documentElement);
+            var cPurple = cs.getPropertyValue('--ags-purple').trim();
+            var cCyan = cs.getPropertyValue('--ags-cyan').trim();
+            var cBlue = cs.getPropertyValue('--ags-blue').trim();
+            var cPink = cs.getPropertyValue('--ags-pink').trim();
+            var cMuted = cs.getPropertyValue('--ags-text-muted').trim();
+            var cGrid = cs.getPropertyValue('--ags-border-light').trim();
+            new Chart(el, {
+              type: 'radar',
+              data: {
+                labels: ['知识匹配度', '趣味性', '互动性', '学习效果', '实施难度'],
+                datasets: [
+                  { label: '探索冒险', data: [98, 95, 92, 92, 68], borderColor: cPurple, backgroundColor: rgba(cPurple, 0.10), pointBackgroundColor: cPurple, borderWidth: 2 },
+                  { label: '模拟经营', data: [96, 88, 85, 90, 76], borderColor: cCyan, backgroundColor: rgba(cCyan, 0.10), pointBackgroundColor: cCyan, borderWidth: 2 },
+                  { label: '解谜闯关', data: [96, 90, 80, 86, 72], borderColor: cBlue, backgroundColor: rgba(cBlue, 0.10), pointBackgroundColor: cBlue, borderWidth: 2 },
+                  { label: '角色养成', data: [76, 85, 88, 74, 62], borderColor: cPink, backgroundColor: rgba(cPink, 0.10), pointBackgroundColor: cPink, borderWidth: 2 }
+                ]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                scales: {
+                  r: {
+                    min: 0, max: 100,
+                    ticks: { display: false, stepSize: 25 },
+                    grid: { color: cGrid },
+                    angleLines: { color: cGrid },
+                    pointLabels: { color: cMuted, font: { size: 11 } }
+                  }
+                }
+              }
+            });
+          }
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initRadar);
+          } else {
+            initRadar();
+          }
+        })();
+      </script>
     </main>
     <script>lucide.createIcons();</script>
 </body>

@@ -250,6 +250,61 @@ const BUILDER_CSS = `
   }
 }
 
+/* ═══ 常用老员工 · 星级积累系统 ═══ */
+
+/* 老员工卡片悬停发光 */
+.tb-vet-card:hover {
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 212, 255, 0.4) !important;
+}
+
+/* 经验条流动动画 */
+@keyframes tbVetXpFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.tb-vet-xp-bar {
+  background-size: 200% 100% !important;
+  animation: tbVetXpFlow 3s linear infinite;
+  transition: width 0.4s ease;
+}
+
+/* 等级徽章脉冲 */
+@keyframes tbVetLvPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 170, 0, 0.3); }
+  50% { box-shadow: 0 0 10px rgba(255, 170, 0, 0.5); }
+}
+.tb-vet-lv-badge {
+  animation: tbVetLvPulse 2.5s ease-in-out infinite;
+}
+
+/* 介绍面板入场动画 */
+@keyframes tbGuideSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tb-vet-guide {
+  animation: tbGuideSlide 0.3s ease-out forwards;
+}
+
+/* 星级闪烁 */
+@keyframes tbStarTwinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+.tb-vet-card:hover .tb-vet-lv-badge {
+  animation: tbVetLvPulse 1s ease-in-out infinite;
+}
+
+/* 老员工详情弹窗 */
+@keyframes tbVetModalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.tb-vet-modal {
+  animation: tbVetModalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
 /* ═══ v5 角色卡牌库 · 部门分组 + 悬停详情覆盖层 ═══ */
 
 /* ── 部门折叠区 ── */
@@ -796,7 +851,31 @@ export default function TeamBuilder() {
   }
 
   // ══════════════════════════════════════════
-  // 渲染：部门总监展示区（8位核心角色头像）
+  // 老员工星级数据：确定性生成（基于ID哈希）
+  // 星级可积累：当前星级 + 升级进度 + 工作记录
+  // ══════════════════════════════════════════
+  const getVeteranStats = (agentId) => {
+    let hash = 0
+    for (let i = 0; i < agentId.length; i++) {
+      hash = ((hash << 5) - hash) + agentId.charCodeAt(i)
+      hash |= 0
+    }
+    const abs = Math.abs(hash)
+    const starLevel = 2 + (abs % 4)       // 2~5星
+    const xpInLevel = 20 + (abs >> 3) % 75 // 当前等级内XP 20-94%
+    const projectsDone = 30 + (abs >> 5) % 200 // 30-229个项目
+    const successRate = 82 + (abs >> 7) % 17     // 82%-98%成功率
+    const totalXp = starLevel * 100 + xpInLevel
+    return { starLevel, xpInLevel, projectsDone, successRate, totalXp }
+  }
+
+  // ── UI介绍面板展开状态 ──
+  const [showGuide, setShowGuide] = useState(false)
+  // ── 老员工详情弹窗 ──
+  const [vetDetail, setVetDetail] = useState(null)
+
+  // ══════════════════════════════════════════
+  // 渲染：常用老员工展示区（8位核心角色，含星级积累/工作记录/升级系统）
   // ══════════════════════════════════════════
   const renderDirectorsShowcase = () => {
     return html`
@@ -807,22 +886,69 @@ export default function TeamBuilder() {
         <div class="tb-corner-deco tb-corner-bl"></div>
         <div class="tb-corner-deco tb-corner-br"></div>
 
+        <!-- 标题栏 -->
         <div class="relative flex items-center gap-2 mb-3">
-          <span class="text-[9px] font-bold tracking-widest" style=${{ fontFamily: H.fontMono, color: H.cyan, textShadow: `0 0 4px ${H.cyan}60` }}>
-            DEPARTMENT DIRECTORS
+          <span class="text-[11px] font-bold tracking-wider" style=${{ fontFamily: H.fontBody, color: H.cyan, textShadow: `0 0 6px ${H.cyan}60` }}>
+            ⭐ 常用老员工
           </span>
           <div class="flex-1 h-px" style=${{ background: H.glassBorder }}></div>
-          <span class="text-[9px]" style=${{ fontFamily: H.fontMono, color: H.textMuted }}>8 CORE ROLES</span>
+          <button class="text-[9px] flex items-center gap-1 px-2 py-0.5 tb-chamfer-sm transition-all"
+                  style=${{ fontFamily: H.fontMono, color: showGuide ? H.cyan : H.textMuted, border: `1px solid ${showGuide ? H.glassBorderBright : H.borderSubtle}`, background: showGuide ? 'rgba(0,212,255,0.08)' : 'transparent' }}
+                  onClick=${() => setShowGuide(!showGuide)}>
+            ${showGuide ? '✕ 关闭说明' : '? 界面说明'}
+          </button>
+          <span class="text-[9px]" style=${{ fontFamily: H.fontMono, color: H.textMuted }}>${DIRECTOR_AGENTS.length} 位核心角色</span>
         </div>
 
+        <!-- UI 组件介绍说明面板（可折叠） -->
+        ${showGuide ? html`
+          <div class="relative mb-3 p-3 tb-chamfer-sm tb-vet-guide" style=${{ background: 'rgba(0,212,255,0.04)', border: `1px solid ${H.glassBorder}` }}>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              <div class="flex items-start gap-2">
+                <span class="text-base shrink-0 mt-0.5">⭐</span>
+                <div>
+                  <div class="text-[10px] font-bold" style=${{ fontFamily: H.fontBody, color: H.textBright }}>星级积累</div>
+                  <div class="text-[9px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textSecondary }}>完成项目获得经验值，星级随经验积累自动提升，越高星级能力越强</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-base shrink-0 mt-0.5">📊</span>
+                <div>
+                  <div class="text-[10px] font-bold" style=${{ fontFamily: H.fontBody, color: H.textBright }}>工作记录</div>
+                  <div class="text-[9px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textSecondary }}>每位老员工有完整的项目履历，包括完成数量和成功率</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-base shrink-0 mt-0.5">📈</span>
+                <div>
+                  <div class="text-[10px] font-bold" style=${{ fontFamily: H.fontBody, color: H.textBright }}>学习升级</div>
+                  <div class="text-[9px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textSecondary }}>经验条显示升级进度，满条后自动升星并解锁新技能</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-base shrink-0 mt-0.5">🖱️</span>
+                <div>
+                  <div class="text-[10px] font-bold" style=${{ fontFamily: H.fontBody, color: H.textBright }}>一键入队</div>
+                  <div class="text-[9px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textSecondary }}>点击老员工卡片可直接分配到对应槽位，已入队的显示灰色</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ` : null}
+
+        <!-- 老员工卡片网格 -->
         <div class="relative grid grid-cols-4 sm:grid-cols-8 gap-2">
           ${DIRECTOR_AGENTS.map((dir, i) => {
             const agent = AGENTS.find(a => a.id === dir.id)
             if (!agent) return null
             const isUsed = usedAgentIds.includes(dir.id)
+            const vs = getVeteranStats(dir.id)
+            const rarityStars = getRarity(agent.id) === 'legendary' ? 4 : getRarity(agent.id) === 'epic' ? 3 : 2
+            // 综合星级 = 基础稀有度 + 积累星级（显示用）
+            const displayStars = Math.min(5, rarityStars + Math.floor(vs.starLevel / 2))
             return html`
               <div key=${dir.id}
-                   class=${`tb-card-wrap relative tb-chamfer-sm cursor-pointer transition-all ${isUsed ? 'opacity-40' : 'hover:scale-105'}`}
+                   class=${`tb-card-wrap relative tb-chamfer-sm cursor-pointer transition-all tb-vet-card ${isUsed ? 'opacity-40' : 'hover:scale-105'}`}
                    style=${{
                      background: agent.color + '0a',
                      border: `1px solid ${agent.color}30`,
@@ -837,7 +963,8 @@ export default function TeamBuilder() {
                        }
                      }
                      setShowDetail(agent)
-                   }}>
+                   }}
+                   onDoubleClick=${(e) => { e.stopPropagation(); setVetDetail({ agent, dir, vs }) }}>
                 <div class="tb-card-cover-sweep"></div>
 
                 <!-- 头像 -->
@@ -849,33 +976,58 @@ export default function TeamBuilder() {
                        loading="lazy" />
                   <!-- 渐变叠层 -->
                   <div class="absolute inset-0" style=${{
-                    background: `linear-gradient(180deg, transparent 50%, ${agent.color}40 100%)`,
+                    background: `linear-gradient(180deg, transparent 40%, ${agent.color}50 100%)`,
                   }}></div>
+
+                  <!-- 积累星级（左上角，金色星星） -->
+                  <div class="absolute top-1 left-1 flex items-center gap-0.5 px-1 py-0.5 tb-chamfer-sm"
+                       style=${{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+                    ${Array.from({ length: 5 }).map((_, si) => html`
+                      <span key=${si} class="text-[8px]" style=${{ color: si < displayStars ? '#fbbf24' : 'rgba(251,191,36,0.2)', textShadow: si < displayStars ? '0 0 3px rgba(251,191,36,0.6)' : 'none' }}>★</span>
+                    `)}
+                  </div>
+
+                  ${isUsed ? html`
+                    <div class="absolute top-1 right-1 text-[7px] font-bold px-1 py-0.5 tb-chamfer-sm"
+                         style=${{ fontFamily: H.fontMono, background: H.green, color: '#05010f' }}>
+                      已入队
+                    </div>
+                  ` : html`
+                    <div class="absolute top-1 right-1 text-[7px] font-bold px-1 py-0.5 tb-chamfer-sm tb-vet-lv-badge"
+                         style=${{ fontFamily: H.fontMono, background: 'rgba(0,0,0,0.6)', color: H.amber, border: '1px solid rgba(255,170,0,0.3)' }}>
+                      Lv.${vs.starLevel}
+                    </div>
+                  `}
+
                   <!-- 角色标签 -->
                   <div class="absolute bottom-1 left-1 right-1">
-                    <div class="text-[9px] font-bold truncate text-center" style=${{ fontFamily: H.fontBody, color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
+                    <div class="text-[9px] font-bold truncate text-center" style=${{ fontFamily: H.fontBody, color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
                       ${dir.role}
                     </div>
                   </div>
-                  <!-- 稀有度星标 -->
-                  <div class="absolute top-1 right-1 text-[7px] font-bold" style=${{ fontFamily: H.fontMono, color: '#fbbf24', textShadow: '0 0 3px rgba(0,0,0,0.8)' }}>
-                    ${'★'.repeat(getRarity(agent.id) === 'legendary' ? 4 : getRarity(agent.id) === 'epic' ? 3 : 2)}
-                  </div>
-                  ${isUsed ? html`
-                    <div class="absolute top-1 left-1 text-[7px] font-bold px-1 py-0.5 tb-chamfer-sm"
-                         style=${{ fontFamily: H.fontMono, background: H.cyan, color: '#05010f' }}>
-                      IN TEAM
-                    </div>
-                  ` : null}
                 </div>
 
-                <!-- 名称 -->
+                <!-- 升级进度条 -->
+                <div class="px-1 pt-1">
+                  <div class="h-1 rounded-full overflow-hidden" style=${{ background: 'rgba(255,255,255,0.06)' }}>
+                    <div class="h-full rounded-full tb-vet-xp-bar"
+                         style=${{
+                           width: vs.xpInLevel + '%',
+                           background: `linear-gradient(90deg, ${agent.color}, ${agent.color}cc)`,
+                           boxShadow: `0 0 4px ${agent.color}80`,
+                         }}></div>
+                  </div>
+                </div>
+
+                <!-- 名称 + 工作记录 -->
                 <div class="px-1 pt-1 pb-0.5">
                   <div class="text-[9px] font-bold truncate text-center" style=${{ fontFamily: H.fontBody, color: H.textPrimary }}>
                     ${agent.name}
                   </div>
-                  <div class="text-[8px] truncate text-center" style=${{ fontFamily: H.fontMono, color: H.textMuted }}>
-                    ${dir.dept}
+                  <div class="text-[8px] truncate text-center flex items-center justify-center gap-1" style=${{ fontFamily: H.fontMono, color: H.textMuted }}>
+                    <span style=${{ color: H.green }}>${vs.projectsDone}</span><span>项目</span>
+                    <span style=${{ color: H.textFaint }}>·</span>
+                    <span style=${{ color: H.cyan }}>${vs.successRate}%</span>
                   </div>
                 </div>
               </div>
@@ -1609,6 +1761,136 @@ export default function TeamBuilder() {
 
       <!-- 详情弹窗 -->
       ${renderDetailModal()}
+
+      <!-- 老员工详情弹窗 -->
+      ${vetDetail ? (() => {
+        const { agent, dir, vs } = vetDetail
+        const rarityStars = getRarity(agent.id) === 'legendary' ? 4 : getRarity(agent.id) === 'epic' ? 3 : 2
+        const displayStars = Math.min(5, rarityStars + Math.floor(vs.starLevel / 2))
+        const xpToNext = 100 - vs.xpInLevel
+        return html`
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4"
+               style=${{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+               onClick=${() => setVetDetail(null)}>
+            <div class="tb-vet-modal relative w-full max-w-md p-5 tb-chamfer overflow-hidden"
+                 style=${{ background: H.glassBg, border: `1px solid ${agent.color}40`, boxShadow: `0 0 40px ${agent.color}20` }}
+                 onClick=${(e) => e.stopPropagation()}>
+              <div class="tb-scanlines"></div>
+              <div class="tb-corner-deco tb-corner-tl"></div>
+              <div class="tb-corner-deco tb-corner-tr"></div>
+              <div class="tb-corner-deco tb-corner-bl"></div>
+              <div class="tb-corner-deco tb-corner-br"></div>
+
+              <!-- 头部：头像 + 名称 + 星级 -->
+              <div class="relative flex items-start gap-3 mb-4">
+                <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 relative" style=${{ border: `2px solid ${agent.color}50` }}>
+                  <img src=${dir.avatar} alt=${agent.name} class="w-full h-full object-cover" />
+                  <div class="absolute inset-0" style=${{ background: `linear-gradient(180deg, transparent 50%, ${agent.color}40 100%)` }}></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-base font-bold truncate" style=${{ fontFamily: H.fontBody, color: H.textBright }}>${agent.name}</span>
+                    <span class="text-[10px] px-1.5 py-0.5 tb-chamfer-sm flex-shrink-0"
+                          style=${{ fontFamily: H.fontMono, background: 'rgba(255,170,0,0.12)', color: H.amber, border: '1px solid rgba(255,170,0,0.3)' }}>
+                      Lv.${vs.starLevel}
+                    </span>
+                  </div>
+                  <div class="text-[11px] mb-1.5" style=${{ fontFamily: H.fontMono, color: H.textSecondary }}>${dir.role} · ${dir.dept}</div>
+                  <!-- 积累星级 -->
+                  <div class="flex items-center gap-0.5">
+                    ${Array.from({ length: 5 }).map((_, si) => html`
+                      <span key=${si} class="text-sm" style=${{
+                        color: si < displayStars ? '#fbbf24' : 'rgba(251,191,36,0.15)',
+                        textShadow: si < displayStars ? '0 0 6px rgba(251,191,36,0.5)' : 'none',
+                      }}>★</span>
+                    `)}
+                  </div>
+                </div>
+                <button class="text-sm opacity-50 hover:opacity-100 transition-opacity flex-shrink-0"
+                        style=${{ color: H.textMuted }}
+                        onClick=${() => setVetDetail(null)}>✕</button>
+              </div>
+
+              <!-- 升级进度条 -->
+              <div class="relative mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] font-bold" style=${{ fontFamily: H.fontMono, color: H.cyan }}>经验进度</span>
+                  <span class="text-[10px] tabular-nums" style=${{ fontFamily: H.fontMono, color: H.textSecondary }}>${vs.xpInLevel}% → 下一星</span>
+                </div>
+                <div class="h-2 rounded-full overflow-hidden" style=${{ background: 'rgba(255,255,255,0.06)' }}>
+                  <div class="h-full rounded-full tb-vet-xp-bar"
+                       style=${{
+                         width: vs.xpInLevel + '%',
+                         background: `linear-gradient(90deg, ${agent.color}, ${agent.color}cc)`,
+                         boxShadow: `0 0 6px ${agent.color}80`,
+                       }}></div>
+                </div>
+                <div class="text-[9px] mt-1" style=${{ fontFamily: H.fontBody, color: H.textFaint }}>
+                  再完成 ${xpToNext} 个项目即可升至 ${vs.starLevel + 1} 星
+                </div>
+              </div>
+
+              <!-- 工作记录 -->
+              <div class="relative mb-4 grid grid-cols-3 gap-2">
+                <div class="p-2.5 tb-chamfer-sm text-center" style=${{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${H.borderSubtle}` }}>
+                  <div class="text-xl font-bold tabular-nums" style=${{ fontFamily: H.fontMono, color: H.green }}>${vs.projectsDone}</div>
+                  <div class="text-[9px]" style=${{ fontFamily: H.fontBody, color: H.textMuted }}>完成项目</div>
+                </div>
+                <div class="p-2.5 tb-chamfer-sm text-center" style=${{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${H.borderSubtle}` }}>
+                  <div class="text-xl font-bold tabular-nums" style=${{ fontFamily: H.fontMono, color: H.cyan }}>${vs.successRate}%</div>
+                  <div class="text-[9px]" style=${{ fontFamily: H.fontBody, color: H.textMuted }}>成功率</div>
+                </div>
+                <div class="p-2.5 tb-chamfer-sm text-center" style=${{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${H.borderSubtle}` }}>
+                  <div class="text-xl font-bold tabular-nums" style=${{ fontFamily: H.fontMono, color: H.amber }}>${vs.totalXp}</div>
+                  <div class="text-[9px]" style=${{ fontFamily: H.fontBody, color: H.textMuted }}>总经验值</div>
+                </div>
+              </div>
+
+              <!-- 能力描述 -->
+              <div class="relative mb-4 p-3 tb-chamfer-sm" style=${{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${H.borderSubtle}` }}>
+                <div class="text-[10px] font-bold mb-1" style=${{ fontFamily: H.fontMono, color: H.cyan }}>能力概要</div>
+                <div class="text-[11px] leading-relaxed" style=${{ fontFamily: H.fontBody, color: H.textSecondary }}>
+                  ${agent.desc || '综合型智能体，能够灵活适应多种任务场景。'}
+                </div>
+              </div>
+
+              <!-- 操作按钮 -->
+              <div class="relative flex gap-2">
+                ${!usedAgentIds.includes(dir.id) ? html`
+                  <button class="flex-1 px-4 py-2.5 tb-chamfer-btn text-sm font-bold tracking-wider transition-all"
+                          style=${{
+                            fontFamily: H.fontHeader,
+                            background: `linear-gradient(135deg, ${agent.color}, ${agent.color}cc)`,
+                            color: '#fff',
+                            boxShadow: `0 0 16px ${agent.color}40`,
+                          }}
+                          onClick=${() => {
+                            for (let s = 0; s < 6; s++) {
+                              if (slots[s] === null && canAssign(dir.id, s, AGENTS).ok) {
+                                assignAgent(dir.id, s)
+                                setVetDetail(null)
+                                return
+                              }
+                            }
+                          }}>
+                    一键入队 →
+                  </button>
+                ` : html`
+                  <div class="flex-1 px-4 py-2.5 tb-chamfer-btn text-sm font-bold text-center"
+                       style=${{ fontFamily: H.fontHeader, background: 'rgba(74,222,128,0.1)', color: H.green, border: `1px solid ${H.green}30` }}>
+                    ✓ 已在队伍中
+                  </div>
+                `}
+                <button class="px-4 py-2.5 tb-chamfer-btn text-sm font-bold transition-all"
+                        style=${{ fontFamily: H.fontHeader, background: 'rgba(255,255,255,0.05)', color: H.textMuted, border: `1px solid ${H.borderSubtle}` }}
+                        onClick=${() => setVetDetail(null)}>
+                  关闭
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+      })() : null}
     </div>
   `
 }

@@ -1,96 +1,94 @@
 :root {
-  /* === Base Background === */
-  --ags-bg-base: #0a0814;
-  --ags-bg-deep: #0d0b1a;
-  --ags-bg-surface: #131124;
-  --ags-bg-card: #181530;
-  --ags-bg-card-hover: #1d1a3d;
-  --ags-bg-elevated: #1f1b3a;
+  /* === Base Background (Light Apple-style) === */
+  --ags-bg-base: #f5f5f7;
+  --ags-bg-surface: #ffffff;
+  --ags-bg-card: #ffffff;
+  --ags-bg-sidebar: #1d1d1f;
+  --bg-sidebar-secondary: #2c2c2e;
+  --ags-bg-hover: #f5f5f7;
+  --ags-bg-elevated: #ffffff;
 
   /* === Primary Purple === */
   --ags-purple: #8b5cf6;
   --ags-purple-light: #a78bfa;
   --ags-purple-dark: #7c3aed;
-  --ags-purple-glow: rgba(139, 92, 246, 0.4);
+  --ags-purple-soft: #f3effe;
+  --ags-purple-glow: rgba(139, 92, 246, 0.15);
 
-  /* === Pink / Magenta === */
+  /* === Pink === */
   --ags-pink: #ec4899;
   --ags-pink-light: #f472b6;
-  --ags-pink-glow: rgba(236, 72, 153, 0.35);
+  --ags-pink-soft: #fdf2f8;
 
-  /* === Cyan === */
+  /* === Cyan / Blue === */
   --ags-cyan: #06b6d4;
   --ags-cyan-light: #22d3ee;
-  --ags-cyan-glow: rgba(6, 182, 212, 0.35);
-
-  /* === Blue === */
   --ags-blue: #3b82f6;
   --ags-blue-light: #60a5fa;
-  --ags-blue-glow: rgba(59, 130, 246, 0.35);
 
   /* === Gold / Amber === */
   --ags-gold: #f59e0b;
   --ags-gold-light: #fbbf24;
-  --ags-gold-glow: rgba(245, 158, 11, 0.35);
 
   /* === Green === */
   --ags-green: #10b981;
   --ags-green-light: #34d399;
-  --ags-green-glow: rgba(16, 185, 129, 0.35);
 
   /* === Text === */
-  --ags-text-primary: #ffffff;
-  --ags-text-secondary: #c4b8e8;
-  --ags-text-muted: #8b80b5;
-  --ags-text-dim: #5c5478;
+  --ags-text-primary: #1d1d1f;
+  --ags-text-secondary: #424245;
+  --ags-text-muted: #6e6e73;
+  --ags-text-dim: #86868b;
+  --ags-text-on-dark: #ffffff;
+  --ags-text-on-dark-muted: #aeaeb2;
 
   /* === Border === */
-  --ags-border: rgba(139, 92, 246, 0.15);
-  --ags-border-light: rgba(139, 92, 246, 0.08);
-  --ags-border-active: rgba(139, 92, 246, 0.4);
+  --ags-border: #d2d2d7;
+  --ags-border-light: #e5e5ea;
+  --ags-border-dark: rgba(255, 255, 255, 0.1);
 
   /* === Gradients === */
-  --ags-gradient-purple-pink: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-  --ags-gradient-purple-cyan: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-  --ags-gradient-pink-purple: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  --ags-gradient-blue-purple: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --ags-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  --ags-gradient-green: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  --ags-gradient-dark: linear-gradient(180deg, #131124 0%, #0d0b1a 100%);
+  --ags-gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  --ags-gradient-dark: linear-gradient(180deg, #1d1d1f 0%, #2c2c2e 100%);
 
   /* === Shadows === */
-  --ags-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --ags-shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
-  --ags-shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.3);
-  --ags-shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.3);
+  --ags-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --ags-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --ags-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --ags-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
 
   /* === Typography === */
-  --ags-font-sans: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ags-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --ags-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", sans-serif;
 
   /* === Radius === */
-  --ags-radius-sm: 6px;
-  --ags-radius-md: 10px;
-  --ags-radius-lg: 14px;
+  --ags-radius-sm: 8px;
+  --ags-radius-md: 12px;
+  --ags-radius-lg: 16px;
   --ags-radius-xl: 20px;
   --ags-radius-full: 9999px;
 
-  /* === Semantic Aliases (required by fill-html-head.mjs) === */
+  /* === Semantic Aliases (required by fill-html-head.mjs @theme inline bridge) === */
   --ags-background: var(--ags-bg-base);
   --ags-foreground: var(--ags-text-primary);
   --ags-card: var(--ags-bg-card);
-  --ags-primary: var(--ags-purple);
-  --ags-primary-foreground: var(--ags-text-primary);
-  --ags-muted: var(--ags-bg-surface);
-  --ags-muted-foreground: var(--ags-text-muted);
-  --ags-border-semantic: var(--ags-border);
-  --ags-ring: var(--ags-purple);
-  --ags-secondary: var(--ags-bg-elevated);
-  --ags-secondary-foreground: var(--ags-text-secondary);
-  --ags-accent: var(--ags-bg-surface);
-  --ags-accent-foreground: var(--ags-text-secondary);
-  --ags-destructive: var(--ags-pink);
-  --ags-destructive-foreground: var(--ags-text-primary);
+  --ags-card-foreground: var(--ags-text-primary);
   --ags-popover: var(--ags-bg-elevated);
   --ags-popover-foreground: var(--ags-text-primary);
+  --ags-primary: var(--ags-purple);
+  --ags-primary-foreground: #ffffff;
+  --ags-secondary: var(--ags-bg-elevated);
+  --ags-secondary-foreground: var(--ags-text-secondary);
+  --ags-muted: var(--ags-bg-hover);
+  --ags-muted-foreground: var(--ags-text-muted);
+  --ags-accent: var(--ags-purple-soft);
+  --ags-accent-foreground: var(--ags-purple-dark);
+  --ags-destructive: var(--ags-pink);
+  --ags-destructive-foreground: #ffffff;
+  --ags-input: var(--ags-border-light);
+  --ags-ring: var(--ags-purple);
+  --ags-chart-1: var(--ags-purple);
+  --ags-chart-2: var(--ags-cyan);
+  --ags-chart-3: var(--ags-blue);
+  --ags-chart-4: var(--ags-pink);
+  --ags-chart-5: var(--ags-gold);
 }
