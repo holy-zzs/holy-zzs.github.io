@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "buildCommand": null,
-  "outputDirectory": ".",
-  "framework": null,
-  "cleanUrls": true,
-  "trailingSlash": false
+  "functions": {
+    "vercel/api/*.mjs": {
+      "maxDuration": 300
+    }
+  },
+  "routes": [
+    { "src": "/api/pdf-proxy/(.*)", "dest": "/vercel/api/pdf-proxy.mjs" }
+  ]
 }

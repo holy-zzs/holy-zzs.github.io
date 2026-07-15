@@ -39,6 +39,9 @@ export async function analyzeWithLLM(rawText, filename, settings, onProgress, op
     if (be.type === 'mixed_content') {
       title = 'HTTPS 页面无法调用 HTTP 后端（混合内容拦截）'
       detail = '当前网站是 HTTPS，后端 API 是 HTTP，浏览器已拦截请求。请在本地 HTTP 环境（localhost）使用上传功能，或改用文本粘贴模式。'
+    } else if (be.type === 'https_cert') {
+      title = 'PDF OCR 代理需要信任证书'
+      detail = be.message
     }
     warnings.push({ type: 'backend_error', title, detail })
   }
@@ -515,9 +518,18 @@ function mergeResults(partialResults, rawText, filename) {
 
 // ════════════════════════════════════════════════
 // PDF 后端服务配置
-// 优先调用后端 API（PyMuPDF + PaddleOCR），降级到浏览器 pdfjs
+// HTTP 环境 (localhost): 直接调用 http://101.35.114.5:8000
+// HTTPS 环境 (GitHub Pages): 通过 https://101.35.114.5:9001 自签证书代理
 // ════════════════════════════════════════════════
-const PDF_SERVER_URL = 'http://101.35.114.5:8000'
+const PDF_SERVER_HTTP = 'http://101.35.114.5:8000'
+const PDF_SERVER_HTTPS = 'https://101.35.114.5:9001'
+
+function getPdfServerUrl() {
+  // HTTPS 页面用 HTTPS 代理，HTTP 页面直接用 HTTP
+  if (location.protocol === 'https:') return PDF_SERVER_HTTPS
+  return PDF_SERVER_HTTP
+}
+
 // 动态超时：基础120s + 每MB加3s，最高600s（10分钟，覆盖大文件上传+OCR）
 function getPdfServerTimeout(fileSize) {
   const sizeMB = (fileSize || 0) / 1024 / 1024
@@ -526,9 +538,10 @@ function getPdfServerTimeout(fileSize) {
 
 // 检测后端服务是否在线
 export async function checkPdfServer() {
+  const url = getPdfServerUrl()
   try {
-    const resp = await fetch(`${PDF_SERVER_URL}/health`, {
-      signal: AbortSignal.timeout(5000),
+    const resp = await fetch(`${url}/health`, {
+      signal: AbortSignal.timeout(8000),
     })
     if (resp.ok) {
       const data = await resp.json()
@@ -547,15 +560,24 @@ export async function checkPdfServer() {
 // ════════════════════════════════════════════════
 export async function extractPdfText(file, onProgress) {
   // ── 优先尝试后端 API（PyMuPDF + PaddleOCR）──
+  const pdfServerUrl = getPdfServerUrl()
   const timeout = getPdfServerTimeout(file.size)
 
-  // 检查混合内容问题（HTTPS 页面调用 HTTP API）
-  if (location.protocol === 'https:' && PDF_SERVER_URL.startsWith('http://')) {
-    console.warn('混合内容拦截: HTTPS 页面无法调用 HTTP 后端 API')
-    return extractPdfTextLocal(file, onProgress, {
-      type: 'mixed_content',
-      message: '当前页面是 HTTPS，后端 API 是 HTTP，浏览器已拦截。请在本地 HTTP 环境使用，或用文本粘贴模式。',
-    })
+  // HTTPS 页面使用自签证书代理，需要用户先信任证书
+  if (location.protocol === 'https:' && pdfServerUrl.startsWith('https://')) {
+    // 先测试 HTTPS 代理是否可用（用户可能未信任自签证书）
+    try {
+      const testResp = await fetch(`${pdfServerUrl}/health`, {
+        signal: AbortSignal.timeout(8000),
+      })
+      if (!testResp.ok) throw new Error(`HTTPS 代理返回 ${testResp.status}`)
+    } catch (e) {
+      console.warn('HTTPS 代理不可用，降级到浏览器解析:', e.message)
+      return extractPdfTextLocal(file, onProgress, {
+        type: 'https_cert',
+        message: `线上版 (HTTPS) 的 PDF OCR 代理需要信任证书。请在新标签页打开 https://101.35.114.5:9001/health ，点击"高级"→"继续前往"，然后回到此页面重新上传。或改用文本粘贴模式 / 本地 localhost 环境。`,
+      })
+    }
   }
 
   try {
@@ -563,7 +585,7 @@ export async function extractPdfText(file, onProgress) {
     const formData = new FormData()
     formData.append('file', file)
 
-    const resp = await fetch(`${PDF_SERVER_URL}/parse-pdf`, {
+    const resp = await fetch(`${pdfServerUrl}/parse-pdf`, {
       method: 'POST',
       body: formData,
       signal: AbortSignal.timeout(timeout),

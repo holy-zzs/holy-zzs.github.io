@@ -1,5 +1,6 @@
 import { html, useState, useEffect, useRef } from '../../deps.js'
 import { NavBar, Footer } from './PlatformCommon.js'
+import { useApp, STEPS } from '../../store/appContext.js'
 
 // ═══════════════════════════════════════════════════════════
 // AI 工作台 v6 — AI 总监控制台
@@ -736,10 +737,15 @@ function PlayablePreview() {
 // ═══════════════════════════════════════════════════════════
 
 export default function AIStudio() {
+  const { state, navigate, goStep, toast } = useApp()
   const [selectedAgent, setSelectedAgent] = useState('director')
   const [controlMode, setControlMode] = useState('key')
   const [canvasAgents, setCanvasAgents] = useState(AGENTS.filter(a => a.x !== undefined))
   const [connections, setConnections] = useState([])
+
+  const material = state.material
+  const gameplay = state.selectedGameplay
+  const agentCount = (state.selectedAgents || []).length
 
   const handleDropAgent = (id, x, y) => {
     const agent = AGENTS.find(a => a.id === id)
@@ -758,6 +764,18 @@ export default function AIStudio() {
     })
   }
 
+  const startDevelop = () => {
+    if (!material) {
+      toast('请先上传教材', 'error')
+      return
+    }
+    navigate(STEPS.WORKSPACE)
+  }
+
+  const adjustTeam = () => {
+    goStep(STEPS.AGENTS)
+  }
+
   return html`
     <div class="as6-page">
       <${NavBar} />
@@ -770,6 +788,76 @@ export default function AIStudio() {
           </div>
           <div class="as6-version">v6.0 · HOLO OS</div>
         </div>
+
+        <!-- 流程状态条：教材 + 玩法 + 团队 + 开发按钮 -->
+        <div style=${{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+          padding: '14px 20px', marginBottom: '16px',
+          background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)',
+          borderRadius: '12px', flexWrap: 'wrap',
+        }}>
+          <div style=${{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', flex: 1 }}>
+            <!-- 教材状态 -->
+            <div style=${{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style=${{ fontSize: '20px' }}>📚</span>
+              <div>
+                <div style=${{ fontSize: '10px', color: C.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>教材</div>
+                <div style=${{ fontSize: '13px', color: material ? C.text : C.faint, maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  ${material ? (material.filename || material.structure?.[0]?.title || '已解析') : '未上传'}
+                </div>
+              </div>
+            </div>
+            <!-- 玩法状态 -->
+            <div style=${{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style=${{ fontSize: '20px' }}>🎮</span>
+              <div>
+                <div style=${{ fontSize: '10px', color: C.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>玩法</div>
+                <div style=${{ fontSize: '13px', color: gameplay ? C.text : C.faint }}>
+                  ${gameplay ? (gameplay.name || gameplay.type || '已选') : '未选择'}
+                </div>
+              </div>
+            </div>
+            <!-- 团队状态 -->
+            <div style=${{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style=${{ fontSize: '20px' }}>👥</span>
+              <div>
+                <div style=${{ fontSize: '10px', color: C.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>团队</div>
+                <div style=${{ fontSize: '13px', color: agentCount > 0 ? C.text : C.faint }}>
+                  ${agentCount > 0 ? `${agentCount} 位智能体` : '未组建'}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 操作按钮 -->
+          <div style=${{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button onClick=${adjustTeam}
+              style=${{
+                padding: '8px 16px', fontSize: '13px', fontWeight: 600,
+                background: 'transparent', border: '1px solid rgba(0,212,255,0.3)',
+                color: C.accent, borderRadius: '8px', cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter=${(e) => { e.target.style.background = 'rgba(0,212,255,0.08)' }}
+              onMouseLeave=${(e) => { e.target.style.background = 'transparent' }}>
+              调整团队
+            </button>
+            <button onClick=${startDevelop}
+              style=${{
+                padding: '10px 24px', fontSize: '14px', fontWeight: 700,
+                background: 'linear-gradient(135deg, #00d4ff, #00ff88)',
+                border: 'none', color: '#050208', borderRadius: '8px',
+                cursor: material ? 'pointer' : 'not-allowed',
+                opacity: material ? 1 : 0.4,
+                boxShadow: material ? '0 0 20px rgba(0,212,255,0.3)' : 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter=${(e) => { if (material) e.target.style.transform = 'scale(1.03)' }}
+              onMouseLeave=${(e) => { e.target.style.transform = 'scale(1)' }}>
+              开始开发 →
+            </button>
+          </div>
+        </div>
+
         <${CommandBar} />
         <div class="as6-workspace">
           <${Armory} selectedAgent=${selectedAgent} onSelectAgent=${setSelectedAgent} canvasAgents=${canvasAgents} />

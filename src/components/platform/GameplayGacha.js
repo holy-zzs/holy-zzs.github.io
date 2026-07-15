@@ -66,7 +66,7 @@ const GACHA_CSS = `
 `
 
 export default function GameplayGacha() {
-  const { state, dispatch, navigate } = useContext(AppContext)
+  const { state, dispatch, navigate, goStep } = useContext(AppContext)
 
   const grade = state.selectedGrade || 'primary'
   const architect = useMemo(() => getArchitect(grade), [grade])
@@ -108,16 +108,17 @@ export default function GameplayGacha() {
     })
   }, [chainExample])
 
-  // ── 确认玩法，进入上传教材（AI自动组队，无需手动选智能体）──
+  // ── 确认玩法，进入 AI Studio（AI自动组队）──
   const confirmGameplay = useCallback(() => {
     if (!selectedGameplay) return
     dispatch({ type: 'SET_GAMEPLAY', payload: selectedGameplay })
-    navigate(STEPS.UPLOAD)
-  }, [selectedGameplay, dispatch, navigate])
+    // 用 goStep 跳过守卫（SET_GAMEPLAY dispatch 尚未在当前 render cycle 生效）
+    goStep(STEPS.AISTUDIO)
+  }, [selectedGameplay, dispatch, goStep])
 
   // ── 返回 ──
   const goBack = useCallback(() => {
-    dispatch({ type: 'SET_STEP', payload: STEPS.MODE })
+    dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [dispatch])
 
@@ -505,7 +506,7 @@ export default function GameplayGacha() {
                 border: '1px solid var(--theme-border)',
               }}
               onClick=${goBack}>
-        ← 返回模式选择
+        ← 返回上传教材
       </button>
       <button class=${`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${selectedGameplay ? '' : 'opacity-40 cursor-not-allowed'}`}
               style=${{
@@ -514,7 +515,7 @@ export default function GameplayGacha() {
               }}
               disabled=${!selectedGameplay}
               onClick=${confirmGameplay}>
-        确认玩法，AI自动组队 →
+        确认玩法，进入AI工作室 →
       </button>
     </div>
   `
@@ -545,7 +546,7 @@ export default function GameplayGacha() {
           </button>
         </div>
 
-        <${StepProgress} current=${2} total=${5} labels=${['选学科', '选模式', '抽玩法', '组团队', '传教材']} />
+        <${StepProgress} current=${2} total=${4} labels=${['选学科', '传教材', '选玩法', 'AI工作室']} />
 
         <!-- 架构师卡 -->
         ${renderArchitectCard()}

@@ -53,18 +53,18 @@ export default function SubjectPage() {
 
   const goBack = useCallback(() => goStep(STEPS.LANDING), [goStep])
 
-  const skipToMode = useCallback(() => {
+  const skipToUpload = useCallback(() => {
     dispatch({ type: 'SET_SUBJECT', payload: null })
-    dispatch({ type: 'SET_STEP', payload: STEPS.MODE })
+    dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [dispatch])
 
-  // ── 快捷场景：自动选最热门一级学科后跳 MODE ──
+  // ── 快捷场景：自动选最热门一级学科后跳上传教材 ──
   const onQuickScene = useCallback(() => {
     if (!subjects.length) return
     const hottest = [...subjects].sort((a, b) => b.uses - a.uses)[0]
     dispatch({ type: 'SET_SUBJECT', payload: hottest })
-    dispatch({ type: 'SET_STEP', payload: STEPS.MODE })
+    dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [subjects, dispatch])
 
@@ -195,7 +195,7 @@ export default function SubjectPage() {
   const useTeam = useCallback((team) => {
     dispatch({ type: 'SET_PRESET_TEAM', payload: team })
     dispatch({ type: 'SET_AGENTS', payload: team.agents.map(resolveId) })
-    dispatch({ type: 'SET_STEP', payload: STEPS.MODE })
+    dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [dispatch])
 
@@ -203,7 +203,7 @@ export default function SubjectPage() {
   const onNext = useCallback(() => {
     if (!selectedSubject1) return
     dispatch({ type: 'SET_SUBJECT', payload: selectedSubject1 })
-    dispatch({ type: 'SET_STEP', payload: STEPS.MODE })
+    dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [selectedSubject1, dispatch])
 
@@ -291,7 +291,7 @@ export default function SubjectPage() {
 
         <!-- 步骤进度 -->
         <div class="mt-3">
-          <${StepProgress} current=${0} total=${4} labels=${['选学科', '选模式', '组团队', '传教材']} />
+          <${StepProgress} current=${0} total=${4} labels=${['选学科', '传教材', '选玩法', 'AI工作室']} />
         </div>
 
         <!-- 移动端：快捷场景横向滚动条 -->
@@ -304,7 +304,7 @@ export default function SubjectPage() {
             </button>
           `)}
           <button class="flex shrink-0 items-center gap-1 rounded-full border border-dashed border-gray-200 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-            onClick=${skipToMode}>不限学科</button>
+            onClick=${skipToUpload}>不限学科</button>
         </div>
 
         <!-- 三栏布局 -->
@@ -340,7 +340,7 @@ export default function SubjectPage() {
 
             <!-- 不限学科 -->
             <button class="w-full rounded-lg border border-dashed border-gray-200 px-3 py-2.5 text-xs text-gray-400 transition-colors hover:border-primary-300 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
-              onClick=${skipToMode}>不限学科，直接开始</button>
+              onClick=${skipToUpload}>不限学科，直接开始</button>
           </aside>
 
           <!-- ════ 中栏 ════ -->

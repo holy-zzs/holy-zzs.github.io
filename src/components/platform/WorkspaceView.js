@@ -329,6 +329,7 @@ export default function WorkspaceView() {
 
   const goPlay = useCallback(() => { toast('正在加载游戏场景…', 'info'); goStep(STEPS.PREVIEW) }, [toast, goStep])
   const goBack = useCallback(() => { goStep(STEPS.UPLOAD) }, [goStep])
+  const goStudio = useCallback(() => { goStep(STEPS.AISTUDIO) }, [goStep])
 
   const typeText = async (full, onTick) => {
     let i = 0
@@ -449,6 +450,7 @@ export default function WorkspaceView() {
         </div>
         <div class="flex gap-2 flex-wrap shrink-0 items-center">
           <${Btn} ghost size="sm" onClick=${goBack}>← 教材</${Btn}>
+          <${Btn} ghost size="sm" onClick=${goStudio}>🎛 AI Studio</${Btn}>
           ${isIdle && html`<${Btn} primary onClick=${startBuild}>▶ 开始构建</${Btn}>`}
           ${isRunning && html`<${Btn} onClick=${pauseBuild}>⏸ 暂停</${Btn}>`}
           ${isPaused && html`<${Btn} primary onClick=${startBuild}>▶ 继续</${Btn}>`}

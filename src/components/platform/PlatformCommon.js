@@ -31,11 +31,12 @@ function scrollTopRespectMotion() {
 
 // ── AI工作台下拉菜单数据 ──
 const WORKBENCH_MENU = [
-  { icon: '🎮', label: '创建教育游戏', desc: '从教材到游戏，AI全自动', step: STEPS.SUBJECT },
+  { icon: '🎮', label: '创建教育游戏', desc: '选年级→传教材→选玩法→AI开发', step: STEPS.SUBJECT },
   { icon: '📚', label: '上传教材', desc: '支持PDF/图片/文本', step: STEPS.UPLOAD },
+  { icon: '🎰', label: '选择玩法', desc: 'AI推荐游戏类型', step: STEPS.GAMEPLAY },
+  { icon: '🛸', label: 'AI Game Studio', desc: '智能体调度与开发', step: STEPS.AISTUDIO },
   { icon: '⚡', label: 'AI协作工作台', desc: '多智能体协作生成游戏', step: STEPS.WORKSPACE },
   { icon: '🧪', label: '游戏测试', desc: '预览并调试生成的游戏', step: STEPS.PREVIEW },
-  { icon: '🛸', label: 'AI Game Studio', desc: 'AAA 游戏研发管线', step: STEPS.AISTUDIO },
 ]
 
 // ── AI团队下拉菜单数据（独立导航项）──
@@ -299,18 +300,32 @@ export function FeedbackButton() {
   const go = (step) => {
     // 工作流页面需要前置条件，用 navigate 带守卫
     const WORKFLOW_GUARD_STEPS = new Set([
-      STEPS.WORKSPACE, STEPS.PREVIEW, STEPS.UPLOAD
+      STEPS.WORKSPACE, STEPS.PREVIEW, STEPS.UPLOAD, STEPS.GAMEPLAY, STEPS.AISTUDIO
     ])
     if (WORKFLOW_GUARD_STEPS.has(step)) {
-      // UPLOAD 不再要求已选智能体 — 若未选则自动分配默认团队后进入
-      if (step === STEPS.UPLOAD && (!state.selectedMode)) {
+      // UPLOAD 需要已选年级+科目
+      if (step === STEPS.UPLOAD && (!state.selectedGrade || !state.selectedSubject)) {
         dispatch({ type: 'SET_STEP', payload: STEPS.SUBJECT })
         scrollTopRespectMotion()
         return
       }
-      if (step === STEPS.UPLOAD && (!state.selectedAgents || state.selectedAgents.length === 0)) {
+      // GAMEPLAY 需要已上传教材
+      if (step === STEPS.GAMEPLAY && !state.material) {
+        dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
+        scrollTopRespectMotion()
+        return
+      }
+      // AISTUDIO 需要已选玩法
+      if (step === STEPS.AISTUDIO && !state.selectedGameplay) {
+        dispatch({ type: 'SET_STEP', payload: STEPS.GAMEPLAY })
+        scrollTopRespectMotion()
+        return
+      }
+      // AISTUDIO 进入时自动分配默认团队
+      if (step === STEPS.AISTUDIO && (!state.selectedAgents || state.selectedAgents.length === 0)) {
         dispatch({ type: 'SET_AGENTS', payload: ['captain', 'scholar', 'designer', 'numbers', 'narrative', 'art'] })
       }
+      // WORKSPACE 需要已上传教材
       if (step === STEPS.WORKSPACE && !state.material) {
         dispatch({ type: 'SET_STEP', payload: STEPS.UPLOAD })
         scrollTopRespectMotion()

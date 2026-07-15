@@ -193,6 +193,11 @@ export default function PreviewView() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [goStep])
 
+  const goStudio = useCallback(() => {
+    goStep(STEPS.AISTUDIO)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [goStep])
+
   const regen = useCallback(() => {
     dispatch({ type: 'SET_DOC', payload: null })
     dispatch({ type: 'RESET_DISCUSSION' })
@@ -239,6 +244,11 @@ export default function PreviewView() {
               onMouseEnter=${(e) => e.currentTarget.style.background = C.surfaceHover}
               onMouseLeave=${(e) => e.currentTarget.style.background = C.surface}
               onClick=${goEdit}>← 返回修改</button>
+            <button class="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style=${{ color: C.primary, border: `1px solid rgba(167,139,250,0.3)`, background: 'rgba(167,139,250,0.06)' }}
+              onMouseEnter=${(e) => e.currentTarget.style.background = 'rgba(167,139,250,0.12)'}
+              onMouseLeave=${(e) => e.currentTarget.style.background = 'rgba(167,139,250,0.06)'}
+              onClick=${goStudio}>🎛 调节智能体</button>
             <button class="px-4 py-2 rounded-lg text-sm font-semibold transition-all"
               style=${{ color: '#1a0f3d', background: C.accent }}
               onMouseEnter=${(e) => e.currentTarget.style.filter = 'brightness(1.08)'}

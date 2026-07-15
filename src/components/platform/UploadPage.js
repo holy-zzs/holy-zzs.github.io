@@ -4,7 +4,7 @@ import { html, useState, useRef, useCallback, useMemo } from '../../deps.js'
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText } from '../../lib/aiParser.js?v=aip7'
+import { analyzeWithLLM, extractPdfText } from '../../lib/aiParser.js?v=aip8'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
 // ── 减弱动效 & 解析动画 keyframes（内联注入，避免污染全局） ──
@@ -24,7 +24,7 @@ const PARSE_CSS = `
 `
 
 // ── 5步流程标签 ──
-const STEP_LABELS = ['学段学科', '选择模式', '选择玩法', '上传教材', 'AI协作']
+const STEP_LABELS = ['选学科', '传教材', '选玩法', 'AI工作室']
 
 // ── 输入模式 Tab ──
 const TABS = [
@@ -590,13 +590,13 @@ export default function UploadPage() {
     setPasteText('')
   }, [dispatch])
 
-  // ── 确认教材启动协作 ──
+  // ── 确认教材，进入玩法推荐 ──
   const confirmAndStart = useCallback(() => {
     if (!material) {
       toast('请先上传并解析教材', 'error')
       return
     }
-    navigate(STEPS.WORKSPACE)
+    navigate(STEPS.GAMEPLAY)
   }, [material, navigate, toast])
 
   return html`
@@ -610,7 +610,7 @@ export default function UploadPage() {
 
         <!-- 进度指示器 -->
         <div class="mt-4">
-          <${StepProgress} current=${3} total=${5} labels=${STEP_LABELS} />
+          <${StepProgress} current=${1} total=${4} labels=${STEP_LABELS} />
         </div>
 
         <!-- 页面标题 -->
@@ -831,7 +831,7 @@ export default function UploadPage() {
             style=${{ background: material ? 'var(--theme-primary)' : 'var(--theme-surface-alt)', cursor: material ? 'pointer' : 'not-allowed', opacity: material ? 1 : 0.5 }}
             disabled=${!material}
             onClick=${confirmAndStart}>
-            <span>确认教材，启动AI协作</span><span>→</span>
+            <span>确认教材，选择玩法</span><span>→</span>
           </button>
         </div>
       </${PageContainer}>

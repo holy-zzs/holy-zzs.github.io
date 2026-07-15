@@ -8,8 +8,8 @@ import { STEPS } from '../../store/appContext.js'
 
 const PIPELINE_STAGES = [
   { id: 'data_input',    num: '01', en: 'UPLOAD_DATA',   cn: '投喂知识',   desc: '燃料注入',         step: STEPS.UPLOAD },
-  { id: 'parse',         num: '02', en: 'PARSE_INIT',    cn: '降维解析',   desc: '蓝图扫描与解密',   step: STEPS.MODE },
-  { id: 'awaken',        num: '03', en: 'AWAKEN_TEAM',   cn: '唤醒团队',   desc: '军火库插槽激活',   step: STEPS.AGENTS },
+  { id: 'game_select',   num: '02', en: 'GAME_SELECT',   cn: '选择玩法',   desc: '类型推荐与确认',   step: STEPS.GAMEPLAY },
+  { id: 'studio',        num: '03', en: 'STUDIO_CMD',    cn: 'AI工作室',   desc: '团队调度与开发',   step: STEPS.AISTUDIO },
   { id: 'forge',         num: '04', en: 'FORGE_ENGINE',  cn: '宇宙锻造',   desc: '引擎全开，实时生成', step: STEPS.WORKSPACE },
 ]
 

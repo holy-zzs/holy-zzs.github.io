@@ -11,9 +11,9 @@ import AuthView from './components/auth/AuthView.js'
 import GameHall from './components/hall/GameHall.js'
 import GamePlaza from './components/hall/GamePlaza.js?v=gp8'
 // UploadView 已迁移为平台风格的 UploadPage（见下方 import）
-import WorkspaceView from './components/platform/WorkspaceView.js?v=wsv8'
+import WorkspaceView from './components/platform/WorkspaceView.js?v=wsv9'
 import StarVoyagerWorkbench from './components/platform/StarVoyagerWorkbench.js'
-import AIStudio from './components/platform/AIStudio.js'
+import AIStudio from './components/platform/AIStudio.js?v=as7'
 // PreviewView 已迁移为平台风格的游戏播放器（HTML5 game player）
 import PreviewView from './components/platform/PreviewView.js'
 
@@ -30,7 +30,7 @@ import ProjectsPage from './components/platform/ProjectsPage.js'
 import ProtocolDemo from './components/platform/ProtocolDemo.js'
 import SubjectPage from './components/platform/SubjectPage.js'
 import TeamBuilder from './components/platform/TeamBuilder.js'
-import UploadPage from './components/platform/UploadPage.js?v=pdf20260715i'
+import UploadPage from './components/platform/UploadPage.js?v=pdf20260716a'
 
 // 新增平台页面
 import AboutPage from './components/platform/AboutPage.js'

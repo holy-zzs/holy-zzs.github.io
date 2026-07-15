@@ -63,8 +63,8 @@ export default function LandingPage() {
   }, [dispatch])
 
   const handleSelectSubject = useCallback(() => {
-    // 学科选择后进入模式选择页
-    go(STEPS.MODE)
+    // 选学科后进入上传教材页（新流程跳过模式选择）
+    go(STEPS.SUBJECT)
   }, [go])
 
   const triggerSecondaryAction = useCallback(() => {
