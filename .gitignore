@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+@vite/
+
+# IDE & tools
+.trae/
+trae/
+skills/
+skills-lock.json
+public/trae-bridge.mjs
+trae-bridge.mjs
+
+# Design mockups & references (not part of the app)
+_plaza_reference/
+ai-team-center/
+chuangjieshan-dashboard/
+game-plaza-holo/
+holo-cartridge-arcade/
+新建文件夹/
+docs/
+图片/
+
+# Backend server (not needed for static hosting)
+server/
+
+# Netlify functions (not needed for GitHub Pages)
+netlify/
+
+# Screenshots & misc images
+*.png
+!src/assets/*.png
+!assets/**/*.png
+
+# Design docs
+*.md
+*.design
+
+# Standalone HTML mockups
+community-blueprint.html
+game-hall.html
+mode-page-design-philosophy.html
+subject-page-design-spec.html
+mode-page-visual-poster.png
+mode-page-product-decision.html
+
+# Scripts
+serve.ps1
+
+# Logs
+*.log
+
+# Local Netlify folder
+.netlify
+
+# OS files
+Thumbs.db
+.DS_Store
+assets/crystal/*.mp4

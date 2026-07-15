@@ -1,0 +1,13 @@
+[build]
+  command = ""
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/@vite/*"
+  [headers.values]
+    Content-Type = "text/javascript"
+    Cache-Control = "no-cache"
