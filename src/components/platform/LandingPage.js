@@ -11,7 +11,7 @@ import {
 } from '../../data/homepageBrandContent.mjs'
 import { html, useCallback, useContext, useMemo } from '../../deps.js'
 import { getLandingPrimaryAction } from '../../lib/homepageState.mjs?v8'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 import DemoShowcaseSection from './homepage/DemoShowcaseSection.js'
 import FaqSection from './homepage/FaqSection.js'
 import FeatureCardsSection from './homepage/FeatureCardsSection.js'
@@ -24,7 +24,7 @@ import StageSelectSection from './homepage/StageSelectSection.js'
 import ValueCardsSection from './homepage/ValueCardsSection.js'
 import SocialProofSection from './homepage/SocialProofSection.js'
 import AudiencesSection from './homepage/AudiencesSection.js'
-import { Footer, NavBar } from './PlatformCommon.js?v=nav2'
+import { Footer, NavBar } from './PlatformCommon.js?v=nav3'
 import InfiniteCanvas from './homepage/InfiniteCanvas.js'
 
 export default function LandingPage() {

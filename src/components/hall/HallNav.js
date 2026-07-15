@@ -1,7 +1,7 @@
 // 游戏广场顶栏：参考图风格的深色悬浮导航
 import { html, useState, useEffect } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp } from '../../store/appContext.js'
+import { useApp } from '../../store/appContext.js?v=ctx2'
 import { audio } from '../../lib/audio.js'
 
 export default function HallNav() {

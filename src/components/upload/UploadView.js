@@ -1,6 +1,6 @@
 // 教材上传与解析界面（任务6）
 import { html, useState, useRef } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { Button, EmptyState } from '../common/ui.js'
 import { parseFile, parseText } from '../../lib/parser.js'
 

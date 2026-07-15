@@ -1,7 +1,7 @@
 // 页面2：学段学科细分页（三栏布局：学段确认 / 学科选择 / 推荐团队）
 import { html, useContext, useState, useEffect, useMemo, useCallback, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer, StepProgress, EmptyState } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer, StepProgress, EmptyState } from './PlatformCommon.js?v=nav3'
 import {
   SUBJECTS, QUICK_SCENES, GRADE_GUIDE, SEARCH_PLACEHOLDER,
   DEFAULT_SCENES, recommendTeams, GRADES

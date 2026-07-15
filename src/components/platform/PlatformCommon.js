@@ -2,9 +2,9 @@
 // v2: 完整导航重构 — AI工作台/资源中心下拉 + 搜索 + 帮助抽屉 + 通知 + 反馈 + 头像菜单
 import { PLATFORM_STATS } from '../../data/platformData.js'
 import { html, useContext, useEffect, useRef, useState } from '../../deps.js'
-import { AppContext, STEPS, useApp } from '../../store/appContext.js'
+import { AppContext, STEPS, useApp } from '../../store/appContext.js?v=ctx2'
 import { checkBridgeHealth, testApiKey } from '../../lib/aiAdapter.js?v=aip7'
-import TacticalPipelineHUD from './TacticalPipelineHUD.js'
+import TacticalPipelineHUD from './TacticalPipelineHUD.js?v=th2'
 
 // ── 复古未来主义色板 ──
 const C = {

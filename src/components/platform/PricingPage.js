@@ -1,7 +1,7 @@
 // 定价页 — 3档定价 + 月/年切换 + 功能对比表 + FAQ
 import { html, useCallback, useContext, useState } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { Footer, NavBar, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { Footer, NavBar, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古色板 ──
 const C = {

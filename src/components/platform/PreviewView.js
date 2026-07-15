@@ -1,8 +1,8 @@
 // 页面9：游戏玩家 — AI 协作完成后，在这里"玩"生成的游戏
 // 这不是文档预览器，是一个 HTML5 游戏播放器：CRT 画布 / 动画场景 / 分享 / 嵌入 / 安装一条龙
 import { html, useContext, useState, useCallback, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──
 const C = {

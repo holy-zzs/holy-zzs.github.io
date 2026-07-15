@@ -1,7 +1,7 @@
 // 关于我们 — 平台使命 / 创始故事 / 团队介绍 / 核心价值观 / 数据统计 / 联系方式
 import { html, useContext, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──
 const C = {

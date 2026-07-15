@@ -2,7 +2,7 @@
 // 升级五：悬停交互、点击对话、情绪系统、空闲状态
 import { html, useEffect, useRef, useState, useCallback } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { getAgents, DEFAULT_TEAM, getAgent } from '../../data/agents.js'
 import { audio } from '../../lib/audio.js'
 

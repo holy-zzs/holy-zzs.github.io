@@ -1,9 +1,9 @@
 // 页面5：自定义团队 - 智能体市场页
 // 自由挑选AI角色组队，含金量拉满，这不比博人传燃？
 import { html, useContext, useCallback, useState, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
-import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
+import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 
 // ── 学段筛选（全部/通用/小学/初中/高中/大学）──
 const GRADE_FILTERS = [

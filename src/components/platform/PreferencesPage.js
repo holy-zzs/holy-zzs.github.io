@@ -2,8 +2,8 @@
 // 替代 OnboardingView，设置游戏类型、难度、视觉风格、学习深度、游戏时长
 // 卡片式布局，每个偏好一个区块，含金量拉满
 import { html, useContext, useCallback, useState } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { VISUAL_STYLES, LEARNING_DEPTHS, GAME_DURATIONS, MEMES } from '../../data/platformData.js'
 
 // 游戏类型选项（多选）

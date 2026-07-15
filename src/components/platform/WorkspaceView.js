@@ -2,7 +2,7 @@
 // 左：智能体协作频道（逐个注入 knowledgePoints / levels / theme / playtest 配置块）
 // 右：输出面板（游戏配置 JSON 实时组装 + 实时预览场景）
 import { html, useCallback, useContext, useEffect, useRef, useState } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 
 // ── 色板（硬编码，匹配平台深空主题）──
 const C = {

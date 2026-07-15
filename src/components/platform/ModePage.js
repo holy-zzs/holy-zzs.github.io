@@ -1,8 +1,8 @@
 // 页面3：选择模式页 — 产品决策系统实现
 // 三选一卡片布局 · 视觉权重引导 · 犹豫检测 · 骨架屏 · 异常降级
 import { html, useContext, useState, useEffect, useCallback, useMemo, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer, StepProgress, EmptyState } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer, StepProgress, EmptyState } from './PlatformCommon.js?v=nav3'
 import { PRESET_TEAMS, recommendTeams, COMMUNITY_PLANS, GRADES } from '../../data/platformData.js'
 
 // ── 预设团队 agent id 别名（兼容 PRESET_TEAMS 的简写 id） ──

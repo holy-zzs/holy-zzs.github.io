@@ -9,8 +9,8 @@ import {
   verifyPassword
 } from '../../lib/crypto.js'
 import { uid } from '../../lib/storage.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { Footer, NavBar } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { Footer, NavBar } from './PlatformCommon.js?v=nav3'
 
 // ── 复古色板 ──
 const C = {

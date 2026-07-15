@@ -1,7 +1,7 @@
 // 全局搜索 — 顶部搜索框 + 范围筛选 + 分类分组结果 + 空状态/无结果状态
 import { html, useContext, useState, useCallback, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──
 const C = {

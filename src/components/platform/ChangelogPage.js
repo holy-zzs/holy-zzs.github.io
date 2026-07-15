@@ -1,7 +1,7 @@
 // 更新日志 — 时间线布局 + 版本条目 + 分类变更列表
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──
 const C = {

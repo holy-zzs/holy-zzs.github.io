@@ -3,7 +3,7 @@
 // 赛博 HUD 风格：深空底色 / 机械切角 / 扫描线 / 霓虹光晕
 // ═══════════════════════════════════════════════════════════
 import { html, useState, useCallback, useContext, useEffect } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 
 // ── CSS 样式（注入一次）──
 let _styleEl = null

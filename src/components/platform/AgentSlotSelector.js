@@ -4,11 +4,11 @@
 // 含羁绊系统 + 一键套用模板 + 神秘嘉宾
 // ═══════════════════════════════════════════════════════════
 import { html, useContext, useState, useCallback, useEffect, useRef, useMemo } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 import { AGENTS, getAgentsByGrade } from '../../data/agents.js'
 import { PRESET_TEAMS } from '../../data/platformData.js'
 import { encodeTeamCode, isValidCode, getTeamByCode } from '../../data/teamShareCode.js'
-import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
+import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 
 const MIN_AGENTS = 3
 const MAX_AGENTS = 5

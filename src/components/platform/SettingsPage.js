@@ -1,8 +1,8 @@
 // 设置页 — 4 标签页设置界面
 // 个人信息 / 通知偏好 / 隐私安全 / 连接账户
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古色板 ──
 const C = {

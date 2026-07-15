@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { html } from '../../deps.js'
-import { STEPS } from '../../store/appContext.js'
+import { STEPS } from '../../store/appContext.js?v=ctx2'
 
 const PIPELINE_STAGES = [
   { id: 'data_input',    num: '01', en: 'UPLOAD_DATA',   cn: '投喂知识',   desc: '燃料注入',         step: STEPS.UPLOAD },

@@ -1,10 +1,10 @@
 // 页面4：预设团队选择页
 // 选一个现成AI团队模板，有手就行，含金量拉满
 import { html, useContext, useCallback, useState, useEffect, useRef } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 import { PRESET_TEAMS } from '../../data/platformData.js'
 import { AGENTS } from '../../data/agents.js'
-import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
+import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 
 // PRESET_TEAMS 中 agent id 与 AGENTS 不完全一致，做别名映射
 // 自定义简写 ID (p01/m01/h01/u01…) → 通用角色 ID

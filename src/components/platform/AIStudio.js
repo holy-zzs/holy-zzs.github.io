@@ -1,6 +1,6 @@
 import { html, useState, useEffect, useRef } from '../../deps.js'
-import { NavBar, Footer } from './PlatformCommon.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { NavBar, Footer } from './PlatformCommon.js?v=nav3'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 
 // ═══════════════════════════════════════════════════════════
 // AI 工作台 v6 — AI 总监控制台

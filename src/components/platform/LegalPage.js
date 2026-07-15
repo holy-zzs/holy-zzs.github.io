@@ -1,7 +1,7 @@
 // 法律页面 — 隐私政策 / 服务条款 / Cookie政策 三标签切换 + 左侧章节导航 + 打印友好
 import { html, useContext, useState, useCallback } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // ── 复古未来主义色板 ──
 const C = {

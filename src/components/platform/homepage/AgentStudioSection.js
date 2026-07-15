@@ -12,7 +12,7 @@
  * 说明：模板内统一使用 class=（deps.js 适配器会转成 className）
  */
 import { html, useState, useEffect, useRef, useMemo, useCallback, useContext } from '../../../deps.js'
-import { AppContext, STEPS } from '../../../store/appContext.js'
+import { AppContext, STEPS } from '../../../store/appContext.js?v=ctx2'
 
 /* ────────────────────────────────────────────────────────────
  * Agent 数据

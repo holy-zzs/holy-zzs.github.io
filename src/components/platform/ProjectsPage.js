@@ -1,8 +1,8 @@
 // 页面10：我的游戏页
 // 管理你的游戏库，含金量还在上升，这不比博人传燃？
 import { html, useContext, useCallback, useState, useEffect } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { NavBar, Footer, PageContainer, EmptyState, StepProgress } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { NavBar, Footer, PageContainer, EmptyState, StepProgress } from './PlatformCommon.js?v=nav3'
 
 // ── 游戏状态配置 ──
 const STATUS_CONFIG = {

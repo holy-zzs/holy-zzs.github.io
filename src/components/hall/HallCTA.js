@@ -1,7 +1,7 @@
 // 延迟注册召唤区：大厅底部 CTA
 import { html } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { audio } from '../../lib/audio.js'
 
 export default function HallCTA() {

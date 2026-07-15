@@ -1,6 +1,6 @@
 // 方案预览与导出界面（任务8）
 import { html, useState, useMemo } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { Button, EmptyState, MarkdownView } from '../common/ui.js'
 import { exportMarkdown, exportJSON, exportPDF, buildMarkdown } from '../../lib/exporter.js'
 import { getAgent } from '../../data/agents.js'

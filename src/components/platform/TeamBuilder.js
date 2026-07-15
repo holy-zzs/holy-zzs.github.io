@@ -4,9 +4,9 @@
 // 视觉语言：全息模组匣子 · 借鉴游戏广场设计
 // ═══════════════════════════════════════════════════════════
 import { html, useState, useCallback, useMemo, useEffect } from '../../deps.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { AGENTS, AGENT_CATEGORIES, getNewAgents, getAgentAvatar, DIRECTOR_AGENTS } from '../../data/agents.js'
-import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js'
+import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import {
   TEAM_SLOTS,
   RARITY,

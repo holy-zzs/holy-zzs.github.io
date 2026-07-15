@@ -3,7 +3,7 @@
 // v3.0 升级二：读心术输入框，用户输入主题 → mock AI 响应 → 概念海报 → 可转化为真实教材
 import { html, useEffect, useRef, useState, useCallback } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { audio } from '../../lib/audio.js'
 import { getAgent } from '../../data/agents.js'
 import { useHeroUploadFlow } from './useHeroUploadFlow.js'

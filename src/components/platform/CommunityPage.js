@@ -1,9 +1,9 @@
 // 页面：社区方案 / BLUEPRINT_VAULT
 // 蓝图与节点 (Blueprints & Nodes) — 硬核开源知识武器库
 import { html, useContext, useState, useEffect, useRef, useMemo } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
 import { COMMUNITY_PLANS } from '../../data/platformData.js'
-import { NavBar, Footer } from './PlatformCommon.js'
+import { NavBar, Footer } from './PlatformCommon.js?v=nav3'
 
 // ═══════════════════════════════════════════════════
 // 数据增强 — 为每个方案附加蓝图元数据

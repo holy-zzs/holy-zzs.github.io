@@ -2,7 +2,7 @@
 // 升级六：随机种子地图、幻影排行榜、学习弱点分析、无限重玩
 import { html, useState, useEffect, useRef, useCallback } from '../../react.js'
 import { useHall } from './GameHall.js'
-import { useApp } from '../../store/appContext.js'
+import { useApp } from '../../store/appContext.js?v=ctx2'
 import { audio } from '../../lib/audio.js'
 
 // 概念词库

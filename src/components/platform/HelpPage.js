@@ -2,8 +2,8 @@
 // 使用流程教程 + FAQ手风琴 + 视频教程 + 联系客服 + 新手引导入口
 import { FAQS, MEMES } from '../../data/platformData.js'
 import { html, useCallback, useContext, useState } from '../../deps.js'
-import { AppContext, STEPS } from '../../store/appContext.js'
-import { EmptyState, Footer, NavBar, PageContainer } from './PlatformCommon.js'
+import { AppContext, STEPS } from '../../store/appContext.js?v=ctx2'
+import { EmptyState, Footer, NavBar, PageContainer } from './PlatformCommon.js?v=nav3'
 
 // 使用流程5步
 const FLOW_STEPS = [

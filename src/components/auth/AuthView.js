@@ -1,6 +1,6 @@
 // 认证界面：登录/注册（全屏布局壳，表单委托 AuthForm）
 import { html } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { Logo } from '../common/ui.js'
 import AuthForm from './AuthForm.js'
 

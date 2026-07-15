@@ -1,6 +1,6 @@
 // 偏好设置界面：学习风格 + 游戏类型 + 难度 + 节奏（任务4）
 import { html, useState } from '../../react.js'
-import { useApp, STEPS } from '../../store/appContext.js'
+import { useApp, STEPS } from '../../store/appContext.js?v=ctx2'
 import { Button } from '../common/ui.js'
 import { LEARNING_STYLES, GAME_TYPES, DIFFICULTY_PREFS, PACE_PREFS } from '../../data/options.js'
 
