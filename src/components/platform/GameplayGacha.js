@@ -12,10 +12,10 @@ const T = {
   deep: '#0a0514',
   bgRadial: 'radial-gradient(ellipse at 50% 80%, #1e0f4d 0%, #0a0420 40%, #05010f 100%)',
 
-  // 金属玻璃层
-  glass: 'rgba(15, 12, 25, 0.65)',
-  glassHover: 'rgba(20, 16, 35, 0.8)',
-  glassDeep: 'rgba(8, 6, 15, 0.75)',
+  // 金属玻璃层（降低透明度，让背景图透出）
+  glass: 'rgba(15, 12, 25, 0.42)',
+  glassHover: 'rgba(20, 16, 35, 0.55)',
+  glassDeep: 'rgba(8, 6, 15, 0.50)',
   glassBorder: 'rgba(167, 139, 250, 0.15)',
   glassBorderBright: 'rgba(167, 139, 250, 0.35)',
   glassBorderActive: 'rgba(167, 139, 250, 0.55)',
@@ -50,7 +50,7 @@ const T = {
 
 // ── 图片路径 ──
 const IMG = (n) => `/assets/gameplay/image_${n}_yi19x4.jpg`
-const TEXTBOOK_COVER = '/assets/gameplay/textbook_cover.jpg'
+const TEXTBOOK_COVER = '/assets/gameplay/history_textbook_cover.png'
 const BG_IMAGE = '/assets/gameplay/textbook_cover.jpg'
 
 // ── 4 个游戏模式数据 ──
@@ -191,11 +191,11 @@ const PAGE_CSS = `
 .gp-bg-layer {
   position: fixed; inset: 0; z-index: -2;
   background: url('${BG_IMAGE}') center/cover no-repeat fixed;
-  filter: blur(2px) brightness(0.35) saturate(1.2);
+  filter: blur(2px) brightness(0.50) saturate(1.2);
 }
 .gp-bg-overlay {
   position: fixed; inset: 0; z-index: -1;
-  background: radial-gradient(ellipse at 50% 80%, rgba(30,15,77,0.7) 0%, rgba(10,4,32,0.85) 40%, rgba(5,1,15,0.95) 100%);
+  background: radial-gradient(ellipse at 50% 80%, rgba(30,15,77,0.45) 0%, rgba(10,4,32,0.60) 40%, rgba(5,1,15,0.70) 100%);
 }
 
 /* ── 卡片入场动画 ── */
@@ -229,7 +229,7 @@ const PAGE_CSS = `
   border-radius: 16px;
   background: ${T.metallicSheen};
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 /* ── 金属面板 hover ── */
