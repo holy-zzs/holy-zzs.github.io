@@ -18,7 +18,7 @@ import AIStudio from './components/platform/AIStudio.js?v=as9'
 import PreviewView from './components/platform/PreviewView.js?v=pv3'
 
 // 新平台页面（页面1-15）
-import GameplayGacha from './components/platform/GameplayGacha.js?v=gg5'
+import GameplayGacha from './components/platform/GameplayGacha.js?v=gg6'
 import HelpPage from './components/platform/HelpPage.js?v=cb2'
 import LandingPage from './components/platform/LandingPage.js?v=lp3'
 import ModePage from './components/platform/ModePage.js?v=cb2'

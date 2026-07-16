@@ -1,0 +1,47 @@
+name: Deploy to Tencent COS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install coscmd
+        run: |
+          pip install coscmd
+
+      - name: Configure coscmd
+        run: |
+          coscmd config \
+            -a ${{ secrets.TENCENT_COS_SECRET_ID }} \
+            -s ${{ secrets.TENCENT_COS_SECRET_KEY }} \
+            -b ${{ secrets.TENCENT_COS_BUCKET }} \
+            -r ${{ secrets.TENCENT_COS_REGION }}
+
+      - name: Upload files to COS
+        run: |
+          # 上传根目录文件
+          coscmd upload index.html /
+          coscmd upload .nojekyll /
+          coscmd upload game-hall.html /
+          coscmd upload trae-bridge.mjs /
+          coscmd upload avatar_showcase.jpg /
+          coscmd upload avatar_showcase_12.jpg /
+          coscmd upload department_icons_showcase.jpg /
+
+          # 上传目录（递归同步）
+          coscmd upload -rs src/ src/
+          coscmd upload -rs assets/ assets/
+          coscmd upload -rs public/ public/
+          coscmd upload -rs ai-game-strategist/ ai-game-strategist/
+
+      - name: Deployment info
+        run: |
+          echo "✅ 部署完成!"
+          echo "🌐 COS地址: https://${{ secrets.TENCENT_COS_BUCKET }}.cos.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com/"
