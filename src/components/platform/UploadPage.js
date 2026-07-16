@@ -1,10 +1,10 @@
 ﻿// 页面6：上传教材页 — 把教材交给你的AI团队
 // 4种输入模式（PDF / 粘贴 / 网址 / 示例）+ 解析预览面板 + 团队预览条 + 5步进度
-import { html, useState, useRef, useCallback, useMemo } from '../../deps.js'
+import { html, useState, useRef, useCallback, useMemo, useEffect } from '../../deps.js'
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText } from '../../lib/aiParser.js?v=aip8'
+import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip9'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
 // ── 减弱动效 & 解析动画 keyframes（内联注入，避免污染全局） ──
@@ -158,6 +158,92 @@ function ChapterTree({ structure }) {
           </div>
         `
       })}
+    </div>
+  `
+}
+
+// ════════════════════════════════════════════════════════════
+//  免费额度徽章
+// ════════════════════════════════════════════════════════════
+function QuotaBadge({ usage, loading }) {
+  // loading 状态
+  if (loading) {
+    return html`
+      <div class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs"
+           style=${{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-muted)' }}>
+        <span class="inline-block w-3 h-3 rounded-full border-2 border-t-transparent animate-spin"
+              style=${{ borderColor: 'var(--theme-primary)', borderTopColor: 'transparent' }}></span>
+        <span>正在检查解析引擎...</span>
+      </div>
+    `
+  }
+
+  // 未获取到使用量数据
+  if (!usage) {
+    return html`
+      <div class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs"
+           style=${{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-muted)' }}>
+        <span class="text-base">📄</span>
+        <span>本地解析模式（免费无限制）</span>
+      </div>
+    `
+  }
+
+  // Adobe 已配置
+  if (usage.adobe_enabled) {
+    const remaining = usage.adobe_remaining || 0
+    const total = usage.adobe_total || 500
+    const used = usage.adobe_used || 0
+    const percent = Math.round((remaining / total) * 100)
+    const isLow = remaining < 50
+    const isCritical = remaining < 10
+
+    // 颜色：充足绿、低黄、危险红
+    const color = isCritical ? '#ef4444' : isLow ? '#f5a623' : '#22c55e'
+    const bgColor = isCritical ? 'rgba(239,68,68,0.08)' : isLow ? 'rgba(245,166,35,0.08)' : 'rgba(34,197,94,0.08)'
+    const borderColor = isCritical ? 'rgba(239,68,68,0.25)' : isLow ? 'rgba(245,166,35,0.25)' : 'rgba(34,197,94,0.2)'
+
+    return html`
+      <div class="rounded-xl px-3 py-2.5" style=${{ background: bgColor, border: `1px solid ${borderColor}` }}>
+        <div class="flex items-center justify-between gap-3 mb-1.5">
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm">🔮</span>
+            <span class="text-xs font-bold" style=${{ color: 'var(--theme-text)' }}>Adobe PDF API</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full font-mono"
+                  style=${{ background: color + '22', color: color }}>
+              ${isCritical ? '额度不足' : isLow ? '即将用完' : '正常'}
+            </span>
+          </div>
+          <span class="text-xs font-mono font-bold" style=${{ color }}>
+            ${remaining} / ${total}
+          </span>
+        </div>
+        <!-- 进度条 -->
+        <div class="h-1.5 rounded-full overflow-hidden" style=${{ background: 'rgba(0,0,0,0.15)' }}>
+          <div class="h-full rounded-full transition-all duration-500"
+               style=${{ width: percent + '%', background: color }}></div>
+        </div>
+        <div class="flex items-center justify-between mt-1">
+          <span class="text-[10px]" style=${{ color: 'var(--theme-text-muted)' }}>
+            已用 ${used} 次 · 每月 ${total} 次免费
+          </span>
+          <span class="text-[10px]" style=${{ color: 'var(--theme-text-muted)' }}>
+            ${usage.trial_end ? `试用至 ${usage.trial_end}` : ''}
+          </span>
+        </div>
+      </div>
+    `
+  }
+
+  // Adobe 未配置 → 显示本地模式
+  return html`
+    <div class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs"
+         style=${{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-muted)' }}>
+      <span class="text-base">📄</span>
+      <div class="flex flex-col">
+        <span style=${{ color: 'var(--theme-text)' }}>本地解析模式</span>
+        <span class="text-[10px]">免费无限制 · 文字版PDF可用 · 扫描版需配置 Adobe API</span>
+      </div>
     </div>
   `
 }
@@ -380,10 +466,27 @@ export default function UploadPage() {
   const [parseStep, setParseStep] = useState(0)
   const [parseProgress, setParseProgress] = useState(0)
   const [creativeInput, setCreativeInput] = useState(state.userCreativeInput || '')
+  const [usage, setUsage] = useState(null)
+  const [usageLoading, setUsageLoading] = useState(true)
   const fileInput = useRef(null)
 
   const material = state.material
   const selectedAgents = state.selectedAgents || []
+
+  // ── 加载 API 使用量 ──
+  useEffect(() => {
+    let cancelled = false
+    setUsageLoading(true)
+    fetchUsage().then((data) => {
+      if (!cancelled) {
+        setUsage(data)
+        setUsageLoading(false)
+      }
+    }).catch(() => {
+      if (!cancelled) setUsageLoading(false)
+    })
+    return () => { cancelled = true }
+  }, [])
 
   // 已选团队角色信息
   const teamAgents = useMemo(() => {
@@ -616,11 +719,16 @@ export default function UploadPage() {
         </div>
 
         <!-- 页面标题 -->
-        <div class="text-center mt-2 mb-6">
+        <div class="text-center mt-2 mb-4">
           <h1 class="text-2xl sm:text-3xl font-bold" style=${{ color: 'var(--theme-primary)' }}>📚 把教材交给你的AI团队</h1>
           <p class="text-sm mt-1.5 max-w-2xl mx-auto" style=${{ color: 'var(--theme-text-muted)' }}>
             上传教材内容，AI团队将自动解析章节、提取概念、标注公式，为游戏化设计做准备
           </p>
+        </div>
+
+        <!-- 免费额度徽章 -->
+        <div class="mb-5 max-w-md mx-auto">
+          <${QuotaBadge} usage=${usage} loading=${usageLoading} />
         </div>
 
         <!-- 左右分栏 -->

@@ -605,6 +605,8 @@ export async function extractPdfText(file, onProgress) {
       ocrUsed: data.ocrUsed,
       backendUsed: true,
       avgCharsPerPage: data.avgCharsPerPage,
+      extractionMethod: data.extractionMethod || 'pymupdf',
+      adobeRemaining: data.adobe_remaining,
     }
   } catch (backendErr) {
     // ── 降级到浏览器 pdfjs ──
@@ -614,6 +616,20 @@ export async function extractPdfText(file, onProgress) {
       message: backendErr.message,
     })
   }
+}
+
+// ════════════════════════════════════════════════
+// 获取 API 使用量（Adobe 免费额度等）
+// ════════════════════════════════════════════════
+export async function fetchUsage() {
+  const url = getPdfServerUrl()
+  try {
+    const resp = await fetch(`${url}/usage`, {
+      signal: AbortSignal.timeout(8000),
+    })
+    if (resp.ok) return await resp.json()
+  } catch {}
+  return null
 }
 
 // 浏览器端 pdfjs 提取（降级方案，不支持 OCR）
