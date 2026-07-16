@@ -351,6 +351,29 @@ export default function GameplayGacha() {
   const [selectedMode, setSelectedMode] = useState(null)
   const [activeTab, setActiveTab] = useState(grade === 'junior' ? 'junior' : 'primary')
 
+  // ── 合并 AI 推荐数据与默认兜底数据 ──
+  const rec = state.gameplayRecommendation
+  const IMG_BY_ID = { adventure: IMG(2), simulation: IMG(3), puzzle: IMG(4), rpg: IMG(5) }
+  const TEAM_IMGS = [IMG(6), IMG(0), IMG(7), IMG(8), IMG(9), IMG(10)]
+
+  const gameModes = (rec?.gameModes || GAME_MODES).map((m, i) => ({
+    ...m,
+    img: m.img || IMG_BY_ID[m.id] || IMG(i + 2),
+  }))
+  const dna = rec?.dna || DNA
+  const aiTeam = (rec?.aiTeam || AI_TEAM).map((m, i) => ({
+    ...m,
+    img: m.img || TEAM_IMGS[i] || IMG(i),
+  }))
+  const objectives = rec?.objectives || OBJECTIVES
+  const aiSuggestion = rec?.aiSuggestion || '基于教材分析，推荐选择「探索冒险」方案，该方案与教材内容的探索性学习高度匹配，能有效激发学生的好奇心与探究欲，知识覆盖度与学习效果均表现优异。'
+  const matchScore = rec?.matchScore || 98
+  const matchLabel = rec?.matchLabel || '知识覆盖度高'
+  const matchDesc = rec?.matchDesc || '非常适合游戏化学习'
+  const knowledgePoints = rec?.knowledgePoints || (grade === 'primary' ? 126 : 186)
+  const experiments = rec?.experiments || (grade === 'primary' ? 23 : 45)
+  const isAiGenerated = !!rec && !rec._fallback
+
   const handleSelect = useCallback((mode) => setSelectedMode(mode), [])
 
   const confirmGameplay = useCallback(() => {
@@ -451,7 +474,7 @@ export default function GameplayGacha() {
                   ${state.selectedSubject || '小学科学'} ${grade === 'primary' ? '五年级上册' : grade === 'junior' ? '八年级' : grade === 'senior' ? '高一' : '通用'}
                 </div>
                 <div class="text-xs mt-0.5 truncate" style=${{ color: T.textSecondary }}>
-                  ${state.material?.name || '教材.pdf'}
+                  ${state.material?.filename || state.material?.name || '教材.pdf'}
                 </div>
               </div>
               <!-- 金属光泽反射条 -->
@@ -462,11 +485,12 @@ export default function GameplayGacha() {
             <!-- 教材元数据 -->
             <div class="flex items-center gap-2 text-xs">
               <span class="gp-metal-tag px-2 py-1" style=${{ color: T.textSecondary }}>
-                ${grade === 'primary' ? '126' : '186'} 个知识点
+                ${knowledgePoints} 个知识点
               </span>
               <span class="gp-metal-tag px-2 py-1" style=${{ color: T.textSecondary }}>
-                ${grade === 'primary' ? '23' : '45'} 个实验
+                ${experiments} 个实验
               </span>
+              ${isAiGenerated ? html`<span class="gp-metal-tag px-2 py-1" style=${{ color: T.green, border: `1px solid ${T.green}30` }}>AI</span>` : null}
             </div>
 
             <!-- ══════ 模块断开：金属拉丝分隔线 ══════ -->
@@ -485,7 +509,7 @@ export default function GameplayGacha() {
             <div class="mt-4 flex flex-col items-center">
               <div class="relative w-24 h-24 rounded-full"
                    style=${{
-                     background: `conic-gradient(${T.primary} 0% 98%, ${T.borderSubtle} 98% 100%)`,
+                     background: `conic-gradient(${T.primary} 0% ${matchScore}%, ${T.borderSubtle} ${matchScore}% 100%)`,
                      boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 16px rgba(167,139,250,0.2)',
                    }}>
                 <div class="absolute inset-[6px] rounded-full flex flex-col items-center justify-center"
@@ -493,12 +517,12 @@ export default function GameplayGacha() {
                        background: `linear-gradient(135deg, ${T.deep}, ${T.void})`,
                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
                      }}>
-                  <span class="text-2xl font-bold leading-none" style=${{ color: T.primary, fontFamily: T.fontDisplay }}>98%</span>
+                  <span class="text-2xl font-bold leading-none" style=${{ color: T.primary, fontFamily: T.fontDisplay }}>${matchScore}%</span>
                   <span class="text-[10px] mt-1" style=${{ color: T.textMuted }}>匹配度</span>
                 </div>
               </div>
-              <p class="mt-3 text-sm font-medium" style=${{ color: T.textBright }}>知识覆盖度高</p>
-              <p class="text-xs mt-0.5" style=${{ color: T.textSecondary }}>非常适合游戏化学习</p>
+              <p class="mt-3 text-sm font-medium" style=${{ color: T.textBright }}>${matchLabel}</p>
+              <p class="text-xs mt-0.5" style=${{ color: T.textSecondary }}>${matchDesc}</p>
             </div>
 
             <div class="gp-divider my-5"></div>
@@ -512,7 +536,7 @@ export default function GameplayGacha() {
               <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.primary }}>学习目标</span>
             </div>
             <ul class="space-y-2.5">
-              ${OBJECTIVES.map((obj, i) => html`
+              ${objectives.map((obj, i) => html`
                 <li key=${i} class="flex items-start gap-2">
                   <span class="w-4 h-4 mt-0.5 rounded-full flex items-center justify-center shrink-0"
                         style=${{
@@ -563,11 +587,14 @@ export default function GameplayGacha() {
           <div class="pb-6">
             <!-- 标题 + 年龄 Tab -->
             <header class="mb-6">
-              <h1 class="text-2xl font-bold tracking-tight" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
+              <h1 class="text-2xl font-bold tracking-tight flex items-center gap-2" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                 AI 推荐的游戏化学习方案
+                ${isAiGenerated ? html`<span class="text-xs px-2 py-0.5 rounded-full" style=${{ background: T.green + '20', color: T.green, border: `1px solid ${T.green}40` }}>AI 生成</span>` : null}
               </h1>
               <p class="text-sm mt-1.5" style=${{ color: T.textSecondary }}>
-                基于教材内容分析，为目标年龄段推荐最合适的游戏化学习方案
+                ${isAiGenerated
+                  ? `基于${state.selectedSubject || '教材'}内容分析，AI 为您定制了以下游戏化学习方案`
+                  : '基于教材内容分析，为目标年龄段推荐最合适的游戏化学习方案'}
               </p>
               <div class="flex flex-wrap items-center gap-2 mt-4">
                 ${AGE_TABS.map(tab => html`
@@ -586,7 +613,7 @@ export default function GameplayGacha() {
 
             <!-- ═══ 4 个游戏模式卡片（加宽，图片更大）═══ -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-              ${GAME_MODES.map((mode) => {
+              ${gameModes.map((mode) => {
                 const isSelected = selectedMode?.id === mode.id
                 return html`
                   <article key=${mode.id}
@@ -685,10 +712,10 @@ export default function GameplayGacha() {
                   方案对比
                 </h3>
                 <div class="relative w-full flex items-center justify-center" style=${{ height: '220px' }}>
-                  <${RadarChart} data=${GAME_MODES} size=${240} />
+                  <${RadarChart} data=${gameModes} size=${240} />
                 </div>
                 <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 relative">
-                  ${GAME_MODES.map((m, i) => {
+                  ${gameModes.map((m, i) => {
                     const colors = [T.cyan, T.primary, T.green, T.pink]
                     return html`
                       <div key=${i} class="flex items-center gap-1.5">
@@ -707,14 +734,14 @@ export default function GameplayGacha() {
                   AI 建议
                 </h3>
                 <p class="text-xs leading-relaxed mt-2 line-clamp-3 relative" style=${{ color: T.textSecondary }}>
-                  基于教材分析，推荐选择「探索冒险」方案，该方案与生态系统的探索性学习高度匹配，能有效激发学生的好奇心与探究欲，知识覆盖度与学习效果均表现优异。
+                  ${aiSuggestion}
                 </p>
                 <div class="gp-divider my-4 relative"></div>
                 <h3 class="text-sm font-semibold relative" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   游戏 DNA 分析
                 </h3>
                 <div class="mt-3 space-y-2.5 relative">
-                  ${DNA.map((d, i) => html`
+                  ${dna.map((d, i) => html`
                     <div key=${i} class="flex items-center gap-2">
                       <span class="text-xs w-16 shrink-0 truncate" style=${{ color: T.textSecondary }}>${d.label}</span>
                       <div class="flex-1 h-2.5 gp-dna-bar">
@@ -743,7 +770,7 @@ export default function GameplayGacha() {
                   所需 AI 团队
                 </h3>
                 <ul class="flex flex-col gap-2.5 relative">
-                  ${AI_TEAM.map((member, i) => html`
+                  ${aiTeam.map((member, i) => html`
                     <li key=${i} class="flex items-center gap-3">
                       <img src=${member.img} alt=${member.name}
                            class="w-12 h-12 rounded-xl object-cover shrink-0"

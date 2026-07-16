@@ -465,6 +465,7 @@ export default function UploadPage() {
   const [parsing, setParsing] = useState(false)
   const [parseStep, setParseStep] = useState(0)
   const [parseProgress, setParseProgress] = useState(0)
+  const [recommending, setRecommending] = useState(false) // AI推荐生成中
   const [creativeInput, setCreativeInput] = useState(state.userCreativeInput || '')
   const [usage, setUsage] = useState(null)
   const [usageLoading, setUsageLoading] = useState(true)
@@ -694,19 +695,98 @@ export default function UploadPage() {
     setPasteText('')
   }, [dispatch])
 
-  // ── 确认教材，进入玩法推荐 ──
-  const confirmAndStart = useCallback(() => {
+  // ── 确认教材，调用AI生成游戏化推荐，进入玩法推荐 ──
+  const confirmAndStart = useCallback(async () => {
     if (!material) {
       toast('请先上传并解析教材', 'error')
       return
     }
     dispatch({ type: 'SET_CREATIVE_INPUT', payload: creativeInput })
+
+    // 如果已有推荐数据，直接进入
+    if (state.gameplayRecommendation) {
+      navigate(STEPS.GAMEPLAY)
+      return
+    }
+
+    // 调用 CVM API 生成游戏化推荐
+    const apiKey = state.settings?.apiKey || ''
+    const isHttps = location.protocol === 'https:'
+    const apiUrl = isHttps
+      ? 'https://101.35.114.5:9002/api/recommend'
+      : 'http://101.35.114.5:8002/api/recommend'
+
+    setRecommending(true)
+    dispatch({ type: 'SET_RECOMMENDATION_LOADING', payload: true })
+
+    try {
+      const resp = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          material: {
+            id: material.id,
+            filename: material.filename,
+            type: material.type,
+            structure: material.structure,
+            concepts: material.concepts,
+            formulas: material.formulas,
+            terms: material.terms,
+            stats: material.stats,
+            analyzedBy: material.analyzedBy,
+            parsedAt: material.parsedAt,
+          },
+          subject: state.selectedSubject || '',
+          grade: state.selectedGrade || 'primary',
+          creativeInput: creativeInput || '',
+          apiKey: apiKey,
+        }),
+        signal: AbortSignal.timeout(120000), // 2分钟超时
+      })
+
+      if (!resp.ok) {
+        throw new Error(`API 返回 ${resp.status}`)
+      }
+
+      const data = await resp.json()
+      const recommendation = data.recommendation || data
+
+      // 存储 AI 推荐数据到全局状态
+      dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: recommendation })
+
+      if (data.warning) {
+        toast(data.warning, 'info')
+      } else {
+        toast('AI 游戏化方案已生成!', 'success')
+      }
+    } catch (e) {
+      console.warn('AI推荐生成失败，使用默认数据:', e)
+      toast('AI推荐生成失败，将使用默认方案', 'error')
+      // 不阻塞流程，GameplayGacha 有兜底数据
+    } finally {
+      setRecommending(false)
+      dispatch({ type: 'SET_RECOMMENDATION_LOADING', payload: false })
+    }
+
     navigate(STEPS.GAMEPLAY)
-  }, [material, navigate, toast, creativeInput, dispatch])
+  }, [material, navigate, toast, creativeInput, dispatch, state.gameplayRecommendation, state.settings, state.selectedSubject, state.selectedGrade])
 
   return html`
     <div class="min-h-screen flex flex-col" style=${{ background: 'var(--theme-bg)', color: 'var(--theme-text)', minHeight: '100vh' }}>
       <style>${PARSE_CSS}</style>
+
+      ${recommending ? html`
+        <div class="fixed inset-0 z-50 flex items-center justify-center" style=${{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+          <div class="text-center px-8 py-10 rounded-2xl" style=${{ background: 'var(--theme-surface)', maxWidth: '400px' }}>
+            <div class="inline-block w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-4"></div>
+            <h3 class="text-lg font-bold mb-2" style=${{ color: 'var(--theme-text)' }}>AI 正在生成游戏化方案</h3>
+            <p class="text-sm" style=${{ color: 'var(--theme-text-muted)' }}>
+              基于教材内容分析，AI 正在为您匹配最合适的游戏化学习方案...<br/>
+              <span class="text-xs mt-2 inline-block">预计需要 30-60 秒，请耐心等待</span>
+            </p>
+          </div>
+        </div>
+      ` : null}
       <${NavBar} />
 
       <${PageContainer} className="pb-28 lg:pb-16">
@@ -963,10 +1043,10 @@ export default function UploadPage() {
             <span>←</span><span>返回选择科目</span>
           </button>
           <button class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all"
-            style=${{ background: material ? 'var(--theme-primary)' : 'var(--theme-surface-alt)', cursor: material ? 'pointer' : 'not-allowed', opacity: material ? 1 : 0.5 }}
-            disabled=${!material}
+            style=${{ background: material && !recommending ? 'var(--theme-primary)' : 'var(--theme-surface-alt)', cursor: material && !recommending ? 'pointer' : 'not-allowed', opacity: material && !recommending ? 1 : 0.5 }}
+            disabled=${!material || recommending}
             onClick=${confirmAndStart}>
-            <span>确认教材，选择玩法</span><span>→</span>
+            ${recommending ? html`<span class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span><span>AI正在生成方案...</span>` : html`<span>确认教材，选择玩法</span><span>→</span>`}
           </button>
         </div>
       </${PageContainer}>
