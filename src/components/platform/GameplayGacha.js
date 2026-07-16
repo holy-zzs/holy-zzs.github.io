@@ -366,7 +366,7 @@ export default function GameplayGacha() {
     img: m.img || TEAM_IMGS[i] || IMG(i),
   }))
   const objectives = rec?.objectives || OBJECTIVES
-  const aiSuggestion = rec?.aiSuggestion || '基于教材分析，推荐选择「探索冒险」方案，该方案与教材内容的探索性学习高度匹配，能有效激发学生的好奇心与探究欲，知识覆盖度与学习效果均表现优异。'
+  const aiSuggestion = rec?.aiSuggestion || '基于教材分析，推荐选择「探索冒险」方案，该方案与教材内容的探索性学习高度匹配，能有效激发学生的好奇心与探究欲。'
   const matchScore = rec?.matchScore || 98
   const matchLabel = rec?.matchLabel || '知识覆盖度高'
   const matchDesc = rec?.matchDesc || '非常适合游戏化学习'

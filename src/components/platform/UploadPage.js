@@ -465,7 +465,7 @@ export default function UploadPage() {
   const [parsing, setParsing] = useState(false)
   const [parseStep, setParseStep] = useState(0)
   const [parseProgress, setParseProgress] = useState(0)
-  const [recommending, setRecommending] = useState(false) // AI推荐生成中
+  const [recommending, setRecommending] = useState(false)
   const [creativeInput, setCreativeInput] = useState(state.userCreativeInput || '')
   const [usage, setUsage] = useState(null)
   const [usageLoading, setUsageLoading] = useState(true)
@@ -695,6 +695,44 @@ export default function UploadPage() {
     setPasteText('')
   }, [dispatch])
 
+  // ── 构建推荐 Prompt（与 CVM 服务端一致的预设 Prompt）──
+  const buildRecommendPrompt = useCallback((mat, subject, grade, creative) => {
+    const gradeCn = { primary: '小学', junior: '初中', senior: '高中', college: '大学' }[grade] || grade || '通用'
+    const stats = mat.stats || {}
+
+    let md = `# 教材分析报告\n\n## 基本信息\n- 学段: ${gradeCn}\n- 学科: ${subject || '通用'}\n- 教材文件: ${mat.filename || 'unknown'}\n\n## 统计信息\n- 文本字数: ${stats.chars || 0}\n- 章节数: ${stats.sections || 0}\n- 核心概念数: ${stats.concepts || 0}\n- 公式数: ${stats.formulas || 0}\n- 术语数: ${stats.terms || 0}\n`
+
+    if (mat.structure && mat.structure.length) {
+      md += '\n## 章节结构\n'
+      mat.structure.slice(0, 20).forEach(s => {
+        const lvl = s.level || 1
+        md += `${'  '.repeat(lvl - 1)}- ${s.title || '未命名'}\n`
+      })
+    }
+    if (mat.concepts && mat.concepts.length) {
+      md += '\n## 核心概念\n'
+      mat.concepts.slice(0, 30).forEach(c => {
+        md += `- **${c.name || c}**: ${c.context || ''}\n`
+      })
+    }
+    if (mat.terms && mat.terms.length) {
+      md += '\n## 关键术语\n'
+      mat.terms.slice(0, 30).forEach(t => {
+        md += `- **${t.term || t}**: ${t.definition || t.context || ''}\n`
+      })
+    }
+    if (creative) md += `\n## 用户创意想法\n${creative}\n`
+
+    const systemPrompt = `你是一位专业的游戏化学习设计专家。基于以下教材分析数据，为${gradeCn}阶段的${subject || '通用'}学科推荐4个最合适的游戏化学习方案。
+
+请严格按照以下JSON格式返回，不要包含任何其他文本：
+{"gameModes":[{"id":"adventure","num":"01","type":"Adventure","name":"探索冒险","match":98,"stars":5,"effect":92,"tags":["探索","收集","剧情","养成"],"desc":"描述...","color":"#00d4ff","radar":[98,95,92,92,68]}],"dna":[{"label":"探索元素","pct":60,"color":"#00d4ff"}],"aiTeam":[{"name":"游戏策划师","role":"负责整体游戏设计"}],"objectives":["目标1","目标2","目标3"],"aiSuggestion":"建议文字","matchScore":98,"matchLabel":"知识覆盖度高","matchDesc":"非常适合游戏化学习","knowledgePoints":126,"experiments":23}
+
+要求：1.返回4个游戏模式(id:adventure/simulation/puzzle/rpg) 2.描述必须结合教材知识点 3.radar5个值对应:知识匹配度/趣味性/互动性/学习效果/实施难度 4.dna反映教材特点 5.objectives基于实际知识点 6.颜色固定:#00d4ff/#a78bfa/#34d399/#ec4899 7.只返回JSON`
+
+    return { systemPrompt, userPrompt: `以下是${gradeCn}${subject || '通用'}教材分析数据：\n\n${md}\n\n请推荐4个游戏化学习方案。` }
+  }, [])
+
   // ── 确认教材，调用AI生成游戏化推荐，进入玩法推荐 ──
   const confirmAndStart = useCallback(async () => {
     if (!material) {
@@ -709,58 +747,97 @@ export default function UploadPage() {
       return
     }
 
-    // 调用 CVM API 生成游戏化推荐
     const apiKey = state.settings?.apiKey || ''
-    const isHttps = location.protocol === 'https:'
-    const apiUrl = isHttps
-      ? 'https://101.35.114.5:9002/api/recommend'
-      : 'http://101.35.114.5:8002/api/recommend'
+    if (!apiKey) {
+      toast('未配置 AI Key，将使用默认方案', 'info')
+      navigate(STEPS.GAMEPLAY)
+      return
+    }
 
     setRecommending(true)
     dispatch({ type: 'SET_RECOMMENDATION_LOADING', payload: true })
 
+    // 方案1: 通过 CVM API（数据上传到腾讯云）
+    const isHttps = location.protocol === 'https:'
+    const cvmApiUrl = isHttps
+      ? 'https://101.35.114.5:9002/api/recommend'
+      : 'http://101.35.114.5:8002/api/recommend'
+
     try {
-      const resp = await fetch(apiUrl, {
+      const resp = await fetch(cvmApiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           material: {
-            id: material.id,
-            filename: material.filename,
-            type: material.type,
-            structure: material.structure,
-            concepts: material.concepts,
-            formulas: material.formulas,
-            terms: material.terms,
-            stats: material.stats,
-            analyzedBy: material.analyzedBy,
-            parsedAt: material.parsedAt,
+            id: material.id, filename: material.filename, type: material.type,
+            structure: material.structure, concepts: material.concepts,
+            formulas: material.formulas, terms: material.terms,
+            stats: material.stats, analyzedBy: material.analyzedBy, parsedAt: material.parsedAt,
           },
           subject: state.selectedSubject || '',
           grade: state.selectedGrade || 'primary',
           creativeInput: creativeInput || '',
           apiKey: apiKey,
         }),
-        signal: AbortSignal.timeout(120000), // 2分钟超时
+        signal: AbortSignal.timeout(120000),
       })
 
-      if (!resp.ok) {
-        throw new Error(`API 返回 ${resp.status}`)
+      if (resp.ok) {
+        const data = await resp.json()
+        const rec = data.recommendation || data
+        dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: rec })
+        toast(data.warning ? data.warning : 'AI 游戏化方案已生成!', data.warning ? 'info' : 'success')
+        setRecommending(false)
+        dispatch({ type: 'SET_RECOMMENDATION_LOADING', payload: false })
+        navigate(STEPS.GAMEPLAY)
+        return
+      }
+      throw new Error(`CVM API ${resp.status}`)
+    } catch (cvmErr) {
+      console.warn('CVM API 失败，尝试直接调用 DeepSeek:', cvmErr)
+    }
+
+    // 方案2: 直接调用 DeepSeek API（CVM 不可用时的后备方案）
+    try {
+      const { systemPrompt, userPrompt } = buildRecommendPrompt(material, state.selectedSubject, state.selectedGrade, creativeInput)
+      const apiBase = state.settings?.apiBase || 'https://api.deepseek.com/v1'
+
+      const llmResp = await fetch(`${apiBase}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model: state.settings?.model || 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+          stream: false, temperature: 0.3, max_tokens: 4000,
+        }),
+        signal: AbortSignal.timeout(120000),
+      })
+
+      if (!llmResp.ok) throw new Error(`DeepSeek API ${llmResp.status}`)
+      const llmData = await llmResp.json()
+      const content = llmData.choices?.[0]?.message?.content || ''
+
+      // 解析 JSON
+      let rec
+      try {
+        rec = JSON.parse(content)
+      } catch {
+        const m = content.match(/```(?:json)?\s*([\s\S]*?)```/)
+        if (m) rec = JSON.parse(m[1].trim())
+        else {
+          const f = content.indexOf('{'), l = content.lastIndexOf('}')
+          if (f !== -1 && l !== -1) rec = JSON.parse(content.substring(f, l + 1))
+          else throw new Error('JSON 解析失败')
+        }
       }
 
-      const data = await resp.json()
-      const recommendation = data.recommendation || data
-
-      // 存储 AI 推荐数据到全局状态
-      dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: recommendation })
-
-      if (data.warning) {
-        toast(data.warning, 'info')
-      } else {
-        toast('AI 游戏化方案已生成!', 'success')
-      }
-    } catch (e) {
-      console.warn('AI推荐生成失败，使用默认数据:', e)
+      dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: rec })
+      toast('AI 游戏化方案已生成!', 'success')
+    } catch (directErr) {
+      console.warn('Direct DeepSeek API 也失败:', directErr)
       toast('AI推荐生成失败，将使用默认方案', 'error')
       // 不阻塞流程，GameplayGacha 有兜底数据
     } finally {
@@ -769,7 +846,7 @@ export default function UploadPage() {
     }
 
     navigate(STEPS.GAMEPLAY)
-  }, [material, navigate, toast, creativeInput, dispatch, state.gameplayRecommendation, state.settings, state.selectedSubject, state.selectedGrade])
+  }, [material, navigate, toast, creativeInput, dispatch, state.gameplayRecommendation, state.settings, state.selectedSubject, state.selectedGrade, buildRecommendPrompt])
 
   return html`
     <div class="min-h-screen flex flex-col" style=${{ background: 'var(--theme-bg)', color: 'var(--theme-text)', minHeight: '100vh' }}>
