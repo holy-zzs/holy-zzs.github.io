@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Project workspace for agent skills",
+  "scripts": {
+    "test:mineru": "node src/lib/mineruResult.test.mjs && node src/lib/mineruClient.test.mjs"
+  },
   "dependencies": {
     "@react-three/drei": "^9.96.1",
     "@react-three/fiber": "^8.15.12",

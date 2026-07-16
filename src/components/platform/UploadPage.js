@@ -4,7 +4,8 @@ import { html, useState, useRef, useCallback, useMemo, useEffect } from '../../d
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip10'
+import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip11'
+import { collectMineruDownloads } from '../../lib/mineruResult.js?v=mr1'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
 // ── 减弱动效 & 解析动画 keyframes（内联注入，避免污染全局） ──
@@ -342,6 +343,24 @@ function ParsePreview({ material, parsing, parseStep, parseProgress, onReset, di
                 onClick=${onReset}>重新上传</button>
       </div>
 
+      <!-- MinerU 元数据 & 下载入口 -->
+      ${(material.parseMeta && material.parseMeta.mineruUsed) || (material.sourceAssets && material.sourceAssets.downloads && Object.keys(material.sourceAssets.downloads).length > 0) ? html`
+        <div class="flex flex-wrap items-center gap-2 p-2.5 rounded-lg" style=${{ background: 'var(--theme-accent-bg)', border: '1px solid var(--theme-border)' }}>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full" style=${{ background: '#22c55e20', color: '#22c55e', border: '1px solid #22c55e40' }}>MinerU VLM</span>
+          ${material.parseMeta ? html`
+            ${material.parseMeta.pageCount ? html`<span class="text-xs" style=${{ color: 'var(--theme-text-muted)' }}>${material.parseMeta.pageCount} 页</span>` : null}
+            ${material.parseMeta.hasTables ? html`<span class="text-xs" style=${{ color: 'var(--theme-text-muted)' }}>· 含表格</span>` : null}
+            ${material.parseMeta.hasFormulas ? html`<span class="text-xs" style=${{ color: 'var(--theme-text-muted)' }}>· 含公式</span>` : null}
+            ${material.parseMeta.ocrUsed ? html`<span class="text-xs" style=${{ color: 'var(--theme-text-muted)' }}>· OCR</span>` : null}
+          ` : null}
+          ${material.sourceAssets && material.sourceAssets.downloads ? collectMineruDownloads({ downloads: material.sourceAssets.downloads }).map((d) => html`
+            <a href=${d.url} target="_blank" rel="noopener"
+               class="text-xs px-2 py-0.5 rounded-md transition-opacity hover:opacity-80"
+               style=${{ background: 'var(--theme-primary)', color: '#fff' }}>${d.label}</a>
+          `) : null}
+        </div>
+      ` : null}
+
       <!-- 警告/提示面板 -->
       ${material.warnings && material.warnings.length > 0 ? html`
         <div class="space-y-2">
@@ -531,10 +550,13 @@ export default function UploadPage() {
       dispatch({ type: 'SET_MATERIAL', payload: result })
 
       const engineLabel = result.analyzedBy === 'llm' ? '🤖 AI' : result.analyzedBy === 'demo' ? '🎭 Demo' : '本地'
-      const pdfLabel = mineruUsed ? ' · MinerU精准解析' : extractionMethod ? ` · ${extractionMethod}` : ''
+      const meta = result.parseMeta || {}
+      const pdfLabel = meta.mineruUsed ? ' · MinerU VLM' : meta.extractionMethod ? ` · ${meta.extractionMethod}` : ''
+      const tableInfo = meta.hasTables ? ' · 含表格' : ''
+      const formulaInfo = meta.hasFormulas ? ' · 含公式' : ''
       const hasWarnings = result.warnings && result.warnings.length > 0
       const warnSuffix = hasWarnings ? ` · ⚠️ ${result.warnings.length}条提示` : ''
-      toast(`解析完成（${engineLabel}）${pdfLabel}：${result.stats.sections}章节 · ${result.stats.concepts}概念 · ${result.stats.formulas}公式${warnSuffix}`, hasWarnings ? 'info' : 'success')
+      toast(`解析完成（${engineLabel}）${pdfLabel}${tableInfo}${formulaInfo}：${result.stats.sections}章节 · ${result.stats.concepts}概念 · ${result.stats.formulas}公式${warnSuffix}`, hasWarnings ? 'info' : 'success')
       setTimeout(() => {
         setParsing(false)
         setUploadedFile(null)
@@ -570,8 +592,8 @@ export default function UploadPage() {
         runParse(async () => {
           if (name.endsWith('.pdf')) {
             // PDF: 后端 API 优先（含 OCR），降级到 pdfjs
-            const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed } = await extractPdfText(file)
-            return analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed })
+            const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed, markdown, structured, downloads, parseMeta, warnings } = await extractPdfText(file)
+            return analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed, markdown, structured, downloads, parseMeta, warnings })
           } else {
             // 文本类: 直接读取后用 LLM 分析
             const text = await file.text()
@@ -657,13 +679,13 @@ export default function UploadPage() {
       setUploadedFile({ name: file.name, size: file.size, progress: 100 })
       setParseProgress(30)
 
-      // 2. 提取 PDF 文本（MinerU优先，PyMuPDF降级，浏览器pdfjs兜底）
-      const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed } = await extractPdfText(file)
+      // 2. 提取 PDF 文本（MinerU主链路，PyMuPDF降级，浏览器pdfjs兜底）
+      const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed, markdown, structured, downloads, parseMeta, warnings } = await extractPdfText(file)
       setParseProgress(50)
 
       // 3. 用 LLM 分析（或降级到本地解析）
       const [result] = await Promise.all([
-        analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed }),
+        analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed, markdown, structured, downloads, parseMeta, warnings }),
         new Promise((r) => setTimeout(r, 1500)),
       ])
 

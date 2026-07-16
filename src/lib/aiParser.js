@@ -1,8 +1,10 @@
 // AI 驱动的教材解析模块
-// 流程：pdfjs 提取文本 → LLM API 智能分析 → 返回结构化教材数据
+// 流程：MinerU VLM 精准解析 → LLM API 智能分析 → 返回结构化教材数据
 // 支持大教材分块处理，demo 模式自动降级到启发式解析
 import { uid } from './storage.js'
 import { parseText } from './parser.js'
+import { createMineruJob, getMineruJob, getMineruJobResult } from './mineruClient.js'
+import { deriveAnalysisText, normalizeMineruExtraction } from './mineruResult.js'
 
 // ════════════════════════════════════════════════
 // 配置常量
@@ -130,7 +132,18 @@ export async function analyzeWithLLM(rawText, filename, settings, onProgress, op
     }
 
     onProgress?.('done', 'AI 分析完成')
-    mergedResult.warnings = warnings
+    mergedResult.warnings = [...warnings, ...(options.warnings || [])]
+    mergedResult.parseMeta = {
+      ...(options.parseMeta || {}),
+      markdownAvailable: Boolean(options.markdown),
+      structuredAvailable: Boolean(options.structured),
+      downloadCount: Object.keys(options.downloads || {}).length,
+    }
+    mergedResult.sourceAssets = {
+      markdown: options.markdown || '',
+      structured: options.structured || null,
+      downloads: options.downloads || {},
+    }
     return mergedResult
 
   } catch (e) {
@@ -563,61 +576,67 @@ export async function checkPdfServer() {
 }
 
 // ════════════════════════════════════════════════
-// 导出文本提取函数（供 UploadPage 直接使用）
-// 优先调用 MinerU API（高精度），降级到 PyMuPDF 后端，最后降级到浏览器 pdfjs
-// 返回 { text, numPages, ocrUsed?, backendUsed }
+// MinerU 主链路：创建 job → 轮询状态 → 获取结果
 // ════════════════════════════════════════════════
-export async function extractPdfText(file, onProgress) {
-  // ── 1. 优先尝试 MinerU 精准解析 API ──
-  const mineruUrl = getMineruServerUrl()
-  const mineruTimeout = Math.min(300000 + (file.size / 1024 / 1024) * 5000, 600000) // 5min基础 + 5s/MB, 最高10min
+async function waitForMineruResult(file, onProgress) {
+  const job = await createMineruJob(file)
+  const startedAt = Date.now()
+  const timeoutMs = 10 * 60 * 1000
 
-  // HTTPS 页面先测试代理是否可用（自签证书）
-  if (location.protocol === 'https:' && mineruUrl.startsWith('https://')) {
-    try {
-      const testResp = await fetch(`${mineruUrl}/health`, {
-        signal: AbortSignal.timeout(8000),
-      })
-      if (!testResp.ok) throw new Error(`MinerU HTTPS 代理返回 ${testResp.status}`)
-    } catch (e) {
-      console.warn('MinerU HTTPS 代理不可用，降级到 PyMuPDF:', e.message)
-      // 继续尝试其他方式
+  while (Date.now() - startedAt < timeoutMs) {
+    const status = await getMineruJob(job.jobId)
+    const progress = status.progress || 0
+    onProgress?.(Math.max(1, progress), 100)
+
+    if (status.status === 'done' || status.status === 'fallback') {
+      return getMineruJobResult(job.jobId)
     }
+
+    if (status.status === 'failed') {
+      throw new Error(status.message || 'MinerU 任务失败')
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
   }
 
+  throw new Error('MinerU 解析超时')
+}
+
+// ════════════════════════════════════════════════
+// 导出文本提取函数（供 UploadPage 直接使用）
+// 主链路: MinerU VLM 精准解析（腾讯云后端编排）
+// 降级1: 自建 PyMuPDF 后端
+// 降级2: 浏览器 pdfjs
+// 返回 { text, numPages, ocrUsed?, backendUsed, markdown?, structured?, downloads?, parseMeta?, warnings? }
+// ════════════════════════════════════════════════
+export async function extractPdfText(file, onProgress) {
+  // ── 1. 主链路: MinerU VLM 精准解析（腾讯云后端编排）──
   try {
-    onProgress?.(0, 1)
-    const formData = new FormData()
-    formData.append('file', file)
+    console.log('[PDF] 尝试 MinerU VLM 精准解析（腾讯云后端）...')
+    const backendResult = await waitForMineruResult(file, onProgress)
+    const normalized = normalizeMineruExtraction(backendResult)
 
-    console.log('[PDF] 尝试 MinerU 精准解析...')
-    const resp = await fetch(`${mineruUrl}/parse-pdf`, {
-      method: 'POST',
-      body: formData,
-      signal: AbortSignal.timeout(mineruTimeout),
-    })
-
-    if (resp.ok) {
-      const data = await resp.json()
-      onProgress?.(data.numPages, data.numPages)
-      console.log(`[PDF] MinerU 解析成功: ${data.numPages}页, ${data.text.length}字符, 方法=${data.extractionMethod}`)
-
+    const text = deriveAnalysisText(normalized)
+    if (text && text.length > 0) {
+      console.log(`[PDF] MinerU 解析成功: ${normalized.parseMeta.pageCount}页, ${text.length}字符`)
       return {
-        text: data.text,
-        numPages: data.numPages,
-        ocrUsed: data.ocrUsed || true,
-        backendUsed: true,
-        avgCharsPerPage: data.avgCharsPerPage,
-        extractionMethod: data.extractionMethod || 'mineru-vlm',
-        mineruUsed: true,
+        text,
+        markdown: normalized.markdown,
+        numPages: normalized.parseMeta.pageCount,
+        ocrUsed: normalized.parseMeta.ocrUsed,
+        backendUsed: normalized.parseMeta.backendUsed,
+        backendError: null,
+        extractionMethod: normalized.parseMeta.extractionMethod,
+        mineruUsed: normalized.parseMeta.mineruUsed,
+        structured: normalized.structured,
+        downloads: normalized.downloads,
+        parseMeta: normalized.parseMeta,
+        warnings: normalized.warnings,
       }
-    } else {
-      const err = await resp.json().catch(() => ({}))
-      throw new Error(err.error || `MinerU 返回 ${resp.status}`)
     }
+    throw new Error('MinerU 返回空文本')
   } catch (mineruErr) {
-    console.warn('[PDF] MinerU 解析失败，降级到 PyMuPDF 后端:', mineruErr.message)
-    // 继续尝试 PyMuPDF 后端
+    console.warn('[PDF] 腾讯云 MinerU 主链路失败，降级到旧链路:', mineruErr.message)
   }
 
   // ── 2. 降级到 PyMuPDF 后端 API ──
