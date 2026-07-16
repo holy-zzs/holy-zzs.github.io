@@ -44,4 +44,5 @@ jobs:
       - name: Deployment info
         run: |
           echo "✅ 部署完成!"
-          echo "🌐 COS地址: https://${{ secrets.TENCENT_COS_BUCKET }}.cos.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com/"
+          echo "🌐 COS静态网站: https://${{ secrets.TENCENT_COS_BUCKET }}.cos-website.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com/"
+          echo "🌐 COS默认端点: https://${{ secrets.TENCENT_COS_BUCKET }}.cos.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com/"
