@@ -4,7 +4,7 @@ import { html, useState, useRef, useCallback, useMemo, useEffect } from '../../d
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip9'
+import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip10'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
 // ── 减弱动效 & 解析动画 keyframes（内联注入，避免污染全局） ──
@@ -531,9 +531,10 @@ export default function UploadPage() {
       dispatch({ type: 'SET_MATERIAL', payload: result })
 
       const engineLabel = result.analyzedBy === 'llm' ? '🤖 AI' : result.analyzedBy === 'demo' ? '🎭 Demo' : '本地'
+      const pdfLabel = mineruUsed ? ' · MinerU精准解析' : extractionMethod ? ` · ${extractionMethod}` : ''
       const hasWarnings = result.warnings && result.warnings.length > 0
       const warnSuffix = hasWarnings ? ` · ⚠️ ${result.warnings.length}条提示` : ''
-      toast(`解析完成（${engineLabel}）：${result.stats.sections}章节 · ${result.stats.concepts}概念 · ${result.stats.formulas}公式${warnSuffix}`, hasWarnings ? 'info' : 'success')
+      toast(`解析完成（${engineLabel}）${pdfLabel}：${result.stats.sections}章节 · ${result.stats.concepts}概念 · ${result.stats.formulas}公式${warnSuffix}`, hasWarnings ? 'info' : 'success')
       setTimeout(() => {
         setParsing(false)
         setUploadedFile(null)
@@ -569,8 +570,8 @@ export default function UploadPage() {
         runParse(async () => {
           if (name.endsWith('.pdf')) {
             // PDF: 后端 API 优先（含 OCR），降级到 pdfjs
-            const { text, numPages, ocrUsed, backendUsed, backendError } = await extractPdfText(file)
-            return analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError })
+            const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed } = await extractPdfText(file)
+            return analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed })
           } else {
             // 文本类: 直接读取后用 LLM 分析
             const text = await file.text()
@@ -656,13 +657,13 @@ export default function UploadPage() {
       setUploadedFile({ name: file.name, size: file.size, progress: 100 })
       setParseProgress(30)
 
-      // 2. 提取 PDF 文本（后端优先含 OCR）
-      const { text, numPages, ocrUsed, backendUsed, backendError } = await extractPdfText(file)
+      // 2. 提取 PDF 文本（MinerU优先，PyMuPDF降级，浏览器pdfjs兜底）
+      const { text, numPages, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed } = await extractPdfText(file)
       setParseProgress(50)
 
       // 3. 用 LLM 分析（或降级到本地解析）
       const [result] = await Promise.all([
-        analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError }),
+        analyzeWithLLM(text, file.name, state.settings, null, { numPages, fileSize: file.size, ocrUsed, backendUsed, backendError, extractionMethod, mineruUsed }),
         new Promise((r) => setTimeout(r, 1500)),
       ])
 

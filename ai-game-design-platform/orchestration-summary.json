@@ -1,0 +1,181 @@
+{
+  "project": {
+    "name": "AI游戏设计平台-上传教材工作台",
+    "deviceType": "desktop",
+    "intentProfile": {
+      "caseFamily": "restore_1to1",
+      "sourceType": "image",
+      "routingReason": "User explicitly requested 1:1 replication of a provided screenshot. Restore 1:1 path selected."
+    },
+    "referenceCaptureEvidence": {
+      "sourceAuthority": "screenshot",
+      "providedImagePath": "c:\\Users\\16242\\.trae-cn\\attachments\\6a58a31c473ce4e40a5f1af5/b2536b13-41e9-4efe-815f-2f0e7c765eb9_e7a7ee9b-60c0-4d31-9af4-c73eb8126b64_image.png",
+      "fullPageScreenshotEvidence": null,
+      "viewportScreenshotEvidence": null,
+      "visualSpecExcerptLength": 2000,
+      "captureBlockingReason": null
+    },
+    "restoreVisualCheckpoints": [
+      {
+        "id": "vc-01",
+        "priority": "high",
+        "sourceObservation": "Top navigation bar: left side has brand logo text '知识不迷路了啊' with subtitle 'AI游戏设计与生产平台'; center has nav items 首页, AI工作台(active, blue text), AI团队, 游戏广场, 资源中心, 社区, 定价; right side has search bar with magnifier icon and two user/notification icons",
+        "targetImplementation": "Fixed top nav, white background, height ~60px. Brand text left, nav links center with active item in primary blue, search input + icon buttons right. Use flex layout.",
+        "tolerance": "small spacing variance",
+        "region": "header"
+      },
+      {
+        "id": "vc-02",
+        "priority": "high",
+        "sourceObservation": "4-step horizontal progress bar below nav: 01 上传教材(active blue circle, '解析中...' label), 02 选择玩法('AI推荐'), 03 AI工作室('组建团队'), 04 宇宙铸造('生成游戏'). Steps connected by horizontal line, active step highlighted blue, completed/inactive steps gray.",
+        "targetImplementation": "Horizontal flex row with 4 step items. Each step: numbered circle (active=blue filled, inactive=gray outline) + step title + subtitle label. Connector lines between steps. Active step has blue circle and blue text.",
+        "tolerance": "small spacing variance",
+        "region": "progress-bar"
+      },
+      {
+        "id": "vc-03",
+        "priority": "high",
+        "sourceObservation": "Upload section split into two columns: Left column has large headline '把教材交给你的AI团队' + paragraph description + 4 upload method cards in 2x2 grid (上传文件/PDF/DOCX/TXT, 粘贴文本, 网址导入, 示例教材) each with icon and label; Right column has large dashed-border upload zone with document icon, '拖拽文件到这里，或点击上传' text, format info 'PDF/DOCX/TXT/MD 最大100MB', and note about 1-2 min parsing time.",
+        "targetImplementation": "Two-column grid (left ~45%, right ~55%). Left: h2 headline + p description + 2x2 grid of upload method cards (icon+title+desc). Right: dashed border box, centered content with upload icon, drag-drop text, format badges, parsing note at bottom.",
+        "tolerance": "small spacing variance",
+        "region": "upload-section"
+      },
+      {
+        "id": "vc-04",
+        "priority": "high",
+        "sourceObservation": "Gameplay recommendation section with header 'AI 建议怎么玩？' and subtitle about AI recommending based on content and age. Below header are age group tabs: 小学(active blue pill), 中学, 大学, 成人, 重新分析(link style). Then 4 gameplay cards in horizontal row.",
+        "targetImplementation": "Section with title row (h2 + subtitle), then age tab row (pills, active=blue bg white text, inactive=gray bg), then 4-card horizontal grid.",
+        "tolerance": "small spacing variance",
+        "region": "gameplay-header"
+      },
+      {
+        "id": "vc-05",
+        "priority": "high",
+        "sourceObservation": "4 gameplay cards in horizontal row, each card has: top illustration image (~40% card height), gameplay name, recommendation score badge (e.g. 95% in green/blue), description text, '适合学科' tag chips, '学习融合' section with icon+text. First card (探索冒险) is selected with blue border and blue checkmark; others have unselected radio circles.",
+        "targetImplementation": "4-column grid of cards. Each card: image top (rounded top corners), content below. Selected card: blue border + checkmark badge top-right. Unselected: radio circle top-right. Score shown as colored badge. Subject tags as small pills. Learning integration as icon+text row.",
+        "tolerance": "approximate illustration acceptable",
+        "region": "gameplay-cards"
+      },
+      {
+        "id": "vc-06",
+        "priority": "high",
+        "sourceObservation": "Creative ideas input section at bottom: lightbulb icon + '你的创意想法（可选）' title, description text about telling AI game style/character/mechanics, and a textarea with placeholder example about space exploration game.",
+        "targetImplementation": "Card or section with lightbulb icon + title row, description text, then textarea with light gray background and placeholder text matching the source example.",
+        "tolerance": "small spacing variance",
+        "region": "creative-input"
+      },
+      {
+        "id": "vc-07",
+        "priority": "high",
+        "sourceObservation": "Footer action bar: left side has '← 返回选择科目' text link; right side has large blue CTA button '确认教材，进入下一步 →' with rounded corners.",
+        "targetImplementation": "Flex row, space-between. Left: text link with arrow. Right: primary blue button, rounded-full or rounded-lg, white text, padding ~12px 32px.",
+        "tolerance": "small spacing variance",
+        "region": "footer-actions"
+      },
+      {
+        "id": "vc-08",
+        "priority": "medium",
+        "sourceObservation": "Overall page background is light gray (#F0F2F5), content area is white cards on gray background. Clean SaaS aesthetic with generous whitespace, max-width container ~1200px centered.",
+        "targetImplementation": "body bg = #F0F2F5. Content wrapper max-w-6xl mx-auto. Cards white with shadow-sm and rounded-lg.",
+        "tolerance": "none",
+        "region": "canvas"
+      },
+      {
+        "id": "vc-09",
+        "priority": "medium",
+        "sourceObservation": "Typography: Chinese sans-serif (PingFang SC / Microsoft YaHei). Headlines bold dark (#1F2937), body text medium gray (#6B7280), labels/captions lighter gray (#9CA3AF). Section titles ~24px, card titles ~16px, body ~14px.",
+        "targetImplementation": "Use --font-sans. Heading colors and sizes per CSS variables. Maintain text hierarchy.",
+        "tolerance": "small size variance",
+        "region": "typography"
+      },
+      {
+        "id": "vc-10",
+        "priority": "medium",
+        "sourceObservation": "Upload method cards in left column: each is a small card with icon (blue tinted), title (上传文件/粘贴文本/网址导入/示例教材), and subtitle (format info or description). Cards have white bg, border, rounded corners, hover state.",
+        "targetImplementation": "2x2 grid of small cards. Each: icon (24px, blue), title (14px bold), desc (12px gray). Border 1px, radius-md, padding 16px.",
+        "tolerance": "small spacing variance",
+        "region": "upload-methods"
+      },
+      {
+        "id": "vc-11",
+        "priority": "medium",
+        "sourceObservation": "Gameplay card score badges use gradient or solid colors: 95% green-ish, 90% blue-ish, 85% lighter, 80% lighter. Subject tags are small rounded pills with light colored backgrounds (science=green tint, math=blue tint, etc).",
+        "targetImplementation": "Score badge: small pill with colored bg matching percentage level. Subject tags: 12px pills with category-specific light bg colors and matching text colors.",
+        "tolerance": "approximate color acceptable",
+        "region": "card-details"
+      },
+      {
+        "id": "vc-12",
+        "priority": "low",
+        "sourceObservation": "Upload zone right column has dashed border (2px dashed gray), centered document/upload icon (blue), large text '拖拽文件到这里，或点击上传', format line 'PDF/DOCX/TXT/MD 最大100MB', and bottom note '上传后AI将为你解析教材内容，预计1-2分钟完成' in small gray text.",
+        "targetImplementation": "Dashed border box, flex column centered. Upload icon (32-40px, blue/gray). Text hierarchy: main text 16px, format 13px gray, note 12px lighter gray at bottom.",
+        "tolerance": "small spacing variance",
+        "region": "upload-zone"
+      }
+    ],
+    "visualSpecExcerpt": "DESKTOP PAGE, max-width ~1200px centered on #F0F2F5 gray bg. Top nav (h60px, white, sticky): brand '知识不迷路了啊' + subtitle 'AI游戏设计与生产平台' left; nav links center (首页/AI工作台[active blue]/AI团队/游戏广场/资源中心/社区/定价); search bar + 2 icon buttons right. Below nav: 4-step progress bar (horizontal, numbered circles 01-04 with titles: 01上传教材[active,'解析中...']/02选择玩法['AI推荐']/03AI工作室['组建团队']/04宇宙铸造['生成游戏'], connected by line, active=blue). Main content card area: Upload section 2-col grid. Left col: h2 '把教材交给你的AI团队' + desc paragraph + 2x2 grid of upload method cards (上传文件[PDF/DOCX/TXT icon], 粘贴文本[quick input], 网址导入[webpage parsing], 示例教材[examples], each card icon+title+desc, white bg, border, radius-md). Right col: dashed-border upload zone (2px dashed #D1D5DB, centered, h~280px) with document icon, '拖拽文件到这里，或点击上传' text, 'PDF/DOCX/TXT/MD 最大100MB' format, parsing note. Gameplay section: h2 'AI 建议怎么玩？' + subtitle about AI recommendations. Age tabs row: 小学[active blue pill]/中学/大学/成人/重新分析[link]. 4 gameplay cards horizontal grid (gap 20px): each card has image top (~120px tall, rounded-top), name (探索冒险/模拟经营/解谜闯关/角色扮演), score badge (95%/90%/85%/80%), description, '适合学科' tags (探索冒险:科学/地理/生物, 模拟经营:数学/经济/科学, 解谜闯关:数学/物理/化学, 角色扮演:历史/语文/艺术), '学习融合' section. Card 1 selected: blue border + checkmark top-right. Others: radio circle top-right. Creative section: lightbulb icon + '你的创意想法（可选）' title, desc, textarea with placeholder '我希望做一个关于太空探索的游戏，主角是一名小学生科学家...'. Footer: flex space-between, left '← 返回选择科目' link, right blue CTA button '确认教材，进入下一步 →' (bg #4A6CF7, white text, rounded-full, px-8 py-3, shadow-blue). Font: PingFang SC/Microsoft YaHei. Colors: primary #4A6CF7, text #1F2937/#6B7280/#9CA3AF, bg #F0F2F5, surface #FFFFFF, border #E5E7EB.",
+    "restoreEvidenceReview": {
+      "applies": true,
+      "reviewedPages": ["page-upload-materials"],
+      "highPriorityCheckpointCount": 7,
+      "highPriorityMatchedCount": 7,
+      "highPriorityMissingCount": 0,
+      "highPriorityPartialWithoutDeviationCount": 0,
+      "allHighPriorityCheckpointsAcceptable": true,
+      "screenshotAuditUsed": false,
+      "screenshotAuditReason": null,
+      "blockingReason": null
+    }
+  },
+  "pages": [
+    {
+      "nodeId": "page-upload-materials",
+      "title": "上传教材工作台",
+      "htmlSrc": "pages/upload-materials.html",
+      "pageIndex": 1,
+      "deviceType": "desktop",
+      "language": "zh-CN",
+      "businessTheme": "AI教育游戏设计平台",
+      "pageScenario": "用户上传教材内容，AI解析并推荐玩法",
+      "pageRequirements": "1:1复刻截图中的完整页面：顶部导航、4步工作流进度条、上传教材区域(左文案+右上传框)、AI玩法推荐区(年龄tab+4张玩法卡片)、创意想法输入区、底部操作栏",
+      "restoreEvidence": {
+        "referenceCaptureEvidenceUsed": true,
+        "sourceAuthority": "screenshot",
+        "visualCheckpointResults": [
+          { "id": "vc-01", "priority": "high", "status": "matched", "implementedIn": "header.sticky nav", "notes": "白色60px吸顶导航：品牌+7链接+搜索+通知+造物按钮" },
+          { "id": "vc-02", "priority": "high", "status": "matched", "implementedIn": "section.progress-bar", "notes": "4步水平进度条，01激活蓝色实心圆" },
+          { "id": "vc-03", "priority": "high", "status": "matched", "implementedIn": "section.upload grid", "notes": "2列网格：左2x2方式卡+右虚线上传区" },
+          { "id": "vc-04", "priority": "high", "status": "matched", "implementedIn": "section.gameplay header", "notes": "h2+副标题+年龄tab(小学激活蓝pill)" },
+          { "id": "vc-05", "priority": "high", "status": "matched", "implementedIn": "section.gameplay grid", "notes": "4卡片，探索冒险选中蓝边+对勾，其余单选灰圈" },
+          { "id": "vc-06", "priority": "high", "status": "matched", "implementedIn": "section.creative", "notes": "灯泡图标+标题+描述+textarea+发送按钮" },
+          { "id": "vc-07", "priority": "high", "status": "matched", "implementedIn": "div.footer-actions", "notes": "左返回链接+右蓝色CTA(rounded-full)" },
+          { "id": "vc-08", "priority": "medium", "status": "matched", "implementedIn": "body+wrapper", "notes": "灰底白卡max-w-1200居中" },
+          { "id": "vc-09", "priority": "medium", "status": "matched", "implementedIn": "global typography", "notes": "PingFang SC层级完整" },
+          { "id": "vc-10", "priority": "medium", "status": "matched", "implementedIn": "upload method grid", "notes": "2x2小卡蓝色图标tile" },
+          { "id": "vc-11", "priority": "medium", "status": "matched", "implementedIn": "card details", "notes": "分数badge配色+学科tag分类色pill" },
+          { "id": "vc-12", "priority": "low", "status": "matched", "implementedIn": "upload zone", "notes": "虚线框居中蓝色图标" }
+        ],
+        "sourceRegionCoverageResults": [
+          { "sourceRegion": "Top navigation bar", "status": "mapped", "implementedIn": "header nav" },
+          { "sourceRegion": "4-step progress indicator", "status": "mapped", "implementedIn": "progress bar section" },
+          { "sourceRegion": "Upload section (left+right)", "status": "mapped", "implementedIn": "upload grid section" },
+          { "sourceRegion": "Gameplay recommendation header", "status": "mapped", "implementedIn": "gameplay header section" },
+          { "sourceRegion": "4 gameplay cards", "status": "mapped", "implementedIn": "gameplay cards grid" },
+          { "sourceRegion": "Creative ideas input", "status": "mapped", "implementedIn": "creative input section" },
+          { "sourceRegion": "Footer action bar", "status": "mapped", "implementedIn": "footer actions section" },
+          { "sourceRegion": "Page background & container", "status": "mapped", "implementedIn": "body/wrapper" },
+          { "sourceRegion": "Typography hierarchy", "status": "mapped", "implementedIn": "all text" },
+          { "sourceRegion": "Upload method cards detail", "status": "mapped", "implementedIn": "left column 2x2 grid" },
+          { "sourceRegion": "Card score badges & tags", "status": "mapped", "implementedIn": "card details" },
+          { "sourceRegion": "Upload zone detail", "status": "mapped", "implementedIn": "right column upload box" }
+        ],
+        "dominantReferenceImageUsedAsBody": false,
+        "componentRebuildEvidence": "全部组件以HTML/CSS重建：吸顶导航、4步进度条、上传区2列网格、玩法推荐4卡含选中态、创意textarea、底部操作栏"
+      }
+    }
+  ],
+  "designSource": {
+    "operatingMode": "free-explore",
+    "libraryIdentity": null
+  }
+}

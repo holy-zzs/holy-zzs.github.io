@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传教材工作台</title>
+    <style id="theme-vars">
+/* ============================================
+   AI Game Design Platform — Brand CSS
+   1:1 Restored from screenshot
+   ============================================ */
+
+:root {
+  /* Brand Primary — Blue */
+  --color-primary: #4A6CF7;
+  --color-primary-hover: #3B5DE5;
+  --color-primary-light: #EEF2FF;
+  --color-primary-lighter: #F5F7FF;
+  --color-primary-dark: #3551C9;
+
+  /* Accent — Purple for creative/AI elements */
+  --color-accent: #8B5CF6;
+  --color-accent-light: #F3EEFF;
+
+  /* Success / Warning */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+
+  /* Neutral / Gray scale */
+  --color-bg: #F0F2F5;
+  --color-bg-secondary: #F8F9FB;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-border-light: #F0F1F3;
+  --color-divider: #EAECF0;
+
+  /* Text */
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-inverse: #FFFFFF;
+  --color-text-brand: #4A6CF7;
+
+  /* Typography */
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Consolas", monospace;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.10);
+  --shadow-blue: 0 4px 16px rgba(74, 108, 247, 0.25);
+
+  /* Semantic mappings */
+  --bg-canvas: var(--color-bg);
+  --bg-card: var(--color-surface);
+  --bg-subtle: var(--color-bg-secondary);
+  --bg-primary-tint: var(--color-primary-light);
+  --bg-accent-tint: var(--color-accent-light);
+  --text-heading: var(--color-text-primary);
+  --text-body: var(--color-text-secondary);
+  --text-muted: var(--color-text-tertiary);
+  --border-default: var(--color-border);
+  --border-subtle: var(--color-border-light);
+  --border-divider: var(--color-divider);
+  --interactive-primary: var(--color-primary);
+  --interactive-primary-hover: var(--color-primary-hover);
+  --interactive-accent: var(--color-accent);
+
+  /* Prefixed semantic aliases for fill-html-head.mjs (prefix: aigame) */
+  --aigame-background: var(--color-bg);
+  --aigame-foreground: var(--color-text-primary);
+  --aigame-card: var(--color-surface);
+  --aigame-card-foreground: var(--color-text-primary);
+  --aigame-muted: var(--color-bg-secondary);
+  --aigame-muted-foreground: var(--color-text-secondary);
+  --aigame-primary: var(--color-primary);
+  --aigame-primary-foreground: var(--color-text-inverse);
+  --aigame-secondary: var(--color-accent);
+  --aigame-secondary-foreground: var(--color-text-inverse);
+  --aigame-accent: var(--color-accent);
+  --aigame-accent-foreground: var(--color-text-inverse);
+  --aigame-border: var(--color-border);
+  --aigame-input: var(--color-border);
+  --aigame-ring: var(--color-primary);
+  --aigame-success: var(--color-success);
+  --aigame-warning: var(--color-warning);
+  --aigame-radius-sm: var(--radius-sm);
+  --aigame-radius-md: var(--radius-md);
+  --aigame-radius-lg: var(--radius-lg);
+  --aigame-radius-xl: var(--radius-xl);
+  --aigame-radius-full: var(--radius-full);
+  --aigame-font-sans: var(--font-sans);
+  --aigame-font-mono: var(--font-mono);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--aigame-background);
+    --color-foreground: var(--aigame-foreground);
+    --color-card: var(--aigame-card);
+    --color-card-foreground: var(--aigame-card-foreground);
+    --color-primary: var(--aigame-primary);
+    --color-primary-foreground: var(--aigame-primary-foreground);
+    --color-secondary: var(--aigame-secondary);
+    --color-secondary-foreground: var(--aigame-secondary-foreground);
+    --color-muted: var(--aigame-muted);
+    --color-muted-foreground: var(--aigame-muted-foreground);
+    --color-accent: var(--aigame-accent);
+    --color-accent-foreground: var(--aigame-accent-foreground);
+    --color-border: var(--aigame-border);
+    --color-input: var(--aigame-input);
+    --color-ring: var(--aigame-ring);
+    --radius-sm: var(--aigame-radius-sm);
+    --radius-md: var(--aigame-radius-md);
+    --radius-lg: var(--aigame-radius-lg);
+    --radius-xl: var(--aigame-radius-xl);
+  }
+  @layer base {
+    body { background: var(--aigame-background); color: var(--aigame-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--aigame-background); }
+      .text-background { color: var(--aigame-background); }
+      .border-background { border-color: var(--aigame-background); }
+      .ring-background { --tw-ring-color: var(--aigame-background); }
+      .bg-foreground { background-color: var(--aigame-foreground); }
+      .text-foreground { color: var(--aigame-foreground); }
+      .border-foreground { border-color: var(--aigame-foreground); }
+      .ring-foreground { --tw-ring-color: var(--aigame-foreground); }
+      .bg-card { background-color: var(--aigame-card); }
+      .text-card { color: var(--aigame-card); }
+      .border-card { border-color: var(--aigame-card); }
+      .ring-card { --tw-ring-color: var(--aigame-card); }
+      .bg-card-foreground { background-color: var(--aigame-card-foreground); }
+      .text-card-foreground { color: var(--aigame-card-foreground); }
+      .border-card-foreground { border-color: var(--aigame-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--aigame-card-foreground); }
+      .bg-primary { background-color: var(--aigame-primary); }
+      .text-primary { color: var(--aigame-primary); }
+      .border-primary { border-color: var(--aigame-primary); }
+      .ring-primary { --tw-ring-color: var(--aigame-primary); }
+      .bg-primary-foreground { background-color: var(--aigame-primary-foreground); }
+      .text-primary-foreground { color: var(--aigame-primary-foreground); }
+      .border-primary-foreground { border-color: var(--aigame-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--aigame-primary-foreground); }
+      .bg-secondary { background-color: var(--aigame-secondary); }
+      .text-secondary { color: var(--aigame-secondary); }
+      .border-secondary { border-color: var(--aigame-secondary); }
+      .ring-secondary { --tw-ring-color: var(--aigame-secondary); }
+      .bg-secondary-foreground { background-color: var(--aigame-secondary-foreground); }
+      .text-secondary-foreground { color: var(--aigame-secondary-foreground); }
+      .border-secondary-foreground { border-color: var(--aigame-secondary-foreground); }
+      .ring-secondary-foreground { --tw-ring-color: var(--aigame-secondary-foreground); }
+      .bg-muted { background-color: var(--aigame-muted); }
+      .text-muted { color: var(--aigame-muted); }
+      .border-muted { border-color: var(--aigame-muted); }
+      .ring-muted { --tw-ring-color: var(--aigame-muted); }
+      .bg-muted-foreground { background-color: var(--aigame-muted-foreground); }
+      .text-muted-foreground { color: var(--aigame-muted-foreground); }
+      .border-muted-foreground { border-color: var(--aigame-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--aigame-muted-foreground); }
+      .bg-accent { background-color: var(--aigame-accent); }
+      .text-accent { color: var(--aigame-accent); }
+      .border-accent { border-color: var(--aigame-accent); }
+      .ring-accent { --tw-ring-color: var(--aigame-accent); }
+      .bg-accent-foreground { background-color: var(--aigame-accent-foreground); }
+      .text-accent-foreground { color: var(--aigame-accent-foreground); }
+      .border-accent-foreground { border-color: var(--aigame-accent-foreground); }
+      .ring-accent-foreground { --tw-ring-color: var(--aigame-accent-foreground); }
+      .bg-border { background-color: var(--aigame-border); }
+      .text-border { color: var(--aigame-border); }
+      .border-border { border-color: var(--aigame-border); }
+      .ring-border { --tw-ring-color: var(--aigame-border); }
+      .bg-input { background-color: var(--aigame-input); }
+      .text-input { color: var(--aigame-input); }
+      .border-input { border-color: var(--aigame-input); }
+      .ring-input { --tw-ring-color: var(--aigame-input); }
+      .bg-ring { background-color: var(--aigame-ring); }
+      .text-ring { color: var(--aigame-ring); }
+      .border-ring { border-color: var(--aigame-ring); }
+      .ring-ring { --tw-ring-color: var(--aigame-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- ============ Top Navigation ============ -->
+      <header class="sticky top-0 z-50 w-full" style="background: var(--color-surface); border-bottom: 1px solid var(--color-border); box-shadow: var(--shadow-xs);">
+        <div class="mx-auto flex h-[60px] max-w-[1200px] items-center gap-4 px-4 sm:px-6">
+          <!-- Brand -->
+          <div class="flex shrink-0 items-center gap-2.5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);">
+              <i data-lucide="sparkles" class="h-5 w-5" style="color: var(--color-text-inverse);"></i>
+            </div>
+            <div class="flex flex-col leading-tight">
+              <span class="text-[15px] font-bold tracking-tight" style="color: var(--color-text-primary);">知识不迷路了啊</span>
+              <span class="text-[11px]" style="color: var(--color-text-tertiary);">AI游戏设计与生产平台</span>
+            </div>
+          </div>
+
+          <!-- Center nav -->
+          <nav class="hidden flex-1 items-center justify-center gap-0.5 lg:flex">
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)]" style="color: var(--color-text-secondary);" href="#">首页</a>
+            <a class="flex items-center gap-1 rounded-md px-3 py-2 text-[14px] font-semibold" style="color: var(--color-primary); background: var(--color-primary-light);" href="#">
+              AI工作台
+              <i data-lucide="chevron-down" class="h-3.5 w-3.5" style="color: var(--color-primary);"></i>
+            </a>
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">AI团队</a>
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">游戏广场</a>
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">资源中心</a>
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">社区</a>
+            <a class="rounded-md px-3 py-2 text-[14px] transition-colors hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">定价</a>
+          </nav>
+
+          <!-- Right cluster -->
+          <div class="ml-auto flex shrink-0 items-center gap-2.5 lg:ml-0">
+            <div class="relative hidden md:block">
+              <i data-lucide="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" style="color: var(--color-text-tertiary);"></i>
+              <input type="text" class="h-9 w-[220px] rounded-md pl-9 pr-3 text-[13px] outline-none transition-shadow focus:ring-2" placeholder="搜索游戏/模板/Agent/教材" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border); color: var(--color-text-primary); --tw-ring-color: var(--color-primary);" />
+            </div>
+            <button class="relative flex h-9 w-9 items-center justify-center rounded-md transition-colors hover:bg-[var(--color-bg-secondary)]" style="border: 1px solid var(--color-border);" aria-label="通知">
+              <i data-lucide="bell" class="h-4 w-4" style="color: var(--color-text-secondary);"></i>
+              <span class="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold" style="background: var(--color-danger); color: var(--color-text-inverse);">2</span>
+            </button>
+            <button class="flex h-9 items-center gap-1.5 rounded-md px-4 text-[13px] font-medium transition-opacity hover:opacity-90" style="background: var(--color-accent); color: var(--color-text-inverse);">
+              <i data-lucide="wand-2" class="h-4 w-4"></i>
+              造物
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ Page Body ============ -->
+      <div class="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 py-6 sm:px-6">
+
+        <!-- ===== Progress Bar ===== -->
+        <section class="rounded-[14px] p-5 sm:p-6" style="background: var(--color-surface); box-shadow: var(--shadow-sm);">
+          <div class="flex items-center">
+            <!-- Step 01 (active) -->
+            <div class="flex shrink-0 items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full text-[13px] font-bold" style="background: var(--color-primary); color: var(--color-text-inverse); box-shadow: var(--shadow-blue);">01</div>
+              <div class="flex flex-col leading-tight">
+                <span class="text-[14px] font-semibold" style="color: var(--color-primary);">上传教材</span>
+                <span class="mt-0.5 flex items-center gap-1 text-[12px]" style="color: var(--color-primary);">
+                  <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full" style="background: var(--color-primary);"></span>
+                  解析中...
+                </span>
+              </div>
+            </div>
+            <div class="mx-4 h-[2px] flex-1" style="background: var(--color-border);"></div>
+            <!-- Step 02 -->
+            <div class="flex shrink-0 items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 text-[13px] font-bold" style="border-color: var(--color-border); background: var(--color-surface); color: var(--color-text-tertiary);">02</div>
+              <div class="hidden flex-col leading-tight sm:flex">
+                <span class="text-[14px] font-semibold" style="color: var(--color-text-secondary);">选择玩法</span>
+                <span class="mt-0.5 text-[12px]" style="color: var(--color-text-tertiary);">AI推荐</span>
+              </div>
+            </div>
+            <div class="mx-4 h-[2px] flex-1" style="background: var(--color-border);"></div>
+            <!-- Step 03 -->
+            <div class="flex shrink-0 items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 text-[13px] font-bold" style="border-color: var(--color-border); background: var(--color-surface); color: var(--color-text-tertiary);">03</div>
+              <div class="hidden flex-col leading-tight sm:flex">
+                <span class="text-[14px] font-semibold" style="color: var(--color-text-secondary);">AI工作室</span>
+                <span class="mt-0.5 text-[12px]" style="color: var(--color-text-tertiary);">组建团队</span>
+              </div>
+            </div>
+            <div class="mx-4 h-[2px] flex-1" style="background: var(--color-border);"></div>
+            <!-- Step 04 -->
+            <div class="flex shrink-0 items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 text-[13px] font-bold" style="border-color: var(--color-border); background: var(--color-surface); color: var(--color-text-tertiary);">04</div>
+              <div class="hidden flex-col leading-tight sm:flex">
+                <span class="text-[14px] font-semibold" style="color: var(--color-text-secondary);">宇宙铸造</span>
+                <span class="mt-0.5 text-[12px]" style="color: var(--color-text-tertiary);">生成游戏</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Upload Section ===== -->
+        <section class="rounded-[14px] p-6 sm:p-8" style="background: var(--color-surface); box-shadow: var(--shadow-sm);">
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr]">
+            <!-- Left column -->
+            <div class="flex flex-col">
+              <h2 class="text-[24px] font-bold leading-tight" style="color: var(--color-text-primary);">把教材交给你的AI团队</h2>
+              <p class="mt-2.5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">AI将自动解析教材章节，提取知识点，标注公式，为游戏化设计提供精准内容基础</p>
+
+              <div class="mt-6 grid grid-cols-2 gap-3.5">
+                <!-- 上传文件 -->
+                <div class="flex cursor-pointer flex-col gap-2.5 rounded-[10px] border p-4 transition-shadow hover:shadow-[var(--shadow-sm)]" style="border-color: var(--color-border); background: var(--color-surface);">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-[8px]" style="background: var(--color-primary-light);">
+                    <i data-lucide="file-up" class="h-5 w-5" style="color: var(--color-primary);"></i>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[14px] font-semibold" style="color: var(--color-text-primary);">上传文件</span>
+                    <span class="mt-0.5 truncate text-[12px]" style="color: var(--color-text-tertiary);">PDF/DOCX/TXT</span>
+                  </div>
+                </div>
+                <!-- 粘贴文本 -->
+                <div class="flex cursor-pointer flex-col gap-2.5 rounded-[10px] border p-4 transition-shadow hover:shadow-[var(--shadow-sm)]" style="border-color: var(--color-border); background: var(--color-surface);">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-[8px]" style="background: var(--color-primary-light);">
+                    <i data-lucide="clipboard-paste" class="h-5 w-5" style="color: var(--color-primary);"></i>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[14px] font-semibold" style="color: var(--color-text-primary);">粘贴文本</span>
+                    <span class="mt-0.5 truncate text-[12px]" style="color: var(--color-text-tertiary);">快速输入内容</span>
+                  </div>
+                </div>
+                <!-- 网址导入 -->
+                <div class="flex cursor-pointer flex-col gap-2.5 rounded-[10px] border p-4 transition-shadow hover:shadow-[var(--shadow-sm)]" style="border-color: var(--color-border); background: var(--color-surface);">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-[8px]" style="background: var(--color-primary-light);">
+                    <i data-lucide="globe" class="h-5 w-5" style="color: var(--color-primary);"></i>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[14px] font-semibold" style="color: var(--color-text-primary);">网址导入</span>
+                    <span class="mt-0.5 truncate text-[12px]" style="color: var(--color-text-tertiary);">解析网页内容</span>
+                  </div>
+                </div>
+                <!-- 示例教材 -->
+                <div class="flex cursor-pointer flex-col gap-2.5 rounded-[10px] border p-4 transition-shadow hover:shadow-[var(--shadow-sm)]" style="border-color: var(--color-border); background: var(--color-surface);">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-[8px]" style="background: var(--color-primary-light);">
+                    <i data-lucide="book-open" class="h-5 w-5" style="color: var(--color-primary);"></i>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[14px] font-semibold" style="color: var(--color-text-primary);">示例教材</span>
+                    <span class="mt-0.5 truncate text-[12px]" style="color: var(--color-text-tertiary);">查看示例</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right column: dashed upload zone -->
+            <div class="flex flex-col">
+              <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-[14px] border-2 border-dashed px-6 py-10 text-center" style="border-color: var(--color-border); background: var(--color-bg-secondary); min-height: 280px;">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full" style="background: color-mix(in srgb, var(--color-primary) 12%, white);">
+                  <i data-lucide="upload-cloud" class="h-7 w-7" style="color: var(--color-primary);"></i>
+                </div>
+                <p class="text-[16px] font-semibold" style="color: var(--color-text-primary);">拖拽文件到这里，或点击上传</p>
+                <p class="text-[13px]" style="color: var(--color-text-secondary);">PDF/DOCX/TXT/MD 最大100MB</p>
+                <div class="mt-2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px]" style="background: var(--color-primary-light); color: var(--color-primary);">
+                  <i data-lucide="loader-circle" class="h-3.5 w-3.5"></i>
+                  上传后AI将为你解析教材内容，预计1-2分钟完成
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Gameplay Section ===== -->
+        <section class="rounded-[14px] p-6 sm:p-8" style="background: var(--color-surface); box-shadow: var(--shadow-sm);">
+          <!-- Header -->
+          <div class="flex flex-col gap-1">
+            <h2 class="text-[24px] font-bold leading-tight" style="color: var(--color-text-primary);">AI 建议怎么玩？</h2>
+            <p class="text-[14px]" style="color: var(--color-text-secondary);">AI根据教材内容和年龄段，为你推荐最适合的游戏玩法</p>
+          </div>
+
+          <!-- Age tabs -->
+          <div class="mt-5 flex flex-wrap items-center gap-2">
+            <button class="rounded-full px-4 py-1.5 text-[13px] font-medium" style="background: var(--color-primary); color: var(--color-text-inverse);">小学</button>
+            <button class="rounded-full px-4 py-1.5 text-[13px] transition-colors hover:bg-[var(--color-bg-secondary)]" style="background: var(--color-bg-secondary); color: var(--color-text-secondary);">中学</button>
+            <button class="rounded-full px-4 py-1.5 text-[13px] transition-colors hover:bg-[var(--color-bg-secondary)]" style="background: var(--color-bg-secondary); color: var(--color-text-secondary);">大学</button>
+            <button class="rounded-full px-4 py-1.5 text-[13px] transition-colors hover:bg-[var(--color-bg-secondary)]" style="background: var(--color-bg-secondary); color: var(--color-text-secondary);">成人</button>
+            <button class="ml-1 flex items-center gap-1 rounded-full px-3 py-1.5 text-[13px] transition-colors hover:text-[var(--color-primary)]" style="color: var(--color-primary);">
+              <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
+              重新分析
+            </button>
+          </div>
+
+          <!-- Gameplay cards -->
+          <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Card 1: 探索冒险 (SELECTED) -->
+            <div class="flex flex-col overflow-hidden rounded-[14px] border-2 transition-shadow" style="border-color: var(--color-primary); background: var(--color-surface); box-shadow: var(--shadow-blue);">
+              <div class="relative">
+                <img class="h-[120px] w-full object-cover" src="../assets/gameplay-exploration.jpg" alt="探索冒险" />
+                <div class="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full" style="background: var(--color-primary);">
+                  <i data-lucide="check" class="h-4 w-4" style="color: var(--color-text-inverse);"></i>
+                </div>
+              </div>
+              <div class="flex flex-1 flex-col gap-3 p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="truncate text-[16px] font-bold" style="color: var(--color-text-primary);">探索冒险</h3>
+                  <span class="shrink-0 rounded-full px-2 py-0.5 text-[12px] font-semibold" style="background: color-mix(in srgb, var(--color-success) 16%, white); color: var(--color-success);">95%</span>
+                </div>
+                <p class="line-clamp-2 text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">开放世界探索，通过任务解锁知识</p>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[12px]" style="color: var(--color-text-tertiary);">适合学科</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-success) 14%, white); color: var(--color-success);">科学</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-primary) 12%, white); color: var(--color-primary);">地理</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-success) 14%, white); color: var(--color-success);">生物</span>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-start gap-2 border-t pt-3" style="border-color: var(--color-divider);">
+                  <i data-lucide="graduation-cap" class="mt-0.5 h-4 w-4 shrink-0" style="color: var(--color-primary);"></i>
+                  <div class="flex flex-col">
+                    <span class="text-[12px]" style="color: var(--color-text-tertiary);">学习融合</span>
+                    <span class="text-[13px] leading-snug" style="color: var(--color-text-primary);">探索生态系统，理解食物链</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: 模拟经营 -->
+            <div class="flex flex-col overflow-hidden rounded-[14px] border transition-shadow hover:shadow-[var(--shadow-md)]" style="border-color: var(--color-border); background: var(--color-surface);">
+              <div class="relative">
+                <img class="h-[120px] w-full object-cover" src="../assets/gameplay-simulation.jpg" alt="模拟经营" />
+                <div class="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2" style="border-color: var(--color-border); background: var(--color-surface);"></div>
+              </div>
+              <div class="flex flex-1 flex-col gap-3 p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="truncate text-[16px] font-bold" style="color: var(--color-text-primary);">模拟经营</h3>
+                  <span class="shrink-0 rounded-full px-2 py-0.5 text-[12px] font-semibold" style="background: color-mix(in srgb, var(--color-primary) 14%, white); color: var(--color-primary);">90%</span>
+                </div>
+                <p class="line-clamp-2 text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">资源管理经营，理解系统与规律</p>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[12px]" style="color: var(--color-text-tertiary);">适合学科</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-primary) 12%, white); color: var(--color-primary);">数学</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-warning) 14%, white); color: var(--color-warning);">经济</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-success) 14%, white); color: var(--color-success);">科学</span>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-start gap-2 border-t pt-3" style="border-color: var(--color-divider);">
+                  <i data-lucide="graduation-cap" class="mt-0.5 h-4 w-4 shrink-0" style="color: var(--color-primary);"></i>
+                  <div class="flex flex-col">
+                    <span class="text-[12px]" style="color: var(--color-text-tertiary);">学习融合</span>
+                    <span class="text-[13px] leading-snug" style="color: var(--color-text-primary);">管理资源，控制变量，掌握模型</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: 解谜闯关 -->
+            <div class="flex flex-col overflow-hidden rounded-[14px] border transition-shadow hover:shadow-[var(--shadow-md)]" style="border-color: var(--color-border); background: var(--color-surface);">
+              <div class="relative">
+                <img class="h-[120px] w-full object-cover" src="../assets/gameplay-puzzle.jpg" alt="解谜闯关" />
+                <div class="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2" style="border-color: var(--color-border); background: var(--color-surface);"></div>
+              </div>
+              <div class="flex flex-1 flex-col gap-3 p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="truncate text-[16px] font-bold" style="color: var(--color-text-primary);">解谜闯关</h3>
+                  <span class="shrink-0 rounded-full px-2 py-0.5 text-[12px] font-semibold" style="background: color-mix(in srgb, var(--color-accent) 14%, white); color: var(--color-accent);">85%</span>
+                </div>
+                <p class="line-clamp-2 text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">挑战式解谜，强化逻辑与应用</p>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[12px]" style="color: var(--color-text-tertiary);">适合学科</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-primary) 12%, white); color: var(--color-primary);">数学</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-accent) 14%, white); color: var(--color-accent);">物理</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-accent) 14%, white); color: var(--color-accent);">化学</span>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-start gap-2 border-t pt-3" style="border-color: var(--color-divider);">
+                  <i data-lucide="graduation-cap" class="mt-0.5 h-4 w-4 shrink-0" style="color: var(--color-primary);"></i>
+                  <div class="flex flex-col">
+                    <span class="text-[12px]" style="color: var(--color-text-tertiary);">学习融合</span>
+                    <span class="text-[13px] leading-snug" style="color: var(--color-text-primary);">将知识点转化为谜题</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: 角色扮演 -->
+            <div class="flex flex-col overflow-hidden rounded-[14px] border transition-shadow hover:shadow-[var(--shadow-md)]" style="border-color: var(--color-border); background: var(--color-surface);">
+              <div class="relative">
+                <img class="h-[120px] w-full object-cover" src="../assets/gameplay-roleplay.jpg" alt="角色扮演" />
+                <div class="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2" style="border-color: var(--color-border); background: var(--color-surface);"></div>
+              </div>
+              <div class="flex flex-1 flex-col gap-3 p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="truncate text-[16px] font-bold" style="color: var(--color-text-primary);">角色扮演</h3>
+                  <span class="shrink-0 rounded-full px-2 py-0.5 text-[12px] font-semibold" style="background: color-mix(in srgb, var(--color-warning) 16%, white); color: var(--color-warning);">80%</span>
+                </div>
+                <p class="line-clamp-2 text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">沉浸式剧情体验，学习历史文化</p>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[12px]" style="color: var(--color-text-tertiary);">适合学科</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-warning) 14%, white); color: var(--color-warning);">历史</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-primary) 12%, white); color: var(--color-primary);">语文</span>
+                    <span class="rounded-full px-2 py-0.5 text-[11px] whitespace-nowrap" style="background: color-mix(in srgb, var(--color-accent) 14%, white); color: var(--color-accent);">艺术</span>
+                  </div>
+                </div>
+                <div class="mt-auto flex items-start gap-2 border-t pt-3" style="border-color: var(--color-divider);">
+                  <i data-lucide="graduation-cap" class="mt-0.5 h-4 w-4 shrink-0" style="color: var(--color-primary);"></i>
+                  <div class="flex flex-col">
+                    <span class="text-[12px]" style="color: var(--color-text-tertiary);">学习融合</span>
+                    <span class="text-[13px] leading-snug" style="color: var(--color-text-primary);">通过角色体验历史事件</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Creative Ideas Section ===== -->
+        <section class="rounded-[14px] p-6 sm:p-8" style="background: var(--color-surface); box-shadow: var(--shadow-sm);">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-[10px]" style="background: color-mix(in srgb, var(--color-warning) 16%, white);">
+              <i data-lucide="lightbulb" class="h-5 w-5" style="color: var(--color-warning);"></i>
+            </div>
+            <div class="flex flex-col">
+              <h2 class="text-[18px] font-bold leading-tight" style="color: var(--color-text-primary);">你的创意想法（可选）</h2>
+              <p class="mt-0.5 text-[13px]" style="color: var(--color-text-secondary);">告诉AI你想要的游戏风格、角色设定、玩法机制，让定制更贴合你的想象</p>
+            </div>
+          </div>
+          <div class="relative mt-5">
+            <textarea class="um-placeholder w-full resize-none rounded-[10px] p-4 pr-16 text-[14px] leading-relaxed outline-none transition-shadow focus:ring-2" rows="4" placeholder="我希望做一个关于太空探索的游戏，主角是一名小学生科学家，需要解决物理问题并收集能源..." style="background: var(--color-bg-secondary); border: 1px solid var(--color-border); color: var(--color-text-primary); --tw-ring-color: var(--color-primary);"></textarea>
+            <button class="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full transition-opacity hover:opacity-90" style="background: var(--color-primary); box-shadow: var(--shadow-blue);" aria-label="发送创意">
+              <i data-lucide="send" class="h-4 w-4" style="color: var(--color-text-inverse);"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===== Footer Actions ===== -->
+        <div class="flex flex-col items-center justify-between gap-4 py-2 sm:flex-row">
+          <a class="text-[14px] transition-colors hover:text-[var(--color-primary)]" style="color: var(--color-text-secondary);" href="#">
+            ← 返回选择科目
+          </a>
+          <button class="flex items-center gap-2 rounded-full px-8 py-3 text-[14px] font-semibold transition-opacity hover:opacity-90" style="background: var(--color-primary); color: var(--color-text-inverse); box-shadow: var(--shadow-blue);">
+            确认教材，进入下一步 →
+          </button>
+        </div>
+
+      </div>
+    </main>
+    <style>
+      .um-placeholder::placeholder { color: var(--color-text-tertiary); }
+      input::placeholder { color: var(--color-text-tertiary); }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

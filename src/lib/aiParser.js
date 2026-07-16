@@ -524,10 +524,19 @@ function mergeResults(partialResults, rawText, filename) {
 const PDF_SERVER_HTTP = 'http://101.35.114.5:8000'
 const PDF_SERVER_HTTPS = 'https://101.35.114.5:9001'
 
+// MinerU 精准解析服务配置（首选解析器）
+const MINERU_SERVER_HTTP = 'http://101.35.114.5:8003'
+const MINERU_SERVER_HTTPS = 'https://101.35.114.5:9003'
+
 function getPdfServerUrl() {
   // HTTPS 页面用 HTTPS 代理，HTTP 页面直接用 HTTP
   if (location.protocol === 'https:') return PDF_SERVER_HTTPS
   return PDF_SERVER_HTTP
+}
+
+function getMineruServerUrl() {
+  if (location.protocol === 'https:') return MINERU_SERVER_HTTPS
+  return MINERU_SERVER_HTTP
 }
 
 // 动态超时：基础120s + 每MB加3s，最高600s（10分钟，覆盖大文件上传+OCR）
@@ -555,17 +564,68 @@ export async function checkPdfServer() {
 
 // ════════════════════════════════════════════════
 // 导出文本提取函数（供 UploadPage 直接使用）
-// 优先调用后端 API（支持 OCR），降级到浏览器 pdfjs
+// 优先调用 MinerU API（高精度），降级到 PyMuPDF 后端，最后降级到浏览器 pdfjs
 // 返回 { text, numPages, ocrUsed?, backendUsed }
 // ════════════════════════════════════════════════
 export async function extractPdfText(file, onProgress) {
-  // ── 优先尝试后端 API（PyMuPDF + PaddleOCR）──
+  // ── 1. 优先尝试 MinerU 精准解析 API ──
+  const mineruUrl = getMineruServerUrl()
+  const mineruTimeout = Math.min(300000 + (file.size / 1024 / 1024) * 5000, 600000) // 5min基础 + 5s/MB, 最高10min
+
+  // HTTPS 页面先测试代理是否可用（自签证书）
+  if (location.protocol === 'https:' && mineruUrl.startsWith('https://')) {
+    try {
+      const testResp = await fetch(`${mineruUrl}/health`, {
+        signal: AbortSignal.timeout(8000),
+      })
+      if (!testResp.ok) throw new Error(`MinerU HTTPS 代理返回 ${testResp.status}`)
+    } catch (e) {
+      console.warn('MinerU HTTPS 代理不可用，降级到 PyMuPDF:', e.message)
+      // 继续尝试其他方式
+    }
+  }
+
+  try {
+    onProgress?.(0, 1)
+    const formData = new FormData()
+    formData.append('file', file)
+
+    console.log('[PDF] 尝试 MinerU 精准解析...')
+    const resp = await fetch(`${mineruUrl}/parse-pdf`, {
+      method: 'POST',
+      body: formData,
+      signal: AbortSignal.timeout(mineruTimeout),
+    })
+
+    if (resp.ok) {
+      const data = await resp.json()
+      onProgress?.(data.numPages, data.numPages)
+      console.log(`[PDF] MinerU 解析成功: ${data.numPages}页, ${data.text.length}字符, 方法=${data.extractionMethod}`)
+
+      return {
+        text: data.text,
+        numPages: data.numPages,
+        ocrUsed: data.ocrUsed || true,
+        backendUsed: true,
+        avgCharsPerPage: data.avgCharsPerPage,
+        extractionMethod: data.extractionMethod || 'mineru-vlm',
+        mineruUsed: true,
+      }
+    } else {
+      const err = await resp.json().catch(() => ({}))
+      throw new Error(err.error || `MinerU 返回 ${resp.status}`)
+    }
+  } catch (mineruErr) {
+    console.warn('[PDF] MinerU 解析失败，降级到 PyMuPDF 后端:', mineruErr.message)
+    // 继续尝试 PyMuPDF 后端
+  }
+
+  // ── 2. 降级到 PyMuPDF 后端 API ──
   const pdfServerUrl = getPdfServerUrl()
   const timeout = getPdfServerTimeout(file.size)
 
   // HTTPS 页面使用自签证书代理，需要用户先信任证书
   if (location.protocol === 'https:' && pdfServerUrl.startsWith('https://')) {
-    // 先测试 HTTPS 代理是否可用（用户可能未信任自签证书）
     try {
       const testResp = await fetch(`${pdfServerUrl}/health`, {
         signal: AbortSignal.timeout(8000),
@@ -609,7 +669,7 @@ export async function extractPdfText(file, onProgress) {
       adobeRemaining: data.adobe_remaining,
     }
   } catch (backendErr) {
-    // ── 降级到浏览器 pdfjs ──
+    // ── 3. 降级到浏览器 pdfjs ──
     console.warn('后端 PDF 服务不可用，降级到浏览器 pdfjs:', backendErr.message)
     return extractPdfTextLocal(file, onProgress, {
       type: 'backend_error',
