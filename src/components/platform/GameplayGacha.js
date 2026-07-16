@@ -1,51 +1,57 @@
 // ═══════════════════════════════════════════════════════════
-// 玩法推荐 (GameplayGacha) v3.0 — 全息深色统一风格
-// 使用主页 NavBar + TeamBuilder 全息青色系
+// 玩法推荐 (GameplayGacha) v5.0 — 金属光泽 + 背景沉浸 + 卡片加宽
+// 金属拉丝玻璃面板 + 全幅背景图 + 模块明显断开 + 教材封面展示
 // ═══════════════════════════════════════════════════════════
 import { html, useContext, useState, useCallback } from '../../deps.js'
 import { AppContext, STEPS } from '../../store/appContext.js'
 import { NavBar } from './PlatformCommon.js?v=nav3'
 
-// ── 设计令牌（与 TeamBuilder 统一的全息色系）──
+// ── 设计令牌（金属光泽色系）──
 const T = {
-  // 背景层
   void: '#05010f',
   deep: '#0a0514',
-  glass: 'rgba(10, 5, 20, 0.6)',
-  glassHover: 'rgba(15, 10, 30, 0.75)',
-  glassBorder: 'rgba(0, 212, 255, 0.15)',
-  glassBorderBright: 'rgba(0, 212, 255, 0.4)',
+  bgRadial: 'radial-gradient(ellipse at 50% 80%, #1e0f4d 0%, #0a0420 40%, #05010f 100%)',
+
+  // 金属玻璃层
+  glass: 'rgba(15, 12, 25, 0.65)',
+  glassHover: 'rgba(20, 16, 35, 0.8)',
+  glassDeep: 'rgba(8, 6, 15, 0.75)',
+  glassBorder: 'rgba(167, 139, 250, 0.15)',
+  glassBorderBright: 'rgba(167, 139, 250, 0.35)',
+  glassBorderActive: 'rgba(167, 139, 250, 0.55)',
+  metallicSheen: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.01) 100%)',
+  metallicBorder: 'linear-gradient(135deg, rgba(192,200,220,0.25) 0%, rgba(192,200,220,0.05) 50%, rgba(192,200,220,0.15) 100%)',
 
   // 主色
+  primary: '#a78bfa',
+  primaryDark: '#8b5cf6',
   cyan: '#00d4ff',
-  cyanBright: '#00ffff',
-  purple: '#8b5cf6',
-  pink: '#ff2e88',
-  green: '#00ff88',
-  amber: '#ffaa00',
-  gold: '#ffd700',
+  pink: '#ec4899',
+  green: '#34d399',
+  gold: '#F5A623',
+  amber: '#fbbf24',
+  silver: '#c0c8dc',
+  steel: '#6b7280',
 
   // 文字
   textBright: '#ffffff',
-  textPrimary: '#e8e8ff',
-  textSecondary: '#9098b8',
-  textMuted: '#5a5a7a',
-  textFaint: '#3a3a52',
+  textPrimary: '#f5e8ff',
+  textSecondary: '#cbd5e1',
+  textMuted: '#8b7da8',
+  textDim: '#5d4f7a',
   borderSubtle: 'rgba(255, 255, 255, 0.06)',
+  divider: 'rgba(167, 139, 250, 0.1)',
 
   // 字体
   fontDisplay: "'Orbitron', 'Michroma', sans-serif",
   fontBody: "'Rajdhani', 'Inter', system-ui, sans-serif",
   fontMono: "'JetBrains Mono', 'Consolas', monospace",
-
-  // 切角
-  chamfer: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)',
-  chamferSm: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)',
-  chamferBtn: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)',
 }
 
 // ── 图片路径 ──
 const IMG = (n) => `/assets/gameplay/image_${n}_yi19x4.jpg`
+const TEXTBOOK_COVER = '/assets/gameplay/textbook_cover.jpg'
+const BG_IMAGE = '/assets/gameplay/textbook_cover.jpg'
 
 // ── 4 个游戏模式数据 ──
 const GAME_MODES = [
@@ -62,7 +68,7 @@ const GAME_MODES = [
     match: 96, stars: 5, effect: 90,
     tags: ['策略', '管理', '决策', '模拟'],
     desc: '经营一个生态球，调节光照、温度与生物比例，观察物质循环与能量流动的平衡。',
-    color: T.purple, img: IMG(3),
+    color: T.primary, img: IMG(3),
     radar: [96, 88, 85, 90, 76],
   },
   {
@@ -86,7 +92,7 @@ const GAME_MODES = [
 // ── DNA 分析数据 ──
 const DNA = [
   { label: '探索元素', pct: 60, color: T.cyan },
-  { label: '收集元素', pct: 20, color: T.purple },
+  { label: '收集元素', pct: 20, color: T.primary },
   { label: '解谜元素', pct: 15, color: T.green },
   { label: '成长元素', pct: 5, color: T.pink },
 ]
@@ -143,7 +149,7 @@ function RadarChart({ data, size = 240 }) {
           stroke=${T.borderSubtle} strokeWidth="1" />
       `)}
       ${data.map((dataset, di) => {
-        const colors = [T.cyan, T.purple, T.green, T.pink]
+        const colors = [T.cyan, T.primary, T.green, T.pink]
         const color = colors[di]
         const pts = points(dataset.radar)
         const dataPoints = dataset.radar.map((v, i) => {
@@ -154,7 +160,8 @@ function RadarChart({ data, size = 240 }) {
           <polygon key=${di} points=${pts} fill=${color} fillOpacity="0.08"
             stroke=${color} strokeWidth="2" strokeLinejoin="round" />
           ${dataPoints.map((p, pi) => html`
-            <circle key=${`pt-${di}-${pi}`} cx=${p.x} cy=${p.y} r="3" fill=${color} />
+            <circle key=${`pt-${di}-${pi}`} cx=${p.x} cy=${p.y} r="3" fill=${color}
+              style=${{ filter: `drop-shadow(0 0 4px ${color}80)` }} />
           `)}
         `
       })}
@@ -173,41 +180,167 @@ function RadarChart({ data, size = 240 }) {
   `
 }
 
-// ── 页面 CSS ──
+// ── 页面 CSS（金属光泽 + 背景图）──
 const PAGE_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-@keyframes cardFadeIn {
+/* ── 背景层：全幅背景图 + 暗色叠加 ── */
+.gp-bg-layer {
+  position: fixed; inset: 0; z-index: -2;
+  background: url('${BG_IMAGE}') center/cover no-repeat fixed;
+  filter: blur(2px) brightness(0.35) saturate(1.2);
+}
+.gp-bg-overlay {
+  position: fixed; inset: 0; z-index: -1;
+  background: radial-gradient(ellipse at 50% 80%, rgba(30,15,77,0.7) 0%, rgba(10,4,32,0.85) 40%, rgba(5,1,15,0.95) 100%);
+}
+
+/* ── 卡片入场动画 ── */
+@keyframes gpFadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.gg-card { animation: cardFadeIn 0.4s ease-out forwards; }
-.gg-card:nth-child(2) { animation-delay: 0.08s; }
-.gg-card:nth-child(3) { animation-delay: 0.16s; }
-.gg-card:nth-child(4) { animation-delay: 0.24s; }
+.gp-card { animation: gpFadeIn 0.4s ease-out forwards; }
+.gp-card:nth-child(2) { animation-delay: 0.08s; }
+.gp-card:nth-child(3) { animation-delay: 0.16s; }
+.gp-card:nth-child(4) { animation-delay: 0.24s; }
 
-.gg-glass {
+/* ── 金属玻璃面板 ── */
+.gp-metal {
   background: ${T.glass};
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
   border: 1px solid ${T.glassBorder};
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    inset 1px 0 0 rgba(255,255,255,0.04),
+    inset -1px 0 0 rgba(0,0,0,0.2),
+    0 4px 24px rgba(0,0,0,0.5);
+  position: relative;
 }
-.gg-glass-hover:hover {
+.gp-metal::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 16px;
+  background: ${T.metallicSheen};
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ── 金属面板 hover ── */
+.gp-metal-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gp-metal-hover:hover {
   background: ${T.glassHover};
   border-color: ${T.glassBorderBright};
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 8px 32px rgba(0,0,0,0.6),
+    0 0 0 1px ${T.glassBorderBright};
+  transform: translateY(-2px);
 }
-.gg-chamfer { clip-path: ${T.chamfer}; }
-.gg-chamfer-sm { clip-path: ${T.chamferSm}; }
-.gg-chamfer-btn { clip-path: ${T.chamferBtn}; }
 
-.gg-scanlines {
+/* ── 选中状态（金属高亮）── */
+.gp-selected {
+  border-color: ${T.glassBorderActive} !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 0 0 1px ${T.primary}40,
+    0 0 28px ${T.primary}30,
+    0 8px 32px rgba(0,0,0,0.5) !important;
+}
+
+/* ── 模块断开分隔线（金属拉丝质感）── */
+.gp-module-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(167,139,250,0.08) 10%,
+    rgba(192,200,220,0.3) 30%,
+    rgba(167,139,250,0.4) 50%,
+    rgba(192,200,220,0.3) 70%,
+    rgba(167,139,250,0.08) 90%,
+    transparent 100%);
+  margin: 20px 0;
+  position: relative;
+}
+.gp-module-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: -3px;
+  transform: translateX(-50%);
+  width: 40px; height: 7px;
+  background: linear-gradient(180deg, rgba(167,139,250,0.25), transparent);
+  border-radius: 50%;
+  filter: blur(3px);
+}
+
+/* ── 普通分隔线 ── */
+.gp-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, ${T.divider}, transparent);
+}
+
+/* ── HUD 角装饰 ── */
+.gp-hud-tl, .gp-hud-tr, .gp-hud-bl, .gp-hud-br {
+  position: absolute; width: 12px; height: 12px; pointer-events: none; z-index: 2;
+}
+.gp-hud-tl { top: 8px; left: 8px; border-top: 1.5px solid rgba(167,139,250,0.35); border-left: 1.5px solid rgba(167,139,250,0.35); border-top-left-radius: 10px; }
+.gp-hud-tr { top: 8px; right: 8px; border-top: 1.5px solid rgba(167,139,250,0.35); border-right: 1.5px solid rgba(167,139,250,0.35); border-top-right-radius: 10px; }
+.gp-hud-bl { bottom: 8px; left: 8px; border-bottom: 1.5px solid rgba(167,139,250,0.35); border-left: 1.5px solid rgba(167,139,250,0.35); border-bottom-left-radius: 10px; }
+.gp-hud-br { bottom: 8px; right: 8px; border-bottom: 1.5px solid rgba(167,139,250,0.35); border-right: 1.5px solid rgba(167,139,250,0.35); border-bottom-right-radius: 10px; }
+
+/* ── 金属标签 ── */
+.gp-metal-tag {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(192,200,220,0.15);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  border-radius: 6px;
+}
+
+/* ── 金属按钮 ── */
+.gp-metal-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(192,200,220,0.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3);
+  border-radius: 8px;
+  transition: all 0.25s;
+}
+.gp-metal-btn:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+  border-color: rgba(192,200,220,0.25);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 16px rgba(167,139,250,0.15);
+}
+
+/* ── 扫描线纹理 ── */
+.gp-scanlines {
   position: absolute; inset: 0; pointer-events: none;
   background: repeating-linear-gradient(0deg,
     transparent, transparent 2px,
-    rgba(0,212,255,0.02) 2px, rgba(0,212,255,0.02) 4px);
+    rgba(167,139,250,0.015) 2px, rgba(167,139,250,0.015) 4px);
+  border-radius: inherit;
+}
+
+/* ── DNA 条金属质感 ── */
+.gp-dna-bar {
+  background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.gp-dna-fill {
+  background: linear-gradient(180deg, var(--dna-color-light), var(--dna-color));
+  box-shadow: 0 0 8px var(--dna-color-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 `
 
@@ -243,83 +376,149 @@ export default function GameplayGacha() {
   ]
 
   return html`
-    <div class="min-h-screen flex flex-col" style=${{
-      background: `radial-gradient(ellipse at 50% 80%, #1e0f4d 0%, #0a0420 40%, #05010f 100%)`,
+    <div class="min-h-screen flex flex-col relative" style=${{
       fontFamily: T.fontBody,
       color: T.textPrimary,
     }}>
       <style>${PAGE_CSS}</style>
 
-      <!-- ═══ 顶部导航栏 — 与主页一致 ═══ -->
+      <!-- ═══ 背景层：全幅背景图 + 暗色叠加 ═══ -->
+      <div class="gp-bg-layer"></div>
+      <div class="gp-bg-overlay"></div>
+
+      <!-- ═══ 顶部导航栏 ═══ -->
       <${NavBar} />
 
       <!-- ═══ 步骤进度条 ═══ -->
-      <div class="pt-20 px-6 pb-3 flex items-center justify-center gap-3">
+      <div class="pt-20 px-6 pb-3 flex items-center justify-center gap-3 relative">
         ${steps.map((s, i) => html`
           <div key=${i} class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
                  style=${s.done
-                   ? { background: T.cyan, color: T.void, boxShadow: '0 0 8px rgba(0,212,255,0.4)' }
+                   ? { background: T.primary, color: T.void, boxShadow: '0 0 8px rgba(167,139,250,0.4)' }
                    : s.active
-                     ? { background: T.cyan, color: T.void, boxShadow: '0 0 0 3px rgba(0,212,255,0.2), 0 0 12px rgba(0,212,255,0.3)' }
-                     : { border: `1px solid ${T.borderSubtle}`, color: T.textMuted }
+                     ? { background: T.primary, color: T.void, boxShadow: '0 0 0 3px rgba(167,139,250,0.2), 0 0 12px rgba(167,139,250,0.3)' }
+                     : { border: `1px solid ${T.borderSubtle}`, color: T.textMuted, background: 'rgba(255,255,255,0.02)' }
                  }>
               ${s.num}
             </div>
             <span class="text-sm whitespace-nowrap ${s.active ? 'font-semibold' : 'font-medium'}"
-                  style=${{ color: s.active ? T.cyan : s.done ? T.textPrimary : T.textMuted }}>
+                  style=${{ color: s.active ? T.primary : s.done ? T.textPrimary : T.textMuted }}>
               ${s.label}
             </span>
           </div>
           ${i < steps.length - 1 ? html`
             <div class="w-8 h-px shrink-0"
-                 style=${{ background: s.done || s.active ? T.cyan : T.borderSubtle, opacity: s.done || s.active ? 0.6 : 0.3 }}></div>
+                 style=${{ background: s.done || s.active ? T.primary : T.borderSubtle, opacity: s.done || s.active ? 0.6 : 0.3 }}></div>
           ` : null}
         `)}
       </div>
 
       <!-- ═══ 中间：侧栏 + 主内容 ═══ -->
-      <div class="flex-1 flex min-h-0 gap-5 px-6 pb-6">
-        <!-- 左侧全息玻璃栏 -->
-        <aside class="w-72 shrink-0 gg-glass gg-chamfer p-6 overflow-y-auto no-scrollbar hidden lg:block relative">
-          <div class="gg-scanlines"></div>
+      <div class="flex-1 flex min-h-0 gap-5 px-6 pb-6 relative">
+        <!-- ═══ 左侧金属玻璃栏 ═══ -->
+        <aside class="w-72 shrink-0 gp-metal p-6 overflow-y-auto no-scrollbar hidden lg:block relative">
+          <div class="gp-scanlines"></div>
+          <div class="gp-hud-tl"></div>
+          <div class="gp-hud-tr"></div>
+          <div class="gp-hud-bl"></div>
+          <div class="gp-hud-br"></div>
           <div class="relative">
-            <!-- 当前教材 -->
-            <div class="flex items-center gap-2">
+
+            <!-- ══════ 模块 A：当前教材（含封面展示） ══════ -->
+            <div class="flex items-center gap-2 mb-3">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   style=${{ color: T.cyan }}>
+                   style=${{ color: T.primary }}>
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
               </svg>
-              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.cyan }}>当前教材</span>
-            </div>
-            <h2 class="mt-2 text-base font-semibold truncate" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
-              ${state.selectedSubject || '小学科学'} ${grade === 'primary' ? '五年级上册' : grade === 'junior' ? '八年级' : grade === 'senior' ? '高一' : '通用'}
-            </h2>
-            <p class="text-xs mt-1 truncate" style=${{ color: T.textSecondary }}>
-              ${state.material?.name || '教材.pdf'}
-            </p>
-            <div class="flex items-center gap-1.5 mt-2 text-xs" style=${{ color: T.textMuted }}>
-              <span>126个知识点</span>
-              <span style=${{ color: T.cyan }}>·</span>
-              <span>23个实验</span>
+              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.primary }}>当前教材</span>
             </div>
 
-            <div class="my-5 h-px" style=${{ background: T.borderSubtle }}></div>
+            <!-- 教材封面展示 -->
+            <div class="relative rounded-xl overflow-hidden mb-3"
+                 style=${{
+                   border: `1px solid ${T.glassBorder}`,
+                   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 16px rgba(0,0,0,0.4)',
+                 }}>
+              <img src=${TEXTBOOK_COVER} alt="教材封面"
+                   class="w-full h-40 object-cover"
+                   style=${{ filter: 'brightness(0.9) saturate(1.1)' }} />
+              <div class="absolute inset-0 pointer-events-none"
+                   style=${{ background: 'linear-gradient(180deg, transparent 40%, rgba(5,1,15,0.9) 100%)' }}></div>
+              <div class="absolute bottom-2 left-3 right-3">
+                <div class="text-sm font-bold leading-tight" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
+                  ${state.selectedSubject || '小学科学'} ${grade === 'primary' ? '五年级上册' : grade === 'junior' ? '八年级' : grade === 'senior' ? '高一' : '通用'}
+                </div>
+                <div class="text-xs mt-0.5 truncate" style=${{ color: T.textSecondary }}>
+                  ${state.material?.name || '教材.pdf'}
+                </div>
+              </div>
+              <!-- 金属光泽反射条 -->
+              <div class="absolute top-0 left-0 right-0 h-1/3 pointer-events-none"
+                   style=${{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)' }}></div>
+            </div>
+
+            <!-- 教材元数据 -->
+            <div class="flex items-center gap-2 text-xs">
+              <span class="gp-metal-tag px-2 py-1" style=${{ color: T.textSecondary }}>
+                ${grade === 'primary' ? '126' : '186'} 个知识点
+              </span>
+              <span class="gp-metal-tag px-2 py-1" style=${{ color: T.textSecondary }}>
+                ${grade === 'primary' ? '23' : '45'} 个实验
+              </span>
+            </div>
+
+            <!-- ══════ 模块断开：金属拉丝分隔线 ══════ -->
+            <div class="gp-module-divider"></div>
+
+            <!-- ══════ 模块 B：AI 分析结果 ══════ -->
+            <div class="flex items-center gap-2 mb-3">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   style=${{ color: T.primary }}>
+                <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>
+              </svg>
+              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.primary }}>AI 分析结果</span>
+            </div>
+
+            <!-- 匹配度圆环（金属质感）-->
+            <div class="mt-4 flex flex-col items-center">
+              <div class="relative w-24 h-24 rounded-full"
+                   style=${{
+                     background: `conic-gradient(${T.primary} 0% 98%, ${T.borderSubtle} 98% 100%)`,
+                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 16px rgba(167,139,250,0.2)',
+                   }}>
+                <div class="absolute inset-[6px] rounded-full flex flex-col items-center justify-center"
+                     style=${{
+                       background: `linear-gradient(135deg, ${T.deep}, ${T.void})`,
+                       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+                     }}>
+                  <span class="text-2xl font-bold leading-none" style=${{ color: T.primary, fontFamily: T.fontDisplay }}>98%</span>
+                  <span class="text-[10px] mt-1" style=${{ color: T.textMuted }}>匹配度</span>
+                </div>
+              </div>
+              <p class="mt-3 text-sm font-medium" style=${{ color: T.textBright }}>知识覆盖度高</p>
+              <p class="text-xs mt-0.5" style=${{ color: T.textSecondary }}>非常适合游戏化学习</p>
+            </div>
+
+            <div class="gp-divider my-5"></div>
 
             <!-- 学习目标 -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mb-3">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   style=${{ color: T.cyan }}>
+                   style=${{ color: T.primary }}>
                 <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
               </svg>
-              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.cyan }}>学习目标</span>
+              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.primary }}>学习目标</span>
             </div>
-            <ul class="mt-3 space-y-2.5">
+            <ul class="space-y-2.5">
               ${OBJECTIVES.map((obj, i) => html`
                 <li key=${i} class="flex items-start gap-2">
                   <span class="w-4 h-4 mt-0.5 rounded-full flex items-center justify-center shrink-0"
-                        style=${{ background: T.cyan }}>
+                        style=${{
+                          background: T.primary,
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)',
+                        }}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke=${T.void} stroke-width="3">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
@@ -329,41 +528,18 @@ export default function GameplayGacha() {
               `)}
             </ul>
 
-            <div class="my-5 h-px" style=${{ background: T.borderSubtle }}></div>
-
-            <!-- AI 分析结果 -->
-            <div class="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   style=${{ color: T.cyan }}>
-                <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/>
-              </svg>
-              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.cyan }}>AI 分析结果</span>
-            </div>
-            <div class="mt-4 flex flex-col items-center">
-              <div class="relative w-24 h-24 rounded-full"
-                   style=${{ background: `conic-gradient(${T.cyan} 0% 98%, ${T.borderSubtle} 98% 100%)` }}>
-                <div class="absolute inset-[6px] rounded-full flex flex-col items-center justify-center"
-                     style=${{ background: T.deep }}>
-                  <span class="text-2xl font-bold leading-none" style=${{ color: T.cyan, fontFamily: T.fontDisplay }}>98%</span>
-                  <span class="text-[10px] mt-1" style=${{ color: T.textMuted }}>匹配度</span>
-                </div>
-              </div>
-              <p class="mt-3 text-sm font-medium" style=${{ color: T.textBright }}>知识覆盖度高</p>
-              <p class="text-xs mt-0.5" style=${{ color: T.textSecondary }}>非常适合游戏化学习</p>
-            </div>
-
-            <div class="my-5 h-px" style=${{ background: T.borderSubtle }}></div>
+            <div class="gp-divider my-5"></div>
 
             <!-- 适合年龄 -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mb-3">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   style=${{ color: T.cyan }}>
+                   style=${{ color: T.primary }}>
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
-              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.cyan }}>适合年龄</span>
+              <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.primary }}>适合年龄</span>
             </div>
-            <div class="mt-3 flex items-center gap-3">
+            <div class="flex items-center gap-3">
               <div class="min-w-0">
                 <div class="text-lg font-semibold leading-tight" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   ${grade === 'primary' ? '10-11岁' : grade === 'junior' ? '13-15岁' : grade === 'senior' ? '16-18岁' : '18+'}
@@ -373,13 +549,16 @@ export default function GameplayGacha() {
                 </div>
               </div>
               <img src=${IMG(1)} alt="适龄儿童"
-                   class="w-16 h-16 rounded-lg object-cover shrink-0"
-                   style=${{ border: `1px solid ${T.glassBorder}` }} />
+                   class="w-14 h-14 rounded-xl object-cover shrink-0"
+                   style=${{
+                     border: `1px solid ${T.glassBorder}`,
+                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.3)',
+                   }} />
             </div>
           </div>
         </aside>
 
-        <!-- 主内容 -->
+        <!-- ═══ 主内容区 ═══ -->
         <section class="flex-1 min-h-0 overflow-y-auto no-scrollbar">
           <div class="pb-6">
             <!-- 标题 + 年龄 Tab -->
@@ -393,10 +572,10 @@ export default function GameplayGacha() {
               <div class="flex flex-wrap items-center gap-2 mt-4">
                 ${AGE_TABS.map(tab => html`
                   <button key=${tab.id} type="button"
-                    class="px-4 py-2 text-sm whitespace-nowrap transition-all gg-chamfer-btn"
+                    class="gp-metal-btn px-4 py-2 text-sm whitespace-nowrap"
                     style=${activeTab === tab.id
-                      ? { background: T.cyan, color: T.void, fontWeight: 600 }
-                      : { background: T.glass, color: T.textSecondary, border: `1px solid ${T.borderSubtle}`, backdropFilter: 'blur(10px)' }
+                      ? { background: T.primary, color: T.void, fontWeight: 600, border: `1px solid ${T.primary}`, boxShadow: `inset 0 1px 0 rgba(255,255,255,0.2), 0 0 12px ${T.primary}40` }
+                      : { color: T.textSecondary }
                     }
                     onClick=${() => setActiveTab(tab.id)}>
                     ${tab.label}
@@ -405,52 +584,59 @@ export default function GameplayGacha() {
               </div>
             </header>
 
-            <!-- 4 个游戏模式卡片 -->
+            <!-- ═══ 4 个游戏模式卡片（加宽，图片更大）═══ -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
               ${GAME_MODES.map((mode) => {
                 const isSelected = selectedMode?.id === mode.id
                 return html`
                   <article key=${mode.id}
-                    class="gg-card gg-glass gg-chamfer overflow-hidden flex flex-col cursor-pointer transition-all hover:scale-[1.02] relative"
-                    style=${{
-                      borderColor: isSelected ? mode.color : T.glassBorder,
-                      boxShadow: isSelected ? `0 0 0 1px ${mode.color}, 0 0 20px ${mode.color}33` : 'none',
-                    }}
+                    class="gp-card gp-metal gp-metal-hover overflow-hidden flex flex-col cursor-pointer relative ${isSelected ? 'gp-selected' : ''}"
                     onClick=${() => handleSelect(mode)}>
-                    <div class="gg-scanlines"></div>
-                    <div class="relative">
+                    <div class="gp-scanlines"></div>
+                    <!-- 图片区域 — 加高从 h-32 到 h-52 -->
+                    <div class="relative overflow-hidden" style=${{ height: '200px' }}>
                       <img src=${mode.img} alt=${mode.name}
-                           class="h-32 w-full object-cover" />
-                      <div class="absolute inset-0" style=${{ background: `linear-gradient(180deg, transparent 30%, ${T.deep}dd 100%)` }}></div>
+                           class="w-full h-full object-cover"
+                           style=${{ filter: 'brightness(0.85) saturate(1.15)' }} />
+                      <!-- 底部渐变（更轻，让更多图片可见）-->
+                      <div class="absolute inset-0 pointer-events-none"
+                           style=${{ background: 'linear-gradient(180deg, rgba(5,1,15,0.2) 0%, transparent 25%, transparent 60%, rgba(5,1,15,0.95) 100%)' }}></div>
+                      <!-- 顶部金属光泽反射 -->
+                      <div class="absolute top-0 left-0 right-0 h-1/4 pointer-events-none"
+                           style=${{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)' }}></div>
                       ${isSelected ? html`
-                        <div class="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center"
-                             style=${{ background: mode.color }}>
+                        <div class="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center z-10"
+                             style=${{
+                               background: mode.color,
+                               boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 0 12px ${mode.color}80`,
+                             }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke=${T.void} stroke-width="3">
                             <polyline points="20 6 9 17 4 12"/>
                           </svg>
                         </div>
                       ` : null}
-                      <div class="absolute bottom-2 left-3 flex items-center gap-2">
+                      <div class="absolute bottom-2 left-3 flex items-center gap-2 z-10">
                         <span class="text-xs font-mono" style=${{ color: T.textMuted }}>${mode.num}</span>
-                        <span class="text-xs font-mono uppercase tracking-wide" style=${{ color: mode.color }}>
+                        <span class="text-xs font-mono uppercase tracking-wide" style=${{ color: mode.color, textShadow: `0 0 8px ${mode.color}80` }}>
                           ${mode.type}
                         </span>
                       </div>
                     </div>
+                    <!-- 内容区 -->
                     <div class="p-4 flex flex-col gap-3 flex-1 relative">
                       <div class="flex items-start justify-between gap-2">
                         <h3 class="text-base font-semibold leading-tight min-w-0" style=${{ color: T.textBright }}>
                           ${mode.name}
                         </h3>
-                        <span class="text-lg font-bold leading-none shrink-0" style=${{ color: mode.color, fontFamily: T.fontDisplay }}>
+                        <span class="text-lg font-bold leading-none shrink-0" style=${{ color: mode.color, fontFamily: T.fontDisplay, textShadow: `0 0 8px ${mode.color}40` }}>
                           ${mode.match}%
                         </span>
                       </div>
                       <div class="flex flex-wrap gap-1.5">
                         ${mode.tags.map((tag, ti) => html`
                           <span key=${ti}
-                            class="px-2 py-0.5 text-xs whitespace-nowrap rounded-full"
-                            style=${{ background: `${mode.color}15`, color: mode.color, border: `1px solid ${mode.color}30` }}>
+                            class="gp-metal-tag px-2 py-0.5 text-xs whitespace-nowrap"
+                            style=${{ color: mode.color, border: `1px solid ${mode.color}30` }}>
                             ${tag}
                           </span>
                         `)}
@@ -471,7 +657,8 @@ export default function GameplayGacha() {
                           <div class="flex items-center gap-0.5">
                             ${Array.from({ length: 5 }, (_, si) => html`
                               <svg key=${si} width="14" height="14" viewBox="0 0 24 24"
-                                fill=${si < mode.stars ? T.gold : T.borderSubtle}>
+                                fill=${si < mode.stars ? T.gold : T.borderSubtle}
+                                style=${si < mode.stars ? { filter: `drop-shadow(0 0 4px ${T.gold}60)` } : {}}>
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                               </svg>
                             `)}
@@ -487,11 +674,13 @@ export default function GameplayGacha() {
               })}
             </div>
 
-            <!-- 下方三栏分析 -->
+            <!-- ═══ 下方三栏分析 ═══ -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <!-- 雷达图 -->
-              <section class="gg-glass gg-chamfer p-5 flex flex-col relative">
-                <div class="gg-scanlines"></div>
+              <section class="gp-metal p-5 flex flex-col relative">
+                <div class="gp-scanlines"></div>
+                <div class="gp-hud-tl"></div>
+                <div class="gp-hud-tr"></div>
                 <h3 class="text-sm font-semibold mb-2 relative" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   方案对比
                 </h3>
@@ -500,10 +689,10 @@ export default function GameplayGacha() {
                 </div>
                 <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 relative">
                   ${GAME_MODES.map((m, i) => {
-                    const colors = [T.cyan, T.purple, T.green, T.pink]
+                    const colors = [T.cyan, T.primary, T.green, T.pink]
                     return html`
                       <div key=${i} class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full" style=${{ background: colors[i] }}></span>
+                        <span class="w-2.5 h-2.5 rounded-full" style=${{ background: colors[i], boxShadow: `0 0 4px ${colors[i]}80` }}></span>
                         <span class="text-xs" style=${{ color: T.textSecondary }}>${m.name}</span>
                       </div>
                     `
@@ -512,15 +701,15 @@ export default function GameplayGacha() {
               </section>
 
               <!-- AI 建议 + DNA 分析 -->
-              <section class="gg-glass gg-chamfer p-5 flex flex-col relative">
-                <div class="gg-scanlines"></div>
+              <section class="gp-metal p-5 flex flex-col relative">
+                <div class="gp-scanlines"></div>
                 <h3 class="text-sm font-semibold relative" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   AI 建议
                 </h3>
                 <p class="text-xs leading-relaxed mt-2 line-clamp-3 relative" style=${{ color: T.textSecondary }}>
                   基于教材分析，推荐选择「探索冒险」方案，该方案与生态系统的探索性学习高度匹配，能有效激发学生的好奇心与探究欲，知识覆盖度与学习效果均表现优异。
                 </p>
-                <div class="my-4 h-px relative" style=${{ background: T.borderSubtle }}></div>
+                <div class="gp-divider my-4 relative"></div>
                 <h3 class="text-sm font-semibold relative" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   游戏 DNA 分析
                 </h3>
@@ -528,9 +717,15 @@ export default function GameplayGacha() {
                   ${DNA.map((d, i) => html`
                     <div key=${i} class="flex items-center gap-2">
                       <span class="text-xs w-16 shrink-0 truncate" style=${{ color: T.textSecondary }}>${d.label}</span>
-                      <div class="flex-1 h-2 rounded-full overflow-hidden" style=${{ background: T.borderSubtle }}>
-                        <div class="h-full rounded-full transition-all"
-                             style=${{ width: `${d.pct}%`, background: d.color, boxShadow: `0 0 6px ${d.color}66`, transitionDelay: `${i * 0.15}s` }}></div>
+                      <div class="flex-1 h-2.5 gp-dna-bar">
+                        <div class="h-full gp-dna-fill"
+                             style=${{
+                               width: `${d.pct}%`,
+                               '--dna-color': d.color,
+                               '--dna-color-light': d.color + 'cc',
+                               '--dna-color-glow': d.color + '66',
+                               transitionDelay: `${i * 0.15}s`,
+                             }}></div>
                       </div>
                       <span class="text-xs font-medium w-9 text-right shrink-0" style=${{ color: T.textPrimary }}>
                         ${d.pct}%
@@ -541,17 +736,21 @@ export default function GameplayGacha() {
               </section>
 
               <!-- 所需 AI 团队 -->
-              <section class="gg-glass gg-chamfer p-5 flex flex-col relative">
-                <div class="gg-scanlines"></div>
+              <section class="gp-metal p-5 flex flex-col relative">
+                <div class="gp-scanlines"></div>
+                <div class="gp-hud-br"></div>
                 <h3 class="text-sm font-semibold mb-3 relative" style=${{ color: T.textBright, fontFamily: T.fontDisplay }}>
                   所需 AI 团队
                 </h3>
-                <ul class="flex flex-col gap-2 relative">
+                <ul class="flex flex-col gap-2.5 relative">
                   ${AI_TEAM.map((member, i) => html`
                     <li key=${i} class="flex items-center gap-3">
                       <img src=${member.img} alt=${member.name}
-                           class="w-8 h-8 rounded-full object-cover shrink-0"
-                           style=${{ border: `1px solid ${T.glassBorder}` }} />
+                           class="w-12 h-12 rounded-xl object-cover shrink-0"
+                           style=${{
+                             border: `1px solid ${T.glassBorder}`,
+                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.3)',
+                           }} />
                       <div class="min-w-0">
                         <div class="text-sm font-medium truncate" style=${{ color: T.textPrimary }}>${member.name}</div>
                         <div class="text-xs truncate" style=${{ color: T.textMuted }}>${member.role}</div>
@@ -566,11 +765,17 @@ export default function GameplayGacha() {
       </div>
 
       <!-- ═══ 底部操作栏 ═══ -->
-      <footer class="shrink-0 grid grid-cols-3 items-center px-8 py-4 gap-4 border-t relative"
-              style=${{ background: T.glass, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderColor: T.glassBorder }}>
+      <footer class="shrink-0 grid grid-cols-3 items-center px-8 py-4 gap-4 relative"
+              style=${{
+                background: 'rgba(8,6,15,0.8)',
+                backdropFilter: 'blur(24px) saturate(1.4)',
+                WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+                borderTop: '1px solid rgba(167,139,250,0.12)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+              }}>
         <div class="flex items-center gap-2 min-w-0 justify-self-start">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               style=${{ color: T.cyan }}>
+               style=${{ color: T.primary }}>
             <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
@@ -581,19 +786,22 @@ export default function GameplayGacha() {
         </div>
         <div class="justify-self-center">
           <button type="button"
-            class="px-4 py-2 text-sm whitespace-nowrap transition-all gg-chamfer-btn hover:bg-white/5"
-            style=${{ background: T.glass, color: T.textSecondary, border: `1px solid ${T.borderSubtle}` }}
+            class="gp-metal-btn px-4 py-2 text-sm whitespace-nowrap"
+            style=${{ color: T.textSecondary }}
             onClick=${goBack}>
             重新上传教材
           </button>
         </div>
         <div class="justify-self-end">
           <button type="button"
-            class="px-6 py-2.5 text-sm font-semibold whitespace-nowrap transition-all gg-chamfer-btn ${selectedMode ? 'hover:scale-105' : 'opacity-40 cursor-not-allowed'}"
+            class="px-6 py-2.5 text-sm font-semibold whitespace-nowrap transition-all rounded-lg ${selectedMode ? 'hover:scale-105' : 'opacity-40 cursor-not-allowed'}"
             style=${{
-              background: selectedMode ? T.cyan : T.glass,
+              background: selectedMode ? `linear-gradient(135deg, ${T.primary}, ${T.primaryDark})` : 'rgba(255,255,255,0.04)',
               color: selectedMode ? T.void : T.textMuted,
-              boxShadow: selectedMode ? `0 0 16px ${T.cyan}44` : 'none',
+              border: `1px solid ${selectedMode ? T.primary : T.borderSubtle}`,
+              boxShadow: selectedMode
+                ? `inset 0 1px 0 rgba(255,255,255,0.25), 0 0 20px ${T.primary}40, 0 4px 16px rgba(0,0,0,0.4)`
+                : 'inset 0 1px 0 rgba(255,255,255,0.04)',
             }}
             disabled=${!selectedMode}
             onClick=${confirmGameplay}>
