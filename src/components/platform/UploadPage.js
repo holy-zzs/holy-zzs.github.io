@@ -379,6 +379,7 @@ export default function UploadPage() {
   const [parsing, setParsing] = useState(false)
   const [parseStep, setParseStep] = useState(0)
   const [parseProgress, setParseProgress] = useState(0)
+  const [creativeInput, setCreativeInput] = useState(state.userCreativeInput || '')
   const fileInput = useRef(null)
 
   const material = state.material
@@ -596,8 +597,9 @@ export default function UploadPage() {
       toast('请先上传并解析教材', 'error')
       return
     }
+    dispatch({ type: 'SET_CREATIVE_INPUT', payload: creativeInput })
     navigate(STEPS.GAMEPLAY)
-  }, [material, navigate, toast])
+  }, [material, navigate, toast, creativeInput, dispatch])
 
   return html`
     <div class="min-h-screen flex flex-col" style=${{ background: 'var(--theme-bg)', color: 'var(--theme-text)', minHeight: '100vh' }}>
@@ -820,12 +822,37 @@ export default function UploadPage() {
           </div>
         </div>
 
+        <!-- 创意想法输入区 -->
+        <div class="mt-5 rounded-2xl p-4 sm:p-5" style=${{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)' }}>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-lg shrink-0">💡</span>
+            <h3 class="text-sm font-bold" style=${{ color: 'var(--theme-text)' }}>
+              你的创意想法
+              <span class="text-xs font-normal ml-1" style=${{ color: 'var(--theme-text-muted)' }}>（选填）</span>
+            </h3>
+          </div>
+          <p class="text-xs mb-3" style=${{ color: 'var(--theme-text-muted)' }}>
+            告诉AI团队你对游戏的设想，比如玩法风格、角色设定、场景偏好等。留空则由AI全自动设计。
+          </p>
+          <textarea
+            value=${creativeInput}
+            onInput=${(e) => setCreativeInput(e.target.value)}
+            placeholder="例如：希望做成探险解谜风格，主角是一个穿越时空的历史学者，在古代文明中收集知识碎片解锁剧情…"
+            rows=${3}
+            class="w-full px-3 py-2.5 rounded-xl text-sm leading-relaxed outline-none resize-none"
+            style=${{ background: 'var(--theme-surface-alt)', border: '1px solid var(--theme-border)', color: 'var(--theme-text)' }}></textarea>
+          <div class="flex items-center justify-between mt-1.5">
+            <span class="text-[11px]" style=${{ color: 'var(--theme-text-muted)' }}>💡 描述越具体，AI生成的游戏越贴合你的想象</span>
+            <span class="text-xs font-mono" style=${{ color: creativeInput.trim() ? 'var(--theme-accent)' : 'var(--theme-text-muted)' }}>${creativeInput.length} 字</span>
+          </div>
+        </div>
+
         <!-- 底部操作栏 -->
         <div class="mt-8 flex items-center justify-between gap-3 pt-5" style=${{ borderTop: '1px solid var(--theme-border)' }}>
           <button class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-opacity hover:opacity-80"
             style=${{ background: 'var(--theme-surface)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-muted)' }}
-            onClick=${() => navigate(STEPS.AGENTS)}>
-            <span>←</span><span>调整AI团队</span>
+            onClick=${() => { dispatch({ type: 'SET_STEP', payload: STEPS.SUBJECT }); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+            <span>←</span><span>返回选择科目</span>
           </button>
           <button class="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all"
             style=${{ background: material ? 'var(--theme-primary)' : 'var(--theme-surface-alt)', cursor: material ? 'pointer' : 'not-allowed', opacity: material ? 1 : 0.5 }}

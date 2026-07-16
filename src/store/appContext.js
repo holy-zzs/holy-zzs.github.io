@@ -84,6 +84,7 @@ const initialState = {
   savedTeams: [],       // 保存的团队
   // 教材
   material: null,       // 解析后的教材 ParsedMaterial
+  userCreativeInput: '',  // 用户创意想法输入
   // 讨论
   discussion: {
     messages: [],       // 讨论消息列表
@@ -149,6 +150,7 @@ const A = {
   REORDER_AGENTS: 'REORDER_AGENTS',
   SET_SAVED_TEAMS: 'SET_SAVED_TEAMS',
   SET_MATERIAL: 'SET_MATERIAL',
+  SET_CREATIVE_INPUT: 'SET_CREATIVE_INPUT',
   ADD_MESSAGE: 'ADD_MESSAGE',
   SET_MESSAGES: 'SET_MESSAGES',
   SET_DISCUSSION: 'SET_DISCUSSION',
@@ -190,6 +192,7 @@ function reducer(state, action) {
     case A.REORDER_AGENTS: return { ...state, selectedAgents: action.payload }
     case A.SET_SAVED_TEAMS: return { ...state, savedTeams: action.payload }
     case A.SET_MATERIAL: return { ...state, material: action.payload }
+    case A.SET_CREATIVE_INPUT: return { ...state, userCreativeInput: action.payload }
     case A.ADD_MESSAGE:
       return { ...state, discussion: { ...state.discussion, messages: [...state.discussion.messages, action.payload] } }
     case A.SET_MESSAGES:
