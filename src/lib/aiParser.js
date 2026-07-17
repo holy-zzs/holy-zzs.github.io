@@ -669,7 +669,7 @@ export async function extractPdfText(file, onProgress) {
       : `文件 ${sizeMB.toFixed(1)}MB 较大，直接走 CamScanner 代理`
     console.log(`[PDF] ${reason}...`)
     try {
-      const { parseWithModelscope } = await import('./modelscopeClient.js?v=ms2')
+      const { parseWithModelscope } = await import('./modelscopeClient.js?v=ms3')
       const result = await parseWithModelscope(file, onProgress)
       if (result.text && result.text.length > 0) {
         console.log(`[PDF] CamScanner 代理解析成功: ${result.numPages}页, ${result.text.length}字符`)

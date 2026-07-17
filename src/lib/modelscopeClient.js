@@ -36,7 +36,7 @@ export async function checkModelscopeOnline() {
 }
 
 // ────────────────────────────────────────────────
-// 上传 PDF 到 CamScanner 代理解析
+// 上传 PDF 到 CamScanner 代理解析（异步轮询模式）
 // ────────────────────────────────────────────────
 export async function parseWithModelscope(file, onProgress) {
   const base = buildModelscopeApiBase()
@@ -54,22 +54,22 @@ export async function parseWithModelscope(file, onProgress) {
   const form = new FormData()
   form.append('file', file)
 
-  onProgress?.(15, 100, '上传 PDF 到 CamScanner 代理...')
+  onProgress?.(10, 100, '上传 PDF 到 CamScanner 代理...')
 
-  // 同步请求：CamScanner 上传+转换+下载
-  // 大文件（>50MB）CVM 会自动按 12MB 拆分多次调用 CamScanner，需较长超时
-  // 131MB / 12MB ≈ 11 块 × (上传+转换) ≈ 10-15 分钟
-  const resp = await fetch(`${base}/parse`, {
+  // 异步模式：POST /parse 立即返回 job_id（几秒内）
+  // CVM 后台线程处理，前端轮询 GET /jobs/{jobId} 获取结果
+  // 避免 fetch 长时间等待 30+ 分钟导致浏览器超时/页面崩溃
+  const sizeMB = file.size / 1024 / 1024
+  const uploadTimeout = sizeMB > 50 ? 600000 : 120000  // 大文件 10 分钟，小文件 2 分钟
+  const postResp = await fetch(`${base}/parse`, {
     method: 'POST',
     body: form,
-    signal: AbortSignal.timeout(1800000),  // 30 分钟
+    signal: AbortSignal.timeout(uploadTimeout),
   })
 
-  onProgress?.(90, 100, '解析完成，处理结果...')
-
-  if (!resp.ok) {
-    const errText = await resp.text()
-    let errMsg = `CamScanner 解析失败 (HTTP ${resp.status})`
+  if (postResp.status !== 202 && !postResp.ok) {
+    const errText = await postResp.text()
+    let errMsg = `CamScanner 提交失败 (HTTP ${postResp.status})`
     try {
       const errJson = JSON.parse(errText)
       if (errJson.error) errMsg = errJson.error
@@ -77,35 +77,100 @@ export async function parseWithModelscope(file, onProgress) {
     throw new Error(errMsg)
   }
 
-  const result = await resp.json()
-  onProgress?.(100, 100, '完成')
-
-  // 转换为与 MinerU 结果一致的格式（让 aiParser/UploadPage 复用展示逻辑）
-  const raw = result.rawExtraction || {}
-  const structured = result.structured || {}
-
-  return {
-    text: raw.text || '',
-    markdown: raw.markdown || '',
-    numPages: raw.numPages || 0,
-    ocrUsed: true,  // CamScanner 支持 OCR
-    backendUsed: true,
-    backendError: null,
-    extractionMethod: 'camscanner-pdf2markdown',
-    mineruUsed: false,
-    structured,
-    downloads: raw.downloads || {},
-    parseMeta: {
-      pageCount: raw.numPages || 0,
-      hasTables: true,  // CamScanner 智能识别表格
-      hasFormulas: false,
-      ocrUsed: true,
-      backendUsed: true,
-      mineruUsed: false,
-      extractionMethod: 'camscanner-pdf2markdown',
-      batchId: '',
-      filename: raw.filename || '',
-    },
-    warnings: result.warnings || [],
+  const jobInfo = await postResp.json()
+  const jobId = jobInfo.jobId
+  if (!jobId) {
+    throw new Error('CamScanner 代理未返回 jobId')
   }
+
+  console.log(`[CamScanner] 任务已提交: ${jobId}`)
+  onProgress?.(15, 100, 'PDF 已上传，等待解析...')
+
+  // 轮询任务状态
+  const POLL_INTERVAL = 5000  // 5 秒
+  const MAX_POLL_TIME = 60 * 60 * 1000  // 60 分钟总超时
+  const startedAt = Date.now()
+
+  let lastStatus = ''
+  while (Date.now() - startedAt < MAX_POLL_TIME) {
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
+
+    let pollResp
+    try {
+      pollResp = await fetch(`${base}/jobs/${jobId}`, {
+        signal: AbortSignal.timeout(15000),
+      })
+    } catch (e) {
+      console.warn(`[CamScanner] 轮询失败: ${e.message}，重试...`)
+      continue
+    }
+
+    if (!pollResp.ok) {
+      console.warn(`[CamScanner] 轮询返回 HTTP ${pollResp.status}，重试...`)
+      continue
+    }
+
+    const job = await pollResp.json()
+    const jobStatus = job.status || 'unknown'
+
+    if (jobStatus !== lastStatus) {
+      console.log(`[CamScanner] 任务状态: ${jobStatus}`)
+      lastStatus = jobStatus
+    }
+
+    // 从 status 提取分块进度并更新 UI
+    if (jobStatus.startsWith('processing chunk')) {
+      const match = jobStatus.match(/chunk\s+(\d+)\/(\d+)/)
+      if (match) {
+        const cur = parseInt(match[1])
+        const total = parseInt(match[2])
+        const pct = Math.round((cur / total) * 80) + 15  // 15-95%
+        onProgress?.(pct, 100, `CamScanner 解析中 (${cur}/${total} 块)...`)
+      }
+    } else if (jobStatus === 'processing') {
+      onProgress?.(20, 100, 'CamScanner 解析中...')
+    } else if (jobStatus === 'done') {
+      onProgress?.(95, 100, '解析完成，处理结果...')
+      const result = job.result
+      if (!result) {
+        throw new Error('任务完成但未返回结果')
+      }
+      onProgress?.(100, 100, '完成')
+
+      // 转换为与 MinerU 结果一致的格式
+      const raw = result.rawExtraction || {}
+      const structured = result.structured || {}
+
+      return {
+        text: raw.text || '',
+        markdown: raw.markdown || '',
+        numPages: raw.numPages || 0,
+        ocrUsed: true,
+        backendUsed: true,
+        backendError: null,
+        extractionMethod: 'camscanner-pdf2markdown',
+        mineruUsed: false,
+        structured,
+        downloads: raw.downloads || {},
+        parseMeta: {
+          pageCount: raw.numPages || 0,
+          hasTables: true,
+          hasFormulas: false,
+          ocrUsed: true,
+          backendUsed: true,
+          mineruUsed: false,
+          extractionMethod: 'camscanner-pdf2markdown',
+          batchId: '',
+          filename: raw.filename || '',
+        },
+        warnings: result.warnings || [],
+      }
+    } else if (jobStatus === 'failed') {
+      const errMsg = job.error || '未知错误'
+      throw new Error(`CamScanner 解析失败: ${errMsg}`)
+    }
+    // queued 状态继续等待
+  }
+
+  throw new Error('CamScanner 解析超时（60 分钟）')
 }

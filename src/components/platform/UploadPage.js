@@ -4,7 +4,7 @@ import { html, useState, useRef, useCallback, useMemo, useEffect } from '../../d
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip16'
+import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip17'
 import { collectMineruDownloads } from '../../lib/mineruResult.js?v=mr2'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
