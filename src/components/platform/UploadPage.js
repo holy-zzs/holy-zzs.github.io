@@ -751,11 +751,21 @@ export default function UploadPage() {
     const systemPrompt = `你是一位专业的游戏化学习设计专家。基于以下教材分析数据，为${gradeCn}阶段的${subject || '通用'}学科推荐4个最合适的游戏化学习方案。
 
 请严格按照以下JSON格式返回，不要包含任何其他文本：
-{"gameModes":[{"id":"adventure","num":"01","type":"Adventure","name":"探索冒险","match":98,"stars":5,"effect":92,"tags":["探索","收集","剧情","养成"],"desc":"描述...","color":"#00d4ff","radar":[98,95,92,92,68]}],"dna":[{"label":"探索元素","pct":60,"color":"#00d4ff"}],"aiTeam":[{"name":"游戏策划师","role":"负责整体游戏设计"}],"objectives":["目标1","目标2","目标3"],"aiSuggestion":"建议文字","matchScore":98,"matchLabel":"知识覆盖度高","matchDesc":"非常适合游戏化学习","knowledgePoints":126,"experiments":23}
+{"gameModes":[{"id":"adventure","num":"01","type":"Adventure","name":"探索冒险","match":98,"stars":5,"effect":92,"tags":["探索","收集","剧情","养成"],"desc":"描述...","color":"#00d4ff","radar":[98,95,92,92,68]}],"dna":[{"label":"探索元素","pct":60,"color":"#00d4ff"}],"aiTeam":[{"name":"游戏策划师","role":"负责整体游戏设计","roleType":"planner"}],"objectives":["目标1","目标2","目标3"],"aiSuggestion":"建议文字","matchScore":98,"matchLabel":"知识覆盖度高","matchDesc":"非常适合游戏化学习","knowledgePoints":126,"experiments":23,"textbookImagePrompt":"教材主题图的英文描述，用于AI生图，如：a futuristic biology textbook cover with DNA helix and ecosystem elements, cyberpunk style","ageVariants":{"primary":{"difficulty":"简单","playStyle":"引导式探索，重互动轻推理","adjustments":"降低文字阅读量，增加视觉反馈，每关卡5-10分钟","matchAdjust":85},"junior":{"difficulty":"标准","playStyle":"平衡探索与推理，引入策略选择","adjustments":"增加知识点深度，引入合作任务，每关卡15-20分钟","matchAdjust":92},"senior":{"difficulty":"进阶","playStyle":"自主探究，开放式问题解决","adjustments":"引入跨章节综合题，支持多解法路径，每关卡25-30分钟","matchAdjust":88},"adult":{"difficulty":"挑战","playStyle":"项目式学习，真实场景应用","adjustments":"对接行业案例，支持自定义目标，无时间限制","matchAdjust":75}}}
 
-要求：1.返回4个游戏模式(id:adventure/simulation/puzzle/rpg) 2.描述必须结合教材知识点 3.radar5个值对应:知识匹配度/趣味性/互动性/学习效果/实施难度 4.dna反映教材特点 5.objectives基于实际知识点 6.颜色固定:#00d4ff/#a78bfa/#34d399/#ec4899 7.只返回JSON`
+要求：
+1.返回4个游戏模式(id:adventure/simulation/puzzle/rpg)
+2.描述必须结合教材知识点，体现学科特色
+3.radar5个值对应:知识匹配度/趣味性/互动性/学习效果/实施难度
+4.dna反映教材特点
+5.objectives基于实际知识点
+6.颜色固定:#00d4ff/#a78bfa/#34d399/#ec4899
+7.aiTeam必须返回6个成员，根据教材内容定制角色（如数学教材应有"数学建模专家"、"逻辑思维训练师"等），每个成员含roleType字段(可选:planner/educator/narrative/artist/system/analyst/subject_expert)
+8.textbookImagePrompt必须是英文，描述一张适合该教材的封面主题图，包含学科元素和未来科技感，用于AI生图
+9.ageVariants必须返回4个年龄段(primary/junior/senior/adult)的差异化玩法，每个年龄段有不同的difficulty/playStyle/adjustments/matchAdjust
+10.只返回JSON`
 
-    return { systemPrompt, userPrompt: `以下是${gradeCn}${subject || '通用'}教材分析数据：\n\n${md}\n\n请推荐4个游戏化学习方案。` }
+    return { systemPrompt, userPrompt: `以下是${gradeCn}${subject || '通用'}教材分析数据：\n\n${md}\n\n请推荐4个游戏化学习方案，并返回教材主题图描述、4个年龄段的差异化玩法、6个定制化AI团队成员。` }
   }, [])
 
   // ── 确认教材，调用AI生成游戏化推荐，进入玩法推荐 ──
@@ -810,6 +820,15 @@ export default function UploadPage() {
       if (resp.ok) {
         const data = await resp.json()
         const rec = data.recommendation || data
+        // 异步生成教材主题图（不阻塞主流程）
+        if (rec.textbookImagePrompt) {
+          try {
+            const imgUrl = `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(rec.textbookImagePrompt)}&image_size=portrait_4_3`
+            rec.textbookImage = imgUrl
+          } catch (e) {
+            console.warn('教材主题图 URL 构造失败:', e)
+          }
+        }
         dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: rec })
         toast(data.warning ? data.warning : 'AI 游戏化方案已生成!', data.warning ? 'info' : 'success')
         setRecommending(false)
@@ -860,6 +879,17 @@ export default function UploadPage() {
       }
 
       dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: rec })
+      // 异步生成教材主题图（不阻塞主流程）
+      if (rec.textbookImagePrompt) {
+        try {
+          const imgUrl = `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(rec.textbookImagePrompt)}&image_size=portrait_4_3`
+          rec.textbookImage = imgUrl
+          // 更新已 dispatch 的推荐数据（补图）
+          dispatch({ type: 'SET_GAMEPLAY_RECOMMENDATION', payload: { ...rec, textbookImage: imgUrl } })
+        } catch (e) {
+          console.warn('教材主题图 URL 构造失败:', e)
+        }
+      }
       toast('AI 游戏化方案已生成!', 'success')
     } catch (directErr) {
       console.warn('Direct DeepSeek API 也失败:', directErr)

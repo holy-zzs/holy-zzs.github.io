@@ -18,7 +18,7 @@ import AIStudio from './components/platform/AIStudio.js?v=as9'
 import PreviewView from './components/platform/PreviewView.js?v=pv3'
 
 // 新平台页面（页面1-15）
-import GameplayGacha from './components/platform/GameplayGacha.js?v=gg10'
+import GameplayGacha from './components/platform/GameplayGacha.js?v=gg11'
 import HelpPage from './components/platform/HelpPage.js?v=cb2'
 import LandingPage from './components/platform/LandingPage.js?v=lp3'
 import ModePage from './components/platform/ModePage.js?v=cb2'
@@ -30,7 +30,7 @@ import ProjectsPage from './components/platform/ProjectsPage.js?v=cb2'
 import ProtocolDemo from './components/platform/ProtocolDemo.js?v=cb2'
 import SubjectPage from './components/platform/SubjectPage.js?v=sp6'
 import TeamBuilder from './components/platform/TeamBuilder.js?v=cb4'
-import UploadPage from './components/platform/UploadPage.js?v=pdf20260717l'
+import UploadPage from './components/platform/UploadPage.js?v=pdf20260717m'
 
 // 新增平台页面
 import AboutPage from './components/platform/AboutPage.js?v=cb2'

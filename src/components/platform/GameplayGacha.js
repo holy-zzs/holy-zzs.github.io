@@ -99,13 +99,24 @@ const DNA = [
 
 // ── AI 团队数据 ──
 const AI_TEAM = [
-  { name: '游戏策划师', role: '负责整体游戏设计', img: IMG(6) },
-  { name: '教育专家', role: '确保知识准确性', img: IMG(0) },
-  { name: '剧情设计师', role: '设计故事和任务', img: IMG(7) },
-  { name: '美术设计师', role: '创建视觉世界', img: IMG(8) },
-  { name: '系统设计师', role: '设计游戏机制', img: IMG(9) },
-  { name: '测试分析师', role: '评估学习效果', img: IMG(10) },
+  { name: '游戏策划师', role: '负责整体游戏设计', roleType: 'planner', img: IMG(6) },
+  { name: '教育专家', role: '确保知识准确性', roleType: 'educator', img: IMG(0) },
+  { name: '剧情设计师', role: '设计故事和任务', roleType: 'narrative', img: IMG(7) },
+  { name: '美术设计师', role: '创建视觉世界', roleType: 'artist', img: IMG(8) },
+  { name: '系统设计师', role: '设计游戏机制', roleType: 'system', img: IMG(9) },
+  { name: '测试分析师', role: '评估学习效果', roleType: 'analyst', img: IMG(10) },
 ]
+
+// roleType → 预设头像映射（AI 动态团队成员按角色类型匹配头像）
+const ROLE_TYPE_IMGS = {
+  planner: IMG(6),
+  educator: IMG(0),
+  narrative: IMG(7),
+  artist: IMG(8),
+  system: IMG(9),
+  analyst: IMG(10),
+  subject_expert: IMG(0),  // 学科专家复用教育专家图
+}
 
 // ── 年龄段 Tab ──
 const AGE_TABS = [
@@ -114,6 +125,14 @@ const AGE_TABS = [
   { id: 'senior', label: '大学 18-22岁' },
   { id: 'adult', label: '成人 22+岁' },
 ]
+
+// ── 年龄段差异化兜底数据 ──
+const AGE_VARIANTS_FALLBACK = {
+  primary: { difficulty: '简单', playStyle: '引导式探索，重互动轻推理', adjustments: '降低文字阅读量，增加视觉反馈，每关卡5-10分钟', matchAdjust: 85 },
+  junior: { difficulty: '标准', playStyle: '平衡探索与推理，引入策略选择', adjustments: '增加知识点深度，引入合作任务，每关卡15-20分钟', matchAdjust: 92 },
+  senior: { difficulty: '进阶', playStyle: '自主探究，开放式问题解决', adjustments: '引入跨章节综合题，支持多解法路径，每关卡25-30分钟', matchAdjust: 88 },
+  adult: { difficulty: '挑战', playStyle: '项目式学习，真实场景应用', adjustments: '对接行业案例，支持自定义目标，无时间限制', matchAdjust: 75 },
+}
 
 // ── 学习目标 ──
 const OBJECTIVES = [
@@ -361,9 +380,10 @@ export default function GameplayGacha() {
     img: m.img || IMG_BY_ID[m.id] || IMG(i + 2),
   }))
   const dna = rec?.dna || DNA
+  // AI 团队：优先用 roleType 匹配预设头像，其次按 index 轮转
   const aiTeam = (rec?.aiTeam || AI_TEAM).map((m, i) => ({
     ...m,
-    img: m.img || TEAM_IMGS[i] || IMG(i),
+    img: m.img || ROLE_TYPE_IMGS[m.roleType] || TEAM_IMGS[i % TEAM_IMGS.length] || IMG(i),
   }))
   const objectives = rec?.objectives || OBJECTIVES
   const aiSuggestion = rec?.aiSuggestion || '基于教材分析，推荐选择「探索冒险」方案，该方案与教材内容的探索性学习高度匹配，能有效激发学生的好奇心与探究欲。'
@@ -372,6 +392,11 @@ export default function GameplayGacha() {
   const matchDesc = rec?.matchDesc || '非常适合游戏化学习'
   const knowledgePoints = rec?.knowledgePoints || (grade === 'primary' ? 126 : 186)
   const experiments = rec?.experiments || (grade === 'primary' ? 23 : 45)
+  // 教材主题图：AI 生图优先，否则用硬编码封面
+  const textbookImage = rec?.textbookImage || TEXTBOOK_COVER
+  // 年龄段差异化数据
+  const ageVariants = rec?.ageVariants || AGE_VARIANTS_FALLBACK
+  const currentAgeVariant = ageVariants[activeTab] || ageVariants.primary || AGE_VARIANTS_FALLBACK[activeTab]
   const isAiGenerated = !!rec && !rec._fallback
 
   const handleSelect = useCallback((mode) => setSelectedMode(mode), [])
@@ -464,9 +489,10 @@ export default function GameplayGacha() {
                    border: `1px solid ${T.glassBorder}`,
                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 16px rgba(0,0,0,0.4)',
                  }}>
-              <img src=${TEXTBOOK_COVER} alt="教材封面"
+              <img src=${textbookImage} alt="教材封面"
                    class="w-full h-40 object-cover"
-                   style=${{ filter: 'brightness(0.9) saturate(1.1)' }} />
+                   style=${{ filter: 'brightness(0.9) saturate(1.1)' }}
+                   onError=${(e) => { if (e.target.src !== TEXTBOOK_COVER) e.target.src = TEXTBOOK_COVER }} />
               <div class="absolute inset-0 pointer-events-none"
                    style=${{ background: 'linear-gradient(180deg, transparent 40%, rgba(5,1,15,0.9) 100%)' }}></div>
               <div class="absolute bottom-2 left-3 right-3">
@@ -609,6 +635,32 @@ export default function GameplayGacha() {
                   </button>
                 `)}
               </div>
+
+              <!-- 年龄段差异化信息面板 -->
+              ${currentAgeVariant ? html`
+                <div class="mt-4 gp-metal p-4 relative">
+                  <div class="gp-scanlines"></div>
+                  <div class="flex items-center gap-3 flex-wrap relative">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.textMuted }}>难度</span>
+                      <span class="gp-metal-tag px-2 py-1 text-xs font-semibold"
+                            style=${{ color: T.primary, border: `1px solid ${T.primary}40` }}>
+                        ${currentAgeVariant.difficulty}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs uppercase tracking-wider font-mono" style=${{ color: T.textMuted }}>匹配度</span>
+                      <span class="text-sm font-bold" style=${{ color: T.green, fontFamily: T.fontDisplay }}>
+                        ${currentAgeVariant.matchAdjust || '--'}%
+                      </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-medium" style=${{ color: T.textBright }}>${currentAgeVariant.playStyle}</div>
+                      <div class="text-xs mt-0.5" style=${{ color: T.textSecondary }}>${currentAgeVariant.adjustments}</div>
+                    </div>
+                  </div>
+                </div>
+              ` : null}
             </header>
 
             <!-- ═══ 4 个游戏模式卡片（加宽，图片更大）═══ -->
