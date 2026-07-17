@@ -56,11 +56,13 @@ export async function parseWithModelscope(file, onProgress) {
 
   onProgress?.(15, 100, '上传 PDF 到 CamScanner 代理...')
 
-  // 同步请求：CamScanner 上传+转换+下载，大文件可能需 1-3 分钟
+  // 同步请求：CamScanner 上传+转换+下载
+  // 大文件（>50MB）CVM 会自动按 12MB 拆分多次调用 CamScanner，需较长超时
+  // 131MB / 12MB ≈ 11 块 × (上传+转换) ≈ 10-15 分钟
   const resp = await fetch(`${base}/parse`, {
     method: 'POST',
     body: form,
-    signal: AbortSignal.timeout(300000),  // 5 分钟
+    signal: AbortSignal.timeout(1800000),  // 30 分钟
   })
 
   onProgress?.(90, 100, '解析完成，处理结果...')

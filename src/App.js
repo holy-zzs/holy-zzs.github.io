@@ -30,7 +30,7 @@ import ProjectsPage from './components/platform/ProjectsPage.js?v=cb2'
 import ProtocolDemo from './components/platform/ProtocolDemo.js?v=cb2'
 import SubjectPage from './components/platform/SubjectPage.js?v=sp6'
 import TeamBuilder from './components/platform/TeamBuilder.js?v=cb4'
-import UploadPage from './components/platform/UploadPage.js?v=pdf20260717j'
+import UploadPage from './components/platform/UploadPage.js?v=pdf20260717k'
 
 // 新增平台页面
 import AboutPage from './components/platform/AboutPage.js?v=cb2'

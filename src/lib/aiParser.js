@@ -633,28 +633,43 @@ export async function extractPdfText(file, onProgress) {
   if (file.size > 500 * 1024 * 1024) {
     throw new Error(`文件大小 ${(file.size / 1024 / 1024).toFixed(1)}MB 超过 500MB 上限。请拆分 PDF（按章节）后重新上传，或使用文本粘贴模式。`)
   }
-  // 快速读取 PDF 页数
+
+  const sizeMB = file.size / 1024 / 1024
+
+  // 大文件（>50MB）跳过 pdfjs 预检：避免 arrayBuffer 把浏览器内存撑爆导致页面崩溃刷新
+  // 直接走 CamScanner 代理（CVM 端会自动按 12MB 拆分）
   let preCheckPageCount = null
-  try {
-    if (!window.__pdfjs) {
-      const pdfjs = await import('https://esm.sh/pdfjs-dist@4.0.379')
-      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs'
-      window.__pdfjs = pdfjs
+  if (sizeMB <= 50) {
+    try {
+      if (!window.__pdfjs) {
+        const pdfjs = await import('https://esm.sh/pdfjs-dist@4.0.379')
+        pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs'
+        window.__pdfjs = pdfjs
+      }
+      const arrayBuffer = await file.arrayBuffer()
+      const pdf = await window.__pdfjs.getDocument({ data: arrayBuffer.slice(0) }).promise
+      preCheckPageCount = pdf.numPages
+      pdf.destroy()
+      console.log(`[PDF] 预检: ${preCheckPageCount} 页, ${sizeMB.toFixed(1)}MB`)
+    } catch (preCheckErr) {
+      console.warn('[PDF] 页数预检失败，继续主链路:', preCheckErr.message)
     }
-    const arrayBuffer = await file.arrayBuffer()
-    const pdf = await window.__pdfjs.getDocument({ data: arrayBuffer.slice(0) }).promise
-    preCheckPageCount = pdf.numPages
-    pdf.destroy()
-    console.log(`[PDF] 预检: ${preCheckPageCount} 页, ${(file.size / 1024 / 1024).toFixed(1)}MB`)
-  } catch (preCheckErr) {
-    console.warn('[PDF] 页数预检失败，继续主链路:', preCheckErr.message)
+  } else {
+    console.log(`[PDF] 文件 ${sizeMB.toFixed(1)}MB 较大，跳过 pdfjs 预检直接走 CamScanner 代理（CVM 自动拆分）`)
   }
 
-  // 超 200 页 → 走 CamScanner 代理（云端 API，支持 OCR 且无页数限制）
-  if (preCheckPageCount && preCheckPageCount > 200) {
-    console.log(`[PDF] ${preCheckPageCount} 页超过 MinerU 200 页上限，走 CamScanner 代理...`)
+  // 走 CamScanner 代理的条件：
+  //   1) 页数 > 200 (MinerU 上限)，或
+  //   2) 文件 > 50MB（大文件直接走 CamScanner，避免 pdfjs/MinerU 内存问题）
+  const useCamScanner = (preCheckPageCount && preCheckPageCount > 200) || sizeMB > 50
+
+  if (useCamScanner) {
+    const reason = preCheckPageCount
+      ? `${preCheckPageCount} 页超过 MinerU 200 页上限`
+      : `文件 ${sizeMB.toFixed(1)}MB 较大，直接走 CamScanner 代理`
+    console.log(`[PDF] ${reason}...`)
     try {
-      const { parseWithModelscope } = await import('./modelscopeClient.js?v=ms1')
+      const { parseWithModelscope } = await import('./modelscopeClient.js?v=ms2')
       const result = await parseWithModelscope(file, onProgress)
       if (result.text && result.text.length > 0) {
         console.log(`[PDF] CamScanner 代理解析成功: ${result.numPages}页, ${result.text.length}字符`)
@@ -664,7 +679,7 @@ export async function extractPdfText(file, onProgress) {
     } catch (msErr) {
       console.warn('[PDF] CamScanner 代理失败:', msErr.message)
       throw new Error(
-        `PDF 共 ${preCheckPageCount} 页，超过 MinerU 200 页上限，CamScanner 代理也无法使用。原因: ${msErr.message}。请稍后重试，或改用 ≤200 页 PDF 走 MinerU 主链路。`
+        `CamScanner 代理解析失败。原因: ${msErr.message}。请稍后重试，或改用较小 PDF 走 MinerU 主链路。`
       )
     }
   }
