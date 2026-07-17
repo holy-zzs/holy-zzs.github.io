@@ -26,6 +26,12 @@ docs/
 # Backend server (not needed for static hosting)
 server/
 
+# Deploy scripts (contain CVM credentials, NEVER push to public repo)
+deploy/
+
+# Vercel serverless (not used for GitHub Pages)
+vercel/
+
 # Netlify functions (not needed for GitHub Pages)
 netlify/
 

@@ -29,11 +29,14 @@ export async function createMineruJob(file, options = {}) {
   form.append('enableFormula', String(options.enableFormula !== false))
   form.append('enableTable', String(options.enableTable !== false))
   form.append('useOcr', String(options.useOcr !== false))
+  if (options.modelVersion) form.append('modelVersion', options.modelVersion)
 
+  // 大文件上传需要更长超时（MinerU 限制 200MB / 200 页）
+  // 5 分钟覆盖 50MB 文件在 3Mbps 带宽下的上传时间
   const resp = await fetch(`${base}/jobs`, {
     method: 'POST',
     body: form,
-    signal: AbortSignal.timeout(60000),
+    signal: AbortSignal.timeout(300000),
   })
 
   if (!resp.ok) throw new Error(`创建 MinerU 任务失败 (${resp.status})`)

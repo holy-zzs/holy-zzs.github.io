@@ -579,12 +579,31 @@ export async function checkPdfServer() {
 // MinerU 主链路：创建 job → 轮询状态 → 获取结果
 // ════════════════════════════════════════════════
 async function waitForMineruResult(file, onProgress) {
-  const job = await createMineruJob(file)
+  let job
+  try {
+    job = await createMineruJob(file)
+  } catch (createErr) {
+    // 上传超时/网络错误转成用户可读提示
+    if (createErr.name === 'TimeoutError' || /timed?\s*out/i.test(createErr.message)) {
+      throw new Error(`上传到 MinerU 后端超时（文件 ${(file.size / 1024 / 1024).toFixed(1)}MB）。请尝试较小的文件，或检查网络连接。`)
+    }
+    throw createErr
+  }
+
   const startedAt = Date.now()
-  const timeoutMs = 10 * 60 * 1000
+  const timeoutMs = 15 * 60 * 1000  // 15 分钟总超时（大文档 VLM 解析较慢）
 
   while (Date.now() - startedAt < timeoutMs) {
-    const status = await getMineruJob(job.jobId)
+    let status
+    try {
+      status = await getMineruJob(job.jobId)
+    } catch (pollErr) {
+      // 单次轮询失败不致命，继续重试
+      console.warn('[MinerU] 轮询失败，重试:', pollErr.message)
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      continue
+    }
+
     const progress = status.progress || 0
     onProgress?.(Math.max(1, progress), 100)
 
@@ -599,7 +618,7 @@ async function waitForMineruResult(file, onProgress) {
     await new Promise((resolve) => setTimeout(resolve, 2000))
   }
 
-  throw new Error('MinerU 解析超时')
+  throw new Error('MinerU 解析超时（15 分钟未完成），请尝试较小的文件')
 }
 
 // ════════════════════════════════════════════════
@@ -610,6 +629,46 @@ async function waitForMineruResult(file, onProgress) {
 // 返回 { text, numPages, ocrUsed?, backendUsed, markdown?, structured?, downloads?, parseMeta?, warnings? }
 // ════════════════════════════════════════════════
 export async function extractPdfText(file, onProgress) {
+  // ── 0. 预检：MinerU 限制 200MB / 200 页 ──
+  if (file.size > 500 * 1024 * 1024) {
+    throw new Error(`文件大小 ${(file.size / 1024 / 1024).toFixed(1)}MB 超过 500MB 上限。请拆分 PDF（按章节）后重新上传，或使用文本粘贴模式。`)
+  }
+  // 快速读取 PDF 页数
+  let preCheckPageCount = null
+  try {
+    if (!window.__pdfjs) {
+      const pdfjs = await import('https://esm.sh/pdfjs-dist@4.0.379')
+      pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs'
+      window.__pdfjs = pdfjs
+    }
+    const arrayBuffer = await file.arrayBuffer()
+    const pdf = await window.__pdfjs.getDocument({ data: arrayBuffer.slice(0) }).promise
+    preCheckPageCount = pdf.numPages
+    pdf.destroy()
+    console.log(`[PDF] 预检: ${preCheckPageCount} 页, ${(file.size / 1024 / 1024).toFixed(1)}MB`)
+  } catch (preCheckErr) {
+    console.warn('[PDF] 页数预检失败，继续主链路:', preCheckErr.message)
+  }
+
+  // 超 200 页 → 走 CamScanner 代理（云端 API，支持 OCR 且无页数限制）
+  if (preCheckPageCount && preCheckPageCount > 200) {
+    console.log(`[PDF] ${preCheckPageCount} 页超过 MinerU 200 页上限，走 CamScanner 代理...`)
+    try {
+      const { parseWithModelscope } = await import('./modelscopeClient.js?v=ms1')
+      const result = await parseWithModelscope(file, onProgress)
+      if (result.text && result.text.length > 0) {
+        console.log(`[PDF] CamScanner 代理解析成功: ${result.numPages}页, ${result.text.length}字符`)
+        return result
+      }
+      throw new Error('CamScanner 代理返回空文本')
+    } catch (msErr) {
+      console.warn('[PDF] CamScanner 代理失败:', msErr.message)
+      throw new Error(
+        `PDF 共 ${preCheckPageCount} 页，超过 MinerU 200 页上限，CamScanner 代理也无法使用。原因: ${msErr.message}。请稍后重试，或改用 ≤200 页 PDF 走 MinerU 主链路。`
+      )
+    }
+  }
+
   // ── 1. 主链路: MinerU VLM 精准解析（腾讯云后端编排）──
   try {
     console.log('[PDF] 尝试 MinerU VLM 精准解析（腾讯云后端）...')

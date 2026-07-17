@@ -1,11 +1,11 @@
-﻿// 页面6：上传教材页 — 把教材交给你的AI团队
+// 页面6：上传教材页 — 把教材交给你的AI团队
 // 4种输入模式（PDF / 粘贴 / 网址 / 示例）+ 解析预览面板 + 团队预览条 + 5步进度
 import { html, useState, useRef, useCallback, useMemo, useEffect } from '../../deps.js'
 import { useApp, STEPS } from '../../store/appContext.js'
 import { NavBar, Footer, PageContainer, StepProgress } from './PlatformCommon.js?v=nav3'
 import { parseFile, parseText } from '../../lib/parser.js?v=pdfv4'
-import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip11'
-import { collectMineruDownloads } from '../../lib/mineruResult.js?v=mr1'
+import { analyzeWithLLM, extractPdfText, fetchUsage } from '../../lib/aiParser.js?v=aip15'
+import { collectMineruDownloads } from '../../lib/mineruResult.js?v=mr2'
 import { AGENTS, AGENT_CATEGORIES } from '../../data/agents.js'
 
 // ── 减弱动效 & 解析动画 keyframes（内联注入，避免污染全局） ──
@@ -707,7 +707,9 @@ export default function UploadPage() {
       clearInterval(progTimer)
       setParsing(false)
       setUploadedFile(null)
-      toast('PDF解析失败：' + (e.message || '未知错误'), 'error')
+      // 错误信息取首行，避免 toast 过长
+      const errMsg = (e.message || '未知错误').split('\n')[0]
+      toast('PDF 解析失败：' + errMsg, 'error')
     }
   }, [dispatch, toast, state.settings])
 
